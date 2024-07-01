@@ -1,0 +1,4 @@
+{
+  "removeRange": true,
+  "reject": ["yup", "vee-validate"]
+}

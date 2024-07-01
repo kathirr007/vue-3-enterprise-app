@@ -1,0 +1,40 @@
+<script setup lang="ts">
+import { useToasts } from '@/composables/toasts';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+const toast = useToasts();
+const items = ref([
+  {
+    label: 'Add Client',
+    tagline: '',
+    to: '/admin/clients/create',
+  },
+  {
+    label: 'Automation',
+    to: '/admin/clients/create/automation',
+  },
+  {
+    label: 'Client Info',
+    to: '/admin/clients/create/client-info',
+  },
+]);
+</script>
+
+<template>
+  <div>
+    <div class="card">
+      <Steps :model="items" />
+      <router-view v-slot="{ Component }">
+        <keep-alive>
+          <component :is="Component" />
+        </keep-alive>
+      </router-view>
+      <div class="my-4">
+        <ClientsAutomation />
+      </div>
+    </div>
+  </div>
+</template>
+
+<style lang="scss" scoped></style>

@@ -1,0 +1,17 @@
+@use "sass:list";
+@use "sass:map";
+
+$themeColors: list.append($themeColors, 'grey'); // append new css color names with existing theme colors
+
+// merge custom colors with existing colors from theme as color-name: color-value
+$colors: map.merge($colors, (
+  'grey': #797a7b,
+));
+
+// create root variables for $colors
+@import '../../designer/colors';
+
+// create custom text, background & border color classes
+@include color-class('bg-', 'background-color', $themeColors, $colorShades);
+@include color-class('text-', 'color', $themeColors, $colorShades);
+@include color-class('border-', 'border-color', $themeColors, $colorShades);

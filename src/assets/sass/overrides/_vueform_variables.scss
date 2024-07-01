@@ -1,0 +1,27 @@
+*, :before, :after, :root {
+  --vf-primary: var(--primary-color) !important;
+  --vf-primary-darker: var(--primary-dark-color) !important;
+  --vf-danger: #ef4444;
+  --vf-danger-lighter: #fee2e2;
+  --vf-success: #10b981;
+  --vf-success-lighter: #d1fae5;
+  
+  --vf-gray-50: #f9fafb;
+  --vf-gray-100: #f3f4f6;
+  --vf-gray-200: #e5e7eb;
+  --vf-gray-300: #d1d5db;
+  --vf-gray-400: #9ca3af;
+  --vf-gray-500: #6b7280;
+  --vf-gray-600: #4b5563;
+  --vf-gray-700: #374151;
+  --vf-gray-800: #1f2937;
+  --vf-gray-900: #111827;
+
+  --vf-ring-color: var(--primary-color) !important;;
+  --vf-ring-width: 2px;
+
+  --vf-link-color: var(--vf-primary);
+  --vf-link-decoration: inherit;
+  --vf-radius-input: 0.4rem !important;
+  --vf-checkbox-size: 1.32rem !important;
+}

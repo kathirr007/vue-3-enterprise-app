@@ -1,0 +1,7 @@
+{
+  "name": "BrightReturn",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "custom"
+}

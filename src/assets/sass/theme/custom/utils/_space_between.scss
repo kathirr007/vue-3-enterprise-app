@@ -1,0 +1,219 @@
+@use 'sass:math';
+
+$spacer: 16;
+:root {
+  --space-x-reverse: 0;
+  --space-reverse: 0;
+}
+
+@mixin space-between-class($map, $directions) {
+  @each $key, $val in $map {
+    $prefixName: $key;
+    $suffixName: '';
+    $index: str-index($key, 'space');
+
+    @if $index != null {
+      $prefixName: 'space';
+      $suffixName: str-slice($key, str-length('space') + 1, str-length($key));
+    }
+
+    @each $dir, $prop in $directions {
+      @for $i from 0 through 7 {
+        $new: #{math.div($i, 2)};
+        $newClass: floating-class($new);
+        @if (($i % 2) !=0) {
+          .#{$prefix}#{$prefixName}-#{$dir}#{$suffixName}-#{$newClass}
+            > :not([hidden])
+            ~ :not([hidden]) {
+            @each $propName in $prop {
+              @if (
+                ($propName == 'margin-left') or ($propName == 'margin-top')
+              ) {
+                #{$propName}: #{calc(
+                    #{math.div((to-number($new) * 4), to-number($spacer))}rem *
+                      (1 - var(--space-reverse))
+                  )} !important;
+              } @else {
+                #{$propName}: #{calc(
+                    #{math.div((to-number($new) * 4), to-number($spacer))}rem *
+                      var(--space-reverse)
+                  )} !important;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @each $key, $val in $breakpoints {
+    @media screen and (min-width: #{$val}) {
+      .#{$key + $separator} {
+        @each $key, $val in $map {
+          $prefixName: $key;
+          $suffixName: '';
+          $index: str-index($key, 'space');
+
+          @if $index != null {
+            $prefixName: 'space';
+            $suffixName: str-slice(
+              $key,
+              str-length('space') + 1,
+              str-length($key)
+            );
+          }
+
+          @each $dir, $prop in $directions {
+            @for $i from 0 through 7 {
+              $new: #{math.div($i, 2)};
+              $newClass: floating-class($new);
+              &#{$prefix}#{$prefixName}-#{$dir}#{$suffixName}-#{$newClass}
+                > :not([hidden])
+                ~ :not([hidden]) {
+                @each $propName in $prop {
+                  @if (
+                    ($propName == 'margin-left') or ($propName == 'margin-top')
+                  ) {
+                    #{$propName}: #{calc(
+                        #{math.div(
+                            (to-number($new) * 4),
+                            to-number($spacer)
+                          )}rem *
+                          (1 - var(--space-reverse))
+                      )} !important;
+                  } @else {
+                    #{$propName}: #{calc(
+                        #{math.div(
+                            (to-number($new) * 4),
+                            to-number($spacer)
+                          )}rem *
+                          var(--space-reverse)
+                      )} !important;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@mixin repeat-space-between($map, $from, $to, $calc: 1, $directions) {
+  @each $key, $val in $map {
+    $prefixName: $key;
+    $suffixName: '';
+    $index: str-index($key, 'space');
+
+    @if $index != null {
+      $prefixName: 'space';
+      $suffixName: str-slice($key, str-length('space') + 1, str-length($key));
+    }
+
+    @each $dir, $prop in $directions {
+      @for $i from $from through $to {
+        .#{$prefix}#{$prefixName}-#{$dir}#{$suffixName}-#{$i
+          *
+          $calc}
+          > :not([hidden])
+          ~ :not([hidden]) {
+          @each $propName in $prop {
+            @if (($propName == 'margin-left') or ($propName == 'margin-top')) {
+              #{$propName}: #{calc(
+                  #{math.div(
+                      (to-number($i * $calc) * 4),
+                      to-number($spacer)
+                    )}rem *
+                    (1 - var(--space-reverse))
+                )} !important;
+            } @else {
+              #{$propName}: #{calc(
+                  #{math.div(
+                      (to-number($i * $calc) * 4),
+                      to-number($spacer)
+                    )}rem *
+                    var(--space-reverse)
+                )} !important;
+            }
+          }
+        }
+      }
+    }
+    @each $key, $val in $breakpoints {
+      @media screen and (min-width: #{$val}) {
+        .#{$key + $separator} {
+          @each $key, $val in $map {
+            $prefixName: $key;
+            $suffixName: '';
+            $index: str-index($key, 'space');
+
+            @if $index != null {
+              $prefixName: 'space';
+              $suffixName: str-slice(
+                $key,
+                str-length('space') + 1,
+                str-length($key)
+              );
+            }
+
+            @each $dir, $prop in $directions {
+              @for $i from 0 through 7 {
+                $new: #{math.div($i, 2)};
+                $newClass: floating-class($new);
+                &#{$prefix}#{$prefixName}-#{$dir}#{$suffixName}-#{$newClass}
+                  > :not([hidden])
+                  ~ :not([hidden]) {
+                  @each $propName in $prop {
+                    @if (
+                      ($propName == 'margin-left') or
+                        ($propName == 'margin-top')
+                    ) {
+                      #{$propName}: #{calc(
+                          #{math.div(
+                              (to-number($new) * 4),
+                              to-number($spacer)
+                            )}rem *
+                            (1 - var(--space-reverse))
+                        )} !important;
+                    } @else {
+                      #{$propName}: #{calc(
+                          #{math.div(
+                              (to-number($new) * 4),
+                              to-number($spacer)
+                            )}rem *
+                            var(--space-reverse)
+                        )} !important;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+$space-between-props: ('space');
+
+$space-between-directions: (
+  'x': (
+    'margin-left',
+    'margin-right',
+  ),
+  'y': (
+    'margin-top',
+    'margin-bottom',
+  ),
+);
+.space-reverse {
+  --space-reverse: 1;
+}
+
+@include space-between-class($space-between-props, $space-between-directions);
+// @include repeat-space-between($space-between-props, 0, 12, 1, $space-between-directions);
+// @include repeat-space-between($space-between-props, 7, 7, 2, $space-between-directions);
+// @include repeat-space-between($space-between-props, 4, 16, 4, $space-between-directions);
+// @include repeat-space-between($space-between-props, 9, 12, 8, $space-between-directions);

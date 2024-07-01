@@ -1,0 +1,43 @@
+
+
+.vf-label {
+  color: var(--surface-900);
+  font-weight: 500;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.vf-static-tag-hr {
+  hr {
+    margin: 0.5rem 0;
+  }
+}
+
+.vf-row {
+  --vf-gutter: 0.75rem;
+  blockquote,dl,dd,h1,h2,h3,h4,h5,h6,hr,figure,p,pre {
+    margin: 0;
+    color: $primaryColor;
+  }
+}
+
+.flatpickr-calendar.static {
+  position: absolute !important;
+}
+
+.vf-element-layout{
+  .vf-layout-inner-container {
+    .vf-layout-inner-wrapper-before {
+      margin-top: -0.5rem;
+      margin-bottom: 0.32rem;
+    }
+    .vf-layout-inner-wrapper {
+      .vf-radiogroup-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+    }
+  }
+}

@@ -1,0 +1,66 @@
+/* Add your customizations of the theme variables here */
+
+// theme color overrides
+// $primaryLightColor: #69b7ff;
+// $primaryColor: #1B6DE6;
+// $primaryDarkColor: #297fff;
+// $primaryDarkerColor: #2170e7;
+$black: #0F0F0F;
+$white: #FFFFFF;
+$primaryColor: #264170;
+$primaryLightColor: #3C5A8F;
+$primaryHoverColor: #6295ef;
+$primaryDarkColor: #4374c8;
+$primaryDarkerColor: #385d9e;
+$bodyBackgroundColor: #CEDAED;
+$borderColor: #A1B1CC;
+$actionIconColor: #B3C4E0;
+$tableHoverColor: #F4F7FC;
+$menuHighlightColor: $primaryLightColor;
+$topbar: $primaryLightColor;
+$avatar: #6980A6;
+$blue: #265BB5;
+$green: #05A34F;
+$orange: #EF7F1A;
+$purple: #A34199;
+$red: #c40c12;
+$primaryTextColor: #ffffff;
+$primaryLighterColor: scale-color(
+  $primaryColor,
+  $lightness: 25%
+) !default;
+$highlightBg: $primaryColor;
+// $highlightBg: #EFF6FF;
+$highlightTextColor: $primaryTextColor;
+$paginatorElementIconColor: #55595d;
+
+$progressColors: (
+  progress-10: #E31E24,
+  progress-20: #E84D24,
+  progress-30: #ED7421,
+  progress-40: #F3981C,
+  progress-50: #F8B913,
+  progress-60: #FFD500,
+  progress-70: #CEC923,
+  progress-80: #9BC231,
+  progress-90: #3DB338,
+  progress-100: #05A650,
+);
+
+//theme global overrides
+$borderRadius: 6px !default;
+$cardBorderRadius: 10px !default;
+$borderTopRadius: 10px 10px 0 0 !default;
+$borderBottomRadius: 0 0 10px 10px !default;
+$borderLeftRadius: 10px 0 0 10px !default;
+$borderRightRadius: 0 10px 10px 0 !default;
+$boxShadow: 0 0 8px 1px #ABB5C4;
+
+:root {
+  --body-bg-color:#f2f4f6;
+  --border-color: var(--primary-color);
+  &.dark {
+    --border-color: white;
+    --body-bg-color: #CEDAED;
+  }
+}

@@ -1,0 +1,222 @@
+<script setup lang="ts">
+import type { Service } from '@/types/service.type';
+import { useQueryClient } from 'vue-query';
+import { useMutation } from 'vue-query';
+import type { Ref } from 'vue';
+import router from '@/router';
+
+const serviceCreationType = ref<'template' | 'scratch'>();
+const serviceState = ref<'list' | 'create'>('list');
+const deleteServiceDialog = ref(false);
+const isHelpVideoOpen = ref(false);
+const actionType = ref();
+const selectedService = ref<Service>();
+const isStageCreate = ref(false);
+const OpenServiceCreateModal = ref(false);
+
+const { initToast } = useToasts();
+const { defaultBreakpoints } = useCommonBreakPoints();
+const queryClient = useQueryClient();
+const { canDo } = usePermissions();
+const { activeTabIndex, tabRef, handleTabChange } = useSteps('admin-services');
+
+function prepareForRemove(data: Service) {
+  selectedService.value = data;
+  deleteServiceDialog.value = true;
+}
+
+function handleOperation(dialog: Ref<boolean>, toastFn: () => void) {
+  dialog.value = false;
+  if (toastFn && typeof toastFn === 'function') {
+    toastFn();
+  }
+  selectedService.value = undefined;
+  queryClient.invalidateQueries('service-list');
+}
+
+function showToast() {
+  initToast({
+    actionType: actionType.value,
+    title: 'Project Template',
+    actionObj: { ...selectedService.value },
+  });
+}
+
+function handleRemove() {
+  actionType.value = 'Delete';
+  handleOperation(deleteServiceDialog, showToast);
+}
+
+function closeConfirmRemoveDialog() {
+  deleteServiceDialog.value = false;
+}
+
+const { mutateAsync: removeService } = useMutation(
+  (id: string) => useServiceDelete(id),
+  {
+    onSuccess: () => handleRemove(),
+  }
+);
+
+const deleteService = () => {
+  if (selectedService.value !== undefined) {
+    removeService(selectedService.value.id);
+  }
+};
+
+const handleBackSuccess = (type: 'back' | 'success') => {
+  serviceState.value = 'list';
+  serviceCreationType.value = undefined;
+  if (type === 'success') {
+    queryClient.invalidateQueries('service-list');
+  }
+};
+
+const prepareForStageCreate = () => {
+  isStageCreate.value = true;
+};
+</script>
+
+<template>
+  <TabView
+    ref="tabRef"
+    v-model:activeIndex="activeTabIndex"
+    @tab-change="handleTabChange"
+    lazy
+  >
+    <TabPanel header="Project Templates">
+      <CommonPage
+        :title="
+          serviceState === 'list'
+            ? 'Choose a Project Template to update OR Create from Scratch'
+            : 'Create Project Template'
+        "
+      >
+        <template #description>
+          {{
+            serviceState === 'list'
+              ? 'These are the project templates which are already being shortlisted by you to offer your client. You can also add more project templates or create a new project templates from scratch.'
+              : `Setup Project Template ${
+                  serviceCreationType === 'scratch'
+                    ? 'From Scratch'
+                    : 'From Template'
+                }`
+          }}
+        </template>
+        <template #helpActions>
+          <div class="w-full max-w-26rem ml-auto mb-6">
+            <a
+              aria-label="setup project template video"
+              class="font-medium flex justify-content-end align-items-center cursor-pointer"
+              @click="isHelpVideoOpen = true"
+              ><i
+                class="pi pi-youtube p-button-icon p-button-icon-left text-3xl text-primary mr-1 mt-1"
+              />
+              <span>Help</span></a
+            >
+          </div>
+        </template>
+
+        <!-- <Button
+        label="Help"
+        icon="pi pi-plus"
+        class="p-button-sm inline-block mr-2"
+        @click="$router.push({ name: '' })"
+      /> -->
+
+        <template v-slot:actions>
+          <template
+            v-if="serviceState === 'list' && canDo('services', 'create')"
+          >
+            <Button
+              icon="pi pi-plus"
+              class="p-button-sm p-button-rounded"
+              v-tooltip.top="'Add Project Template'"
+              @click="OpenServiceCreateModal = true"
+            />
+          </template>
+        </template>
+
+        <ServiceList
+          v-if="serviceState === 'list'"
+          @prepareForRemove="prepareForRemove"
+          @handleBackSuccess="handleBackSuccess"
+        />
+      </CommonPage>
+    </TabPanel>
+    <TabPanel header="Project Stages">
+      <CommonPage
+        title="
+          Project Stages
+        "
+      >
+        <template v-slot:actions>
+          <template v-if="canDo('services', 'create')">
+            <Button
+              icon="pi pi-plus"
+              class="p-button-sm p-button-rounded"
+              v-tooltip.top="'Create'"
+              @click="prepareForStageCreate"
+            />
+          </template>
+        </template>
+        <ServiceProjectStageList />
+      </CommonPage>
+    </TabPanel>
+  </TabView>
+  <CommonConfirmRemoveDialog
+    v-if="selectedService && deleteServiceDialog"
+    :visible="deleteServiceDialog"
+    :recordToRemove="selectedService as Record<string, any>"
+    title="Confirm Delete Project Template"
+    @confirm="deleteService"
+    @hide="closeConfirmRemoveDialog"
+  />
+  <Dialog
+    :modal="true"
+    appendTo="body"
+    v-model:visible="isHelpVideoOpen"
+    :breakpoints="defaultBreakpoints"
+    :style="{ width: '75vw' }"
+    :contentClass="'border-round-bottom-md'"
+    header="Setup Project Template"
+    @hide="isHelpVideoOpen = false"
+  >
+    <div class="video-container">
+      <iframe
+        width="560"
+        height="315"
+        src="https://www.youtube.com/embed/gh6-gcigNiw"
+        title="Setup Project Template"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen
+      ></iframe>
+    </div>
+  </Dialog>
+
+  <Dialog
+    :modal="true"
+    appendTo="body"
+    v-model:visible="isStageCreate"
+    :breakpoints="defaultBreakpoints"
+    :style="{ width: '40vw' }"
+    :contentClass="'border-round-bottom-md'"
+    header="Create Project Stage"
+    @hide="isStageCreate = false"
+  >
+    <ServiceStageCreateUpdate @success="isStageCreate = false" />
+  </Dialog>
+  <Dialog
+    :modal="true"
+    appendTo="body"
+    v-model:visible="OpenServiceCreateModal"
+    :breakpoints="defaultBreakpoints"
+    :style="{ width: '60vw' }"
+    :contentClass="'border-round-bottom-md'"
+    header="Create Project Template"
+    @hide="OpenServiceCreateModal = false"
+  >
+    <ServiceCreateModal />
+  </Dialog>
+</template>

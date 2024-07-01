@@ -1,0 +1,8 @@
+$border-radius-props: (
+  'border-round-4xl': 1.75rem,
+  'border-round-5xl': 2rem,
+  'border-round-6xl': 2.25rem,
+);
+
+@include style-class('border-radius', $border-radius-props, true);
+@include border-radius-class($border-radius-props, $border-radius-directions);

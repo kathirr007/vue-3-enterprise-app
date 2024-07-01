@@ -1,0 +1,29 @@
+@use 'sass:map';
+@use 'sass:math';
+
+@function size-map-2($default, $prefix, $size: 30) {
+  $size-map: ();
+
+  /* Add rem type objects to map */
+  $rem-map: ();
+
+  @for $i from 1 through $size {
+      $new: #{math.div($i, 2)};
+      $newClass: floating-class($new);
+
+      @if (($i % 2) !=0) {
+          $rem-map: map.merge($rem-map, ('#{$prefix}-#{$newClass}rem': #{calc($new * 1rem)}));
+      }
+  }
+
+  $size-map: map.merge($size-map, $rem-map);
+
+  @return $size-map;
+}
+
+
+$width-properties-2: size-map-2((), 'w', 7);
+$height-properties-2: size-map-2((), 'h', 7);
+
+@include style-class('width', $width-properties-2, true);
+@include style-class('height', $height-properties-2, true);

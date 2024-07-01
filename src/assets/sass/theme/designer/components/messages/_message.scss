@@ -1,0 +1,113 @@
+.p-message {
+  margin: $messageMargin;
+  border-radius: $borderRadius;
+
+  .p-message-wrapper {
+    padding: $messagePadding;
+  }
+
+  .p-message-close {
+    width: $actionIconWidth;
+    height: $actionIconHeight;
+    border-radius: $actionIconBorderRadius;
+    background: transparent;
+    transition: $actionIconTransition;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    &:focus {
+      @include focused();
+    }
+  }
+
+  &.p-message-info {
+    background: $infoMessageBg;
+    border: $infoMessageBorder;
+    border-width: $messageBorderWidth;
+    color: $infoMessageTextColor;
+
+    .p-message-icon {
+      color: $infoMessageIconColor;
+    }
+
+    .p-message-close {
+      color: $infoMessageIconColor;
+    }
+  }
+
+  &.p-message-success {
+    background: $successMessageBg;
+    border: $successMessageBorder;
+    border-width: $messageBorderWidth;
+    color: $successMessageTextColor;
+
+    .p-message-icon {
+      color: $successMessageIconColor;
+    }
+
+    .p-message-close {
+      color: $successMessageIconColor;
+    }
+  }
+
+  &.p-message-warn {
+    background: $warningMessageBg;
+    border: $warningMessageBorder;
+    border-width: $messageBorderWidth;
+    color: $warningMessageTextColor;
+
+    .p-message-icon {
+      color: $warningMessageIconColor;
+    }
+
+    .p-message-close {
+      color: $warningMessageIconColor;
+    }
+  }
+
+  &.p-message-error {
+    background: $errorMessageBg;
+    border: $errorMessageBorder;
+    border-width: $messageBorderWidth;
+    color: $errorMessageTextColor;
+
+    .p-message-icon {
+      color: $errorMessageIconColor;
+    }
+
+    .p-message-close {
+      flex-shrink: 0;
+      color: $errorMessageIconColor;
+    }
+  }
+
+  .p-message-text {
+    font-size: $messageTextFontSize;
+    font-weight: $messageTextFontWeight;
+    word-break: break-word;
+  }
+
+  .p-message-icon {
+    font-size: $messageIconFontSize;
+    margin-right: $inlineSpacing;
+  }
+
+  // overwrite styles
+  &.p-custom-message  {
+    .p-message-wrapper {
+      padding: 0.75rem !important;
+      padding-left: 1rem !important;
+      .p-message-icon {
+        height: 1.5rem;
+        width: 1.5rem;
+        flex: none;
+      }
+      .p-message-text {
+        font-weight: normal;
+        font-size: 0.875rem;
+      }
+    }
+  }
+}

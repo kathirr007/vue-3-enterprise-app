@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "764946154488",
+    "project_id": "brightreturn-4c57d",
+    "storage_bucket": "brightreturn-4c57d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:764946154488:android:2c54ffa22d917d50a28c0d",
+        "android_client_info": {
+          "package_name": "com.mudrantar.brightreturn"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwaPrvDh6985KlhFqVlbVo851d70-m4eM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
