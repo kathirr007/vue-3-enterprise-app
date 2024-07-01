@@ -136,7 +136,7 @@ function showToast() {
     title: 'User',
     actionType: 'Sign in',
     detail: `Welcome back ${currentUser.value ? '' : 'to'} <strong>${
-      fullName(currentUser.value as FullNameObj) || 'Bright Return'
+      fullName(currentUser.value as FullNameObj) || 'App Return'
     }</strong>`
   });
 }
@@ -228,7 +228,7 @@ function gotoPrelogin() {
       <a
         href="https://www.brightreturn.com/"
         target="_blank"
-        title="Bright Return"
+        title="App Return"
       >
         <img
           :src="appData.logoExtended"

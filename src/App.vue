@@ -7,7 +7,7 @@ const isProdBuild = window.location.host.includes('app.');
 
 useHead({
   titleTemplate: (title?: string) =>
-    !title ? 'Bright Return' : `Bright Return | ${title}`,
+    !title ? 'App Return' : `App Return | ${title}`,
 });
 
 if (isProdBuild) {

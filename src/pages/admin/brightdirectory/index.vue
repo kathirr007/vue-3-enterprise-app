@@ -36,7 +36,7 @@ const handlecreateOrUpdateDirectory = (data: BrightDirectory) => {
 </script>
 
 <template>
-  <CommonPage title="Bright Directory">
+  <CommonPage title="App Directory">
     <template v-slot:actions>
       <Button
         class="p-button-rounded p-button-icon-only"

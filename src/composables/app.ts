@@ -301,15 +301,15 @@ export const useBreadcrumbs = createGlobalState(() => {
 export function useAppData() {
   const appData = ref({
     target: 'BrightReturn',
-    appName: 'Bright Return',
+    appName: 'App Return',
     logo: '/images/logos/bright-return.svg',
     logoExtended: '/images/logos/bright-return-2.svg',
     favicon: '/images/logos/bright-return.svg',
     copyright: 'All Rights Reserved - Mudrantar Solutions Pvt Limited',
     currency: 'USD',
     currencySymbol: '$',
-    logoAltText: 'Bright Return',
-    displayName: 'Bright Return',
+    logoAltText: 'App Return',
+    displayName: 'App Return',
     supportEmail: '',
     termsAndConditions: 'https://mudrantar.com/usa/terms-and-conditions.html',
     zohoSupport: ''
@@ -597,7 +597,7 @@ export function useMenuItems(): MenuItem[] {
     },
     {
       name: 'brightdesk',
-      label: 'Bright Desk',
+      label: 'App Desk',
       iconify: true,
       icon: 'fluent:person-support-16-filled',
       iconClass: 'text-2xl',
@@ -1033,7 +1033,7 @@ export function useBreadcrumbsItems(): {
         to: { name: 'admin-administration' }
       },
       {
-        label: 'Bright Directory'
+        label: 'App Directory'
       }
     ],
     'admin-client-billing': [
@@ -1159,7 +1159,7 @@ export function useBreadcrumbsItems(): {
     ],
     'admin-mails': [
       {
-        label: 'Bright Desk'
+        label: 'App Desk'
         // to: { name: 'admin-support' },
       },
       {
@@ -1177,7 +1177,7 @@ export function useBreadcrumbsItems(): {
     ],
     'admin-support': [
       {
-        label: 'Bright Desk'
+        label: 'App Desk'
         // to: { name: 'admin-support' },
       },
       {

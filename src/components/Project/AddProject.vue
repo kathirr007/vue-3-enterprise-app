@@ -708,7 +708,7 @@ watchEffect(() => {
         /> -->
         <img
           src="/images/robot-icon.png"
-          alt="bright assistant robot"
+          alt="app assistant robot"
           class="w-3rem ml-1"
         >
       </div>
@@ -809,7 +809,7 @@ watchEffect(() => {
   <CommonSubscribeDialog
     v-if="subscribeDialog"
     :visible="subscribeDialog"
-    feature="bright assist"
+    feature="app assist"
     @hide="subscribeDialog = false"
   />
 </template>

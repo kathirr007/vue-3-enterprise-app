@@ -10,7 +10,7 @@ const props = defineProps<{
     <div class="text-center">
       <img
         src="/images/robot-icon.png"
-        alt="bright assistant robot"
+        alt="app assistant robot"
         class="w-4rem"
       >
       <p class="font-medium text-xl mt-2">

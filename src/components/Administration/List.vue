@@ -53,7 +53,7 @@ const administrationData = reactive<string[] | any[]>([
   },
   {
     id: 8,
-    name: 'Bright Directory',
+    name: 'App Directory',
     route: 'admin-brightdirectory',
     icon: 'mdi:web'
   },

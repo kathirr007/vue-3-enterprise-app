@@ -1232,7 +1232,7 @@ export default defineComponent({
               /> -->
         <!-- <img
                 src="/images/robot-icon.png"
-                alt="bright assistant robot"
+                alt="app assistant robot"
                 class="w-2rem"
               />
               <span class="font-medium">

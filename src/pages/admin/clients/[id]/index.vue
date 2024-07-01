@@ -726,7 +726,7 @@ export default defineComponent({
       <Icon icon="fluent-emoji:robot" class="ml-1" style="font-size: 2.2rem" />
       <img
         src="/images/robot-icon.png"
-        alt="bright assistant robot"
+        alt="app assistant robot"
         class="w-3rem ml-1"
       />
       <div class="ml-2 text-xl">New Feature Update:</div>

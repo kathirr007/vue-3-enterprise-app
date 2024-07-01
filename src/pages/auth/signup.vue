@@ -19,7 +19,7 @@ function handleLogin() {
       <a
         href="https://www.brightreturn.com/"
         target="_blank"
-        title="Bright Return"
+        title="App Return"
       >
         <img
           :src="appData.logoExtended"

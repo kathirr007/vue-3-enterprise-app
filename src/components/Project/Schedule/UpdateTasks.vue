@@ -347,7 +347,7 @@ watch(
           <img
             v-if="data?.isGeneratedByBrightAssist"
             src="/images/robot-icon.png"
-            alt="bright assistant robot"
+            alt="app assistant robot"
             class="w-3rem ml-1"
           >
           <Avatar

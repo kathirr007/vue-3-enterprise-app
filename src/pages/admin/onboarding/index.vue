@@ -163,7 +163,7 @@ function handleBack(stepName: OnboardingSteps) {
       <a
         href="https://www.brightreturn.com/"
         target="_blank"
-        title="Bright Return"
+        title="App Return"
         class="mx-auto mt-4 lg:mt-0"
       >
         <img

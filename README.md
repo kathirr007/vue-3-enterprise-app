@@ -1,4 +1,4 @@
-# brightreturn-web-ui
+# Vue-3-Enterprise-App
 
 This template should help get you started developing with Vue 3 in Vite.
 

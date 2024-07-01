@@ -187,7 +187,7 @@ watchEffect(() => {
         /> -->
         <img
           src="/images/robot-icon.png"
-          alt="bright assistant robot"
+          alt="app assistant robot"
           class="w-3rem ml-1"
         >
       </div>
@@ -200,8 +200,8 @@ watchEffect(() => {
         <span
           v-html="
             canAccessAllMenu
-              ? ' To access <b>Bright Assistant</b>, please upgrade your subscription plan.'
-              : 'To access <b>Bright Assistant</b>, Please contact your admin to upgrade your subscription plan.'
+              ? ' To access <b>App Assistant</b>, please upgrade your subscription plan.'
+              : 'To access <b>App Assistant</b>, Please contact your admin to upgrade your subscription plan.'
           "
         />
       </Message>

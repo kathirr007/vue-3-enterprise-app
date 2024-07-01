@@ -209,7 +209,7 @@ export const ProjectCreatePayloadSchema = object({
   extensionDate: string().optional().nullable().label('Extension Date'),
   dueInDays: number().optional().nullable().label('dueInDays'),
   reviewerId: string().optional().nullable().label('Reviewer'),
-  isBrightAssist: boolean().optional().nullable().label('Bright Assist'),
+  isBrightAssist: boolean().optional().nullable().label('App Assist'),
   pipelineStageId: string().optional().nullable().label('Project Stage')
 });
 

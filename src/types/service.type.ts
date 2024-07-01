@@ -54,7 +54,7 @@ export const CreateServiceSchema = object({
     .label('Description'),
   // description: string().optional().label('Description'),
   // estimatedTime: number().optional().label('Budget Time'),
-  isBrightAssist: boolean().optional().nullable().label('Bright Assist'),
+  isBrightAssist: boolean().optional().nullable().label('App Assist'),
 });
 
 export interface CreatePipelineStage {

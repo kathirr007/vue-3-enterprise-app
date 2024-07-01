@@ -50,7 +50,7 @@ function downloadFile(path: string, name: string) {
               <a
                 href="https://www.brightreturn.com/"
                 target="_blank"
-                title="Bright Return"
+                title="App Return"
               >
                 <img
                   src="/images/logos/bright-return-2.svg"

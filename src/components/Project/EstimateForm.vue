@@ -206,7 +206,7 @@ const onSubmit = async (values: Record<string, any>) => {
     <template #note>
       <div class="text-base my-3">
         Notes : According to final amount estimate will be generated but this
-        amount will not be updated in Bright Return, as we are calculating based
+        amount will not be updated in App Return, as we are calculating based
         on type and time spent.
       </div>
     </template>

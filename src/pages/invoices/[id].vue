@@ -5,7 +5,7 @@ import axios from 'axios';
 
 useHead({
   titleTemplate: (title?: string) =>
-    !title ? 'Bright Return Invoice' : `Bright Return Invoice | ${title}`,
+    !title ? 'App Return Invoice' : `App Return Invoice | ${title}`,
 });
 
 const { paperize } = usePaperizer('invoiceWrapper', {
@@ -142,6 +142,7 @@ export default defineComponent({
 .content-wrapper {
   max-width: 800px;
 }
+
 .webform-card {
   height: calc(100vh - 280px);
 }
