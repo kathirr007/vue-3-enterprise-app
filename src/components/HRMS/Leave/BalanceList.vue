@@ -32,7 +32,7 @@ const {
   currentPage,
   queryFilters,
   querySortBy,
-  queryKeys,
+  queryKeys
 } = useDataTableUtils();
 const { getAll: getAllLeaveBalances } = useHrmsLeaveBalance();
 const { canDo } = usePermissions();
@@ -65,7 +65,7 @@ const { isFetching: loadingLeaveBalance, data: leaveBalances } = useQuery(
     ...queryKeys,
     selectedUsers,
     selectedYear,
-    selectedLeaveType,
+    selectedLeaveType
   ],
   () => {
     applyFilter('Is Active', undefined);
@@ -88,7 +88,7 @@ const { isFetching: loadingLeaveBalance, data: leaveBalances } = useQuery(
       page: currentPage.value,
       limit: currentLimit.value,
       filters: leavebalanceFilters,
-      sortBy: querySortBy.value,
+      sortBy: querySortBy.value
     });
   }
 );
@@ -104,22 +104,22 @@ watchEffect(() => {
   <div class="flex align-items-center pb-3 gap-2">
     <MultiSelect
       v-model="selectedUsers"
-      optionLabel="name"
+      option-label="name"
       :options="usersList"
       :loading="loadingUsers"
       placeholder="Select a user"
-      :maxSelectedLabels="2"
-      showClear
+      :max-selected-labels="2"
+      show-clear
       filter
     />
     <MultiSelect
       v-model="selectedLeaveType"
-      optionLabel="name"
+      option-label="name"
       :options="leaveTypes"
       :loading="loadingLeaveTypes"
       placeholder="Select a leave type"
-      :maxSelectedLabels="2"
-      showClear
+      :max-selected-labels="2"
+      show-clear
       filter
     />
     <Dropdown
@@ -148,9 +148,11 @@ watchEffect(() => {
       </template>
     </Column>
     <Column header="Total Balance" class="text-center" field="days" />
-    <Column class="text-center w-2" v-if="canDo('leave', 'edit')">
+    <Column v-if="canDo('leave', 'edit')" class="text-center w-2">
       <template #header>
-        <div class="w-full text-center">Actions</div>
+        <div class="w-full text-center">
+          Actions
+        </div>
       </template>
       <template #body="slotProps">
         <div class="md:w-full w-6rem">
@@ -178,7 +180,9 @@ watchEffect(() => {
       </template>
     </Column>
     <template #empty>
-      <div class="text-center">No Leave Balance Found</div>
+      <div class="text-center">
+        No Leave Balance Found
+      </div>
     </template>
   </DataTable>
 </template>

@@ -1,5 +1,4 @@
-import type { InferType } from 'yup';
-import { object, string, boolean, array } from 'yup';
+import { array, boolean, object, string } from 'yup';
 import type { Tag } from '@/types/tags.type';
 
 export interface CreateSmartFolder {
@@ -53,16 +52,16 @@ export interface SmartFolder {
   }[];
 }
 
-export type CreateSmartFolderPayload = {
+export interface CreateSmartFolderPayload {
   name: string;
   clientReadable?: boolean;
   data: [];
-};
+}
 
 export const SmartFolderCreatePayloadSchema = object({
   name: string().required().min(3).label('Folder Name'),
   description: string().optional().max(255).nullable().label('Description'),
-  clientReadable: boolean().optional().label('Client Readable'),
+  clientReadable: boolean().optional().label('Client Readable')
 });
 
 export const SmartFolderSettingPayloadSchema = object().shape({
@@ -75,7 +74,7 @@ export const SmartFolderSettingPayloadSchema = object().shape({
         .required()
         .nullable()
         .min(1)
-        .label('Condition Value'),
+        .label('Condition Value')
     })
-  ),
+  )
 });

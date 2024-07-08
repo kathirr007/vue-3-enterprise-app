@@ -18,15 +18,15 @@ const selectedClients = ref<ImportedClient[]>([]);
 
 <template>
   <DataTable
-    :value="clients"
-    responsiveLayout="scroll"
-    breakpoint="768px"
-    :globalFilterFields="['DisplayName']"
-    :paginator="true"
     v-model:filters="filters"
-    :rows="15"
-    :alwaysShowPaginator="false"
     v-model:selection="selectedClients"
+    :value="clients"
+    responsive-layout="scroll"
+    breakpoint="768px"
+    :global-filter-fields="['DisplayName']"
+    :paginator="true"
+    :rows="15"
+    :always-show-paginator="false"
     :page-link-size="isLarge ? 5 : 3"
   >
     <template #header>
@@ -44,16 +44,18 @@ const selectedClients = ref<ImportedClient[]>([]);
             v-if="selectedClients.length"
             :label="`Import Clients [${selectedClients.length}]`"
             class="p-button-outlined"
-            @click="emit('clients', selectedClients)"
             :loading="loading"
+            @click="emit('clients', selectedClients)"
           />
         </span>
       </div>
     </template>
     <template #empty>
-      <div class="text-center">No Clients Found</div>
+      <div class="text-center">
+        No Clients Found
+      </div>
     </template>
-    <Column selectionMode="multiple" />
+    <Column selection-mode="multiple" />
     <Column field="DisplayName" header="Name" :sortable="true" />
     <Column header="Email">
       <template #body="slotProps">

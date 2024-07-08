@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { stripeSchema, type StripePayload } from '@/types/integrations.type';
+import { type StripePayload, stripeSchema } from '@/types/integrations.type';
 import type { SchemaForm, SchemaFormRef } from '@/types/schemaform.type';
 import InputText from 'primevue/inputtext';
 import { useMutation, useQuery } from 'vue-query';
-const { storeStripeKey, getOrgIntegration } = useIntegrations();
 
 const emit = defineEmits<{
   (e: 'success'): void;
 }>();
+
+const { storeStripeKey, getOrgIntegration } = useIntegrations();
 
 const { initToast } = useToasts();
 const formRef = ref<SchemaFormRef | null>(null);
@@ -18,7 +19,7 @@ const { data: stripeData } = useQuery(
   {
     onSuccess: (data: { id: string; credentials: any }) => {
       formRef.value?.setValues({ ...data.credentials });
-    },
+    }
   }
 );
 
@@ -33,15 +34,15 @@ const { mutateAsync: setStripeKey, isLoading: integratingStripe } = useMutation(
         summary: 'Stripe Integration',
         detail: `Stripe Integration ${
           stripeData.value ? 'updated' : 'created'
-        } successfully`,
+        } successfully`
       });
       emit('success');
-    },
+    }
   }
 );
-const onSubmit = async (values: Record<string, any>) => {
+async function onSubmit(values: Record<string, any>) {
   await setStripeKey(values as StripePayload);
-};
+}
 
 const formData = computed<SchemaForm>(() => ({
   fields: [
@@ -53,13 +54,13 @@ const formData = computed<SchemaForm>(() => ({
       autocomplete: 'off',
       type: 'apiKey',
       helpText: 'Please provide your Stripe Key',
-      disabled: !!stripeData.value?.credentials,
-    },
+      disabled: !!stripeData.value?.credentials
+    }
   ],
   validationSchema: stripeSchema,
   initialValues: stripeData.value ? stripeData.value : undefined,
   btnText: 'Submit',
-  hidePrimaryBtn: !!stripeData.value?.credentials,
+  hidePrimaryBtn: !!stripeData.value?.credentials
 }));
 </script>
 
@@ -71,14 +72,12 @@ const formData = computed<SchemaForm>(() => ({
     class="m-0 p-custom-message"
   >
     To change the credentials please contact support at
-    <a class="font-semibold" href="mailto:help@brightreturn.com"
-      >help@brightreturn.com</a
-    >.
+    <a class="font-semibold" href="mailto:help@brightreturn.com">help@brightreturn.com</a>.
   </Message>
   <CommonSchemaForm
     ref="formRef"
     :data="formData"
     :primary-btn-loading="integratingStripe"
     @submit="onSubmit"
-  ></CommonSchemaForm>
+  />
 </template>

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useQuery } from 'vue-query';
-import type { User } from '@/types/teams.type';
 
 const { metaFilter } = useUtilityFns();
 const { currentUser, isPortalUser } = useCurrentUserData();
@@ -10,12 +9,13 @@ const { data: orgData, isLoading: orgLoading } = useQuery('org-data', () => {
   return useOrgDetails();
 });
 </script>
+
 <template>
   <TabView
     ref="tabRef"
     v-model:activeIndex="activeTabIndex"
-    @tab-change="handleTabChange"
     lazy
+    @tab-change="handleTabChange"
   >
     <TabPanel header="Audit Log">
       <CommonPage title="Audit Log">
@@ -38,7 +38,7 @@ const { data: orgData, isLoading: orgLoading } = useQuery('org-data', () => {
                 ? metaFilter(orgData?.meta, 'autoLogoutInterval')
                 : null
             "
-            isSetting
+            is-setting
             :user-id="currentUser.id"
           />
 
@@ -53,7 +53,7 @@ const { data: orgData, isLoading: orgLoading } = useQuery('org-data', () => {
             <CommonLoading v-if="orgLoading" />
             <div v-else-if="orgData" class="grid formgrid">
               <div class="col-12 py-2 md:col-6">
-                <AuditLogOrgMFA :orgDetails="{ ...orgData }" />
+                <AuditLogOrgMFA :org-details="{ ...orgData }" />
               </div>
             </div>
           </template>

@@ -1,10 +1,10 @@
 import type {
   AttachmentContentType,
-  AttachmentExtension,
+  AttachmentExtension
 } from './attachment.type';
 import type { EntityObj } from './common.type';
 import type { InferType } from 'yup';
-import { object, string, boolean } from 'yup';
+import { boolean, object, string } from 'yup';
 import type { Tag } from './tags.type';
 
 export interface DocumentFile {
@@ -90,7 +90,7 @@ export const DocumentCreatePayloadSchema = object({
   clientExistingWritable: boolean().optional(),
   clientReadable: boolean().optional(),
   clientWritable: boolean().optional(),
-  securedFolder: boolean().optional(),
+  securedFolder: boolean().optional()
 });
 
 export type DocumentCreatePayload = InferType<

@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import type { ContentJSON } from '@/types/common.type';
 import { AddDescriptionSchema } from '@/types/service.type';
-import { useField, useForm, Field as VField } from 'vee-validate';
+import { Field as VField, useField, useForm } from 'vee-validate';
 
 const props = defineProps<{
   currentDesc?: string;
@@ -14,9 +13,9 @@ const { handleSubmit, errors, isSubmitting, meta, validate, values } = useForm({
   initialValues: {
     description: isJsonStringValid(props.currentDesc)
       ? JSON.parse(props.currentDesc as string)?.content
-      : props.currentDesc,
+      : props.currentDesc
   },
-  validationSchema: AddDescriptionSchema,
+  validationSchema: AddDescriptionSchema
 });
 
 const { value: description } = useField<string>('description');
@@ -27,41 +26,41 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-  <form @submit="onSubmit" class="grid p-fluid formgrid">
+  <form class="grid p-fluid formgrid" @submit="onSubmit">
     <div class="field col-12 md:col-12">
       <label for="description" class="block font-medium text-900">
         Description
         <span class="text-red-500">*</span>
       </label>
-      <VField name="description" v-slot="{ handleChange, value }">
+      <VField v-slot="{ handleChange, value }" name="description">
         <Editor
-          @update:model-value="handleChange"
-          @text-change="(e: any) => handleChange(e.htmlValue, true)"
           :model-value="`${value ? value : ''}`"
           editor-style="height: 150px"
+          @update:model-value="handleChange"
+          @text-change="(e: any) => handleChange(e.htmlValue, true)"
           @blur="validate()"
         >
           <template #toolbar>
             <span class="ql-formats">
-              <button class="ql-bold"></button>
-              <button class="ql-italic"></button>
-              <button class="ql-underline"></button>
-              <button class="ql-strike"></button>
+              <button class="ql-bold" />
+              <button class="ql-italic" />
+              <button class="ql-underline" />
+              <button class="ql-strike" />
             </span>
             <span class="ql-formats">
-              <button class="ql-list" value="ordered"></button>
-              <button class="ql-list" value="bullet"></button>
+              <button class="ql-list" value="ordered" />
+              <button class="ql-list" value="bullet" />
             </span>
           </template>
         </Editor>
       </VField>
       <transition mode="out-in" name="field-slide-down">
         <FormFeedbackMessage
-          :success-class="'font-medium'"
+          success-class="font-medium"
           :errors="errors"
           :feedback="false"
           :values="values"
-          :errorKey="'description'"
+          error-key="description"
         />
       </transition>
     </div>
@@ -73,7 +72,7 @@ const onSubmit = handleSubmit(async (values) => {
         label="Submit"
         :disabled="!meta.valid"
         :loading="isSubmitting"
-      ></Button>
+      />
     </div>
   </form>
 </template>

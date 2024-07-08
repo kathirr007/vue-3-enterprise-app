@@ -3,6 +3,7 @@ import MultiSelect from 'primevue/multiselect';
 import type { UnPlannedProject } from '@/types/project.type';
 import type { SchemaForm } from '@/types/schemaform.type';
 import { ProjectUnScheduledSchemaPayload } from '@/types/project.type';
+
 const props = defineProps<{
   unPlannedClient: UnPlannedProject[];
   loading?: boolean;
@@ -28,11 +29,11 @@ const formData = shallowRef<SchemaForm>({
       placeholder: 'Select Client',
       formGridClass: 'col-120. md:col-12',
       display: 'chip',
-      required: true,
-    },
+      required: true
+    }
   ],
   validationSchema: ProjectUnScheduledSchemaPayload,
-  btnText: 'Submit',
+  btnText: 'Submit'
 });
 
 const { findFormIndex, updateOptions } = useSchemaForm(formData);
@@ -43,24 +44,24 @@ watchEffect(async () => {
     updateOptions(props.unPlannedClient, clientsIndex);
   }
 });
-const onSubmit = async (values: Record<string, unknown>) => {
+async function onSubmit(values: Record<string, unknown>) {
   openActionDailog.value = true;
   selectedClient.value = values;
-};
-const handleAction = () => {
+}
+function handleAction() {
   if (selectedClient.value) {
     const payload = selectedClient.value.clients;
     emit('submit', payload);
   }
-};
+}
 </script>
 
 <template>
   <CommonSchemaForm
     ref="formRef"
     :data="formData"
-    @submit="onSubmit"
     :primary-btn-loading="loading"
+    @submit="onSubmit"
   />
   <CommonConfirmRemoveDialog
     v-if="openActionDailog"

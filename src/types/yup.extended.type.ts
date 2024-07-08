@@ -5,11 +5,11 @@ declare module 'yup' {
   interface StringSchema<
     TType extends Maybe<string> = string | undefined,
     TContext extends AnyObject = AnyObject,
-    TOut extends TType = TType,
+    TOut extends TType = TType
   > extends yupExtended.BaseSchema<TType, TContext, TOut> {
     validatePhone({
       countryCode,
-      validationType,
+      validationType
     }: {
       countryCode?: string;
       validationType?: 'mobile' | 'phone';

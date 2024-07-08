@@ -7,7 +7,7 @@ const props = withDefaults(
   }>(),
   {
     deletable: true,
-    draggable: false,
+    draggable: false
   }
 );
 const emits = defineEmits<{
@@ -26,10 +26,10 @@ const confirmRemoveRow = ref(false);
     />
     <template v-if="!$slots.default">
       <div
-        class="field col-12 py-2"
-        :class="`md:col-${12 / cols}`"
         v-for="(col, index) in cols"
         :key="index"
+        class="field col-12 py-2"
+        :class="`md:col-${12 / cols}`"
       >
         <slot />
       </div>
@@ -37,17 +37,17 @@ const confirmRemoveRow = ref(false);
     <slot />
     <i
       v-if="deletable"
-      class="pi pi-minus-circle transform text-red-500 rounded-lg cursor-pointer h-1rem w-1rem absolute right-6"
-      @click="confirmRemoveRow = true"
       v-tooltip="'Remove Row'"
+      class="pi pi-minus-circle transform text-red-500 rounded-lg cursor-pointer h-1rem w-1rem absolute right-6"
       tabindex="0"
       role="link"
+      @click="confirmRemoveRow = true"
     />
   </div>
   <CommonConfirmRemoveDialog
     v-if="confirmRemoveRow"
     v-model:visible="confirmRemoveRow"
-    :title="`Remove Field`"
+    title="Remove Field"
     @confirm="emits('clearRow')"
     @hide="confirmRemoveRow = false"
   >

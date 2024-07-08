@@ -8,7 +8,7 @@ const props = withDefaults(
   }>(),
   {
     level: 1,
-    label: null,
+    label: null
   }
 );
 
@@ -16,15 +16,15 @@ const slots = useSlots();
 
 const isValidLevel = computed(() => props.level >= 1 && props.level <= 6);
 
-const render = () => {
+function render() {
   return !isValidLevel.value
     ? null
     : h(
         `h${props.level}`,
         { class: ['text-primary m-0', props.headingClasses, props.alignClass] },
         props.label || slots.default
-      );
-};
+    );
+}
 </script>
 
 <template>

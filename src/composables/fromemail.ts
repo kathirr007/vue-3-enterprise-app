@@ -1,7 +1,7 @@
 import $api from '@/plugins/api';
 import type { FromEmail, FromEmailCreateInput } from '@/types/fromemail.type';
 
-export const useFromEmail = () => {
+export function useFromEmail() {
   const getAll = async () => {
     const { data } = await $api.get<FromEmail[]>('smtp-from-email');
     return data;
@@ -29,6 +29,6 @@ export const useFromEmail = () => {
     getAll,
     remove,
     createOne,
-    update,
+    update
   };
-};
+}

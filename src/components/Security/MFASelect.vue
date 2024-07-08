@@ -2,7 +2,7 @@
 import type {
   CreateMfaDto,
   MFAProvider,
-  MFASecret,
+  MFASecret
 } from '@/types/myaccount.type';
 import { useMutation } from 'vue-query';
 
@@ -28,27 +28,28 @@ const { mutateAsync: handleMFASecret, isLoading } = useMutation(
       if (data) {
         emit('generateMfaSecret', {
           ...data,
-          mfaProvider: mfaProvider.value as MFAProvider,
+          mfaProvider: mfaProvider.value as MFAProvider
         });
       }
-    },
+    }
   }
 );
 
-const initMFAProcess = async (provider: MFAProvider) => {
+async function initMFAProcess(provider: MFAProvider) {
   mfaProvider.value = provider;
   const payload = {
     email: props.email,
-    provider,
+    provider
   };
   if (!isMFAEnabled.value) {
     await handleMFASecret(payload);
   }
-};
+}
 </script>
+
 <script lang="ts">
 export default defineComponent({
-  inheritAttrs: false,
+  inheritAttrs: false
 });
 </script>
 
@@ -73,7 +74,9 @@ export default defineComponent({
             class="flex-none text-7xl md:text-8xl"
             icon="fa6-solid:envelope"
           />
-          <p class="text-lg font-medium">Email</p>
+          <p class="text-lg font-medium">
+            Email
+          </p>
         </Button>
       </div>
       <div class="text-center w-4">
@@ -87,7 +90,9 @@ export default defineComponent({
         >
           <!-- <i class="pi pi-spin pi-spinner text-4xl" v-if="isLoading"></i> -->
           <Icon class="flex-none text-7xl md:text-8xl" icon="fa6-solid:key" />
-          <p class="text-lg font-medium">MFA</p>
+          <p class="text-lg font-medium">
+            MFA
+          </p>
         </Button>
       </div>
     </template>

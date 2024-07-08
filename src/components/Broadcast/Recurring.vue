@@ -2,7 +2,7 @@
 import type {
   BroadcastRecurring,
   Interval,
-  Recurring,
+  Recurring
 } from '@/types/broadcast.type';
 import dayjs from 'dayjs';
 import MultiSelect from 'primevue/multiselect';
@@ -22,17 +22,17 @@ const isClearDays = ref(true);
 
 const initialValues = {
   daily: {
-    selectedTime: '',
+    selectedTime: ''
   },
   weekly: {
     weeks: [],
-    selectedTime: '',
+    selectedTime: ''
   },
   monthly: {
     months: [],
     days: [],
-    selectedTime: '',
-  },
+    selectedTime: ''
+  }
 };
 
 const recurring = ref<BroadcastRecurring>(structuredClone(initialValues));
@@ -46,7 +46,7 @@ watch(
   }
 );
 
-const setInitailValues = (val: Recurring) => {
+function setInitailValues(val: Recurring) {
   if (val) {
     isClearDays.value = false;
     switch (props.interval) {
@@ -78,7 +78,7 @@ const setInitailValues = (val: Recurring) => {
         break;
     }
   }
-};
+}
 
 onMounted(() => {
   if (props.recurringBroadcast) {
@@ -94,14 +94,15 @@ watchEffect(() => {
 
 const getDaysOptions = computed(() => {
   if (recurring.value.monthly.months.length > 0) {
-    const selectedMonths = monthOptions.filter((month) =>
+    const selectedMonths = monthOptions.filter(month =>
       recurring.value.monthly.months.includes(month.value)
     );
     const minimumDays = selectedMonths.reduce((acc, curr) => {
       if (!acc) {
         return curr.maxDays;
       }
-      if (acc >= curr.maxDays) return curr.maxDays;
+      if (acc >= curr.maxDays)
+        return curr.maxDays;
 
       return acc;
     }, 0);
@@ -135,7 +136,7 @@ watch(
       <label class="block font-medium text-900">Time</label>
       <Calendar
         v-model="recurring.daily.selectedTime"
-        timeOnly
+        time-only
         placeholder="HH:MM"
       />
     </div>
@@ -148,16 +149,16 @@ watch(
     <MultiSelect
       v-model="recurring.weekly.weeks"
       :options="weekOptions"
-      optionLabel="label"
-      optionValue="value"
-      :placeholder="`Select day(s)`"
+      option-label="label"
+      option-value="value"
+      placeholder="Select day(s)"
       :max="7"
-      :maxSelectedLabels="2"
+      :max-selected-labels="2"
     />
     <span>Day</span>
     <Calendar
       v-model="recurring.weekly.selectedTime"
-      timeOnly
+      time-only
       placeholder="HH:MM"
     />
   </div>
@@ -169,24 +170,24 @@ watch(
     <MultiSelect
       v-model="recurring.monthly.months"
       :options="monthOptions"
-      optionLabel="label"
-      optionValue="value"
-      :placeholder="`Select Month(s)`"
+      option-label="label"
+      option-value="value"
+      placeholder="Select Month(s)"
       :max="7"
-      :maxSelectedLabels="2"
+      :max-selected-labels="2"
     />
     <MultiSelect
+      v-model="recurring.monthly.days"
       :options="getDaysOptions"
       :disabled="!getDaysOptions.length"
-      :option-label="'name'"
-      :option-value="'value'"
+      option-label="name"
+      option-value="value"
       placeholder="Select Day(s)"
-      v-model="recurring.monthly.days"
-      :maxSelectedLabels="2"
+      :max-selected-labels="2"
     />
     <Calendar
       v-model="recurring.monthly.selectedTime"
-      timeOnly
+      time-only
       placeholder="HH:MM"
     />
   </div>

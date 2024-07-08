@@ -7,51 +7,53 @@ const mailsData = [
   {
     name: 'Inbox',
     description: 'Inbox messages',
-    route: 'inbox',
+    route: 'inbox'
   },
   {
     name: 'Sent Items',
     description: 'Sent messages',
-    route: 'sent-items',
+    route: 'sent-items'
   },
   {
     name: 'Archived',
     description: 'Archived messages',
-    route: 'archived',
-  },
+    route: 'archived'
+  }
 ];
 
 const filters = ref({
   global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-  name: { value: null, matchMode: FilterMatchMode.IN },
+  name: { value: null, matchMode: FilterMatchMode.IN }
 });
 </script>
 
 <template>
   <DataTable
-    :value="mailsData"
-    responsiveLayout="scroll"
-    breakpoint="768px"
     v-model:filters="filters"
-    :globalFilterFields="['name']"
+    :value="mailsData"
+    responsive-layout="scroll"
+    breakpoint="768px"
+    :global-filter-fields="['name']"
     :paginator="true"
     :rows="10"
-    :alwaysShowPaginator="false"
+    :always-show-paginator="false"
     :page-link-size="3"
-    filterDisplay="menu"
+    filter-display="menu"
   >
     <template #empty>
-      <div class="text-center">No mails found.</div>
+      <div class="text-center">
+        No mails found.
+      </div>
     </template>
     <Column
       header="Name"
       class="w-2"
       :sortable="true"
-      sortField="name"
-      :showFilterMatchModes="false"
-      :filterMenuStyle="{ width: '14rem' }"
+      sort-field="name"
+      :show-filter-match-modes="false"
+      :filter-menu-style="{ width: '14rem' }"
       style="min-width: 14rem"
-      filterField="name"
+      filter-field="name"
     >
       <template #body="{ data }">
         <router-link

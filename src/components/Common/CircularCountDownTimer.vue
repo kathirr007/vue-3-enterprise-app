@@ -21,7 +21,7 @@ const props = withDefaults(defineProps<CountDownCircle>(), {
   valueFontSize: 20,
   labelFontSize: 16,
   labelPosition: 'bottom',
-  circles: () => [],
+  circles: () => []
 });
 
 const emit = defineEmits<{
@@ -30,7 +30,7 @@ const emit = defineEmits<{
   (e: 'update', data: any): void;
 }>();
 
-const getCircleValues = (circles: any[]) => {
+function getCircleValues(circles: any[]) {
   const values: any = {};
   for (const circle of circles) {
     values[circle.id] = {
@@ -38,11 +38,11 @@ const getCircleValues = (circles: any[]) => {
       stepLength: circle.stepLength || 1,
       steps: circle.steps,
       startValue: circle.startValue || 0,
-      dependentCircles: circle.dependentCircles || [],
+      dependentCircles: circle.dependentCircles || []
     };
   }
   return values;
-};
+}
 
 const values = ref(getCircleValues(props.circles));
 const timeOutId = ref();
@@ -52,24 +52,26 @@ function updateCircleValue(circleId: string | number) {
   const circle = values.value[circleId];
 
   if (
-    circle.stepLength > 0 &&
-    circle.value + circle.stepLength >= circle.steps
+    circle.stepLength > 0
+    && circle.value + circle.stepLength >= circle.steps
   ) {
-    circle.value =
-      ((circle.value + circle.stepLength) % circle.steps) + circle.startValue;
+    circle.value
+      = ((circle.value + circle.stepLength) % circle.steps) + circle.startValue;
     for (const dc of circle.dependentCircles) {
       updateCircleValue(dc);
     }
-  } else if (
-    circle.stepLength < 0 &&
-    circle.value + circle.stepLength < circle.startValue
+  }
+  else if (
+    circle.stepLength < 0
+    && circle.value + circle.stepLength < circle.startValue
   ) {
-    circle.value =
-      ((circle.value + circle.stepLength) % circle.steps) + circle.steps;
+    circle.value
+      = ((circle.value + circle.stepLength) % circle.steps) + circle.steps;
     for (const dc of circle.dependentCircles) {
       updateCircleValue(dc);
     }
-  } else {
+  }
+  else {
     circle.value += circle.stepLength;
   }
 }
@@ -83,7 +85,8 @@ function shouldStop() {
       }
     }
     return stop;
-  } else {
+  }
+  else {
     return false;
   }
 }
@@ -108,7 +111,7 @@ function getCircleProps(circle: any) {
     labelFontSize: circle.labelFontSize,
     steps: circle.steps,
     label: circle.label,
-    labelPosition: circle.labelPosition,
+    labelPosition: circle.labelPosition
   };
 }
 function startTimer() {
@@ -126,13 +129,14 @@ function nextStep() {
     const dt = Date.now() - expected.value;
     expected.value += props.interval;
     timeOutId.value = setTimeout(nextStep, Math.max(0, props.interval - dt));
-  } else {
+  }
+  else {
     emit('finished');
   }
 }
 
 defineExpose({
-  startTimer,
+  startTimer
 });
 
 watch(
@@ -150,12 +154,11 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div :class="['circles__container', ...containerClasses]">
+  <div class="circles__container" :class="[...containerClasses]">
     <div
       v-for="(circle, index) in circles"
       :key="index"
-      :class="[
-        'circle__item',
+      class="circle__item" :class="[
         ...(circle.hasOwnProperty('classList')
           ? circle.classList
           : circleClasses),

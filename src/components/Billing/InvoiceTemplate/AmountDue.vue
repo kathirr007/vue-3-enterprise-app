@@ -61,7 +61,7 @@ const { getInlCurrencyNumber } = useVueFilters();
                   margin: 0 auto;
                 "
               >
-                <!-- Invoice block start-->
+                <!-- Invoice block start -->
                 <table
                   border="0"
                   cellspacing="0"
@@ -155,7 +155,7 @@ const { getInlCurrencyNumber } = useVueFilters();
                               >
                                 {{
                                   getInlCurrencyNumber(
-                                    invoiceTemplateData.templateData.dueAmount
+                                    invoiceTemplateData.templateData.dueAmount,
                                   )
                                 }}
                               </td>
@@ -166,7 +166,7 @@ const { getInlCurrencyNumber } = useVueFilters();
                     </tr>
                   </tbody>
                 </table>
-                <!-- Invoice block end-->
+                <!-- Invoice block end -->
               </td>
             </tr>
           </table>

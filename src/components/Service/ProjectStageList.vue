@@ -18,36 +18,38 @@ const { data: projectStages, isLoading: gettingStages } = useQuery(
 const { mutateAsync: removeStage } = useMutation((id: string) => remove(id), {
   onSuccess: () => {
     queryClient.invalidateQueries('project-stages');
-  },
+  }
 });
 
-const handleEdit = (data: ProjectStage) => {
+function handleEdit(data: ProjectStage) {
   selectedStage.value = data;
   isStageUpdate.value = true;
-};
+}
 
-const handleDelete = (data: ProjectStage) => {
+function handleDelete(data: ProjectStage) {
   selectedStage.value = data;
   isStageDelete.value = true;
-};
+}
 </script>
 
 <template>
   <DataTable
     :value="projectStages?.results"
     :loading="gettingStages"
-    responsiveLayout="scroll"
+    responsive-layout="scroll"
     breakpoint="768px"
     :paginator="true"
     :rows="15"
-    :alwaysShowPaginator="false"
+    :always-show-paginator="false"
     :page-link-size="isLarge ? 5 : 3"
   >
     <template #empty>
-      <div class="text-center">No project stages found.</div>
+      <div class="text-center">
+        No project stages found.
+      </div>
     </template>
-    <Column class="w-6" field="name" header="Name"></Column>
-    <Column field="statusName" header="Status"> </Column>
+    <Column class="w-6" field="name" header="Name" />
+    <Column field="statusName" header="Status" />
     <Column class="w-2" header="Actions">
       <template #body="{ data }">
         <div v-if="data.orgId" class="flex gap-2">
@@ -68,18 +70,18 @@ const handleDelete = (data: ProjectStage) => {
   </DataTable>
 
   <Dialog
-    :modal="true"
-    appendTo="body"
     v-model:visible="isStageUpdate"
+    :modal="true"
+    append-to="body"
     :breakpoints="defaultBreakpoints"
     :style="{ width: '40vw' }"
-    :contentClass="'border-round-bottom-md'"
+    content-class="border-round-bottom-md"
     header="Create Project Stage"
     @hide="isStageUpdate = false"
   >
     <ServiceStageCreateUpdate
-      @success="isStageUpdate = false"
       :project-stage="selectedStage"
+      @success="isStageUpdate = false"
     />
   </Dialog>
 
@@ -89,6 +91,7 @@ const handleDelete = (data: ProjectStage) => {
     title="Confirm Delete Project Stage"
     @confirm="removeStage(selectedStage?.id as string)"
     @hide="isStageDelete = false"
-    >Are you sure you want to delete {{ selectedStage?.name }}?
+  >
+    Are you sure you want to delete {{ selectedStage?.name }}?
   </CommonConfirmRemoveDialog>
 </template>

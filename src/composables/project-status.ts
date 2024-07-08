@@ -1,7 +1,7 @@
 import $api from '@/plugins/api';
 import type {
-  ProjectStatus,
   CreateProjectStatusPayload,
+  ProjectStatus
 } from '@/types/project.type';
 
 export function useProjectStatus() {
@@ -22,7 +22,7 @@ export function useProjectStatus() {
     const { data } = await $api.get<ProjectStatus[]>(baseUrl);
     return data.map((status: ProjectStatus) => ({
       ...status,
-      statusName: getStatusName(status.name),
+      statusName: getStatusName(status.name)
     }));
   };
 
@@ -57,6 +57,6 @@ export function useProjectStatus() {
     getOne,
     create,
     update,
-    remove,
+    remove
   };
 }

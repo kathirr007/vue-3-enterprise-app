@@ -11,6 +11,6 @@ export default defineConfig({
   locales: { en },
   locale: 'en',
   rules: {
-    validate_phone,
-  },
+    validate_phone
+  }
 });

@@ -1,13 +1,14 @@
 <script setup lang="ts">
 // import type { SchemaForm } from '@/types/schemaform.type';
-import { useQuery, useQueryClient, useMutation } from 'vue-query';
+import { useMutation, useQuery, useQueryClient } from 'vue-query';
 
 import type { EntityType } from '@/types/tasks.type';
 import { Field as VField } from 'vee-validate';
 import type { DropdownFilterEvent } from 'primevue/dropdown';
 import Dropdown from 'primevue/dropdown';
-import type { Tag, TagType, TagCreatePayload } from '@/types/tags.type';
+import type { Tag, TagCreatePayload, TagType } from '@/types/tags.type';
 import { TagCreatePayloadSchema } from '@/types/tags.type';
+
 const props = defineProps<{
   id?: string;
   tagData?: Tag[];
@@ -45,33 +46,33 @@ const { meta, values, errors } = useForm({
   validationSchema: TagCreatePayloadSchema,
   validateOnMount: false,
   initialValues: {
-    isDocument: props.isUploader,
-  },
+    isDocument: props.isUploader
+  }
 });
-const { mutateAsync: createProjectTag, isLoading: projectTagLoading } =
-  useMutation(
+const { mutateAsync: createProjectTag, isLoading: projectTagLoading }
+  = useMutation(
     (payload: { tagId: string }) => {
       return useProjectCreateTags(props.id as string, payload);
     },
     {
       onSuccess: (data) => {
         emit('success', data);
-      },
+      }
     }
   );
-const { mutateAsync: documentAddTag, isLoading: documentIsLoading } =
-  useMutation(
+const { mutateAsync: documentAddTag, isLoading: documentIsLoading }
+  = useMutation(
     (tagId: string) => {
       return addDocumentTag({
         clientId: props.clientId as string,
         fileId: props.fileId as string,
-        tagId,
+        tagId
       });
     },
     {
       onSuccess: (data) => {
         emit('success', data);
-      },
+      }
     }
   );
 
@@ -87,18 +88,18 @@ const { mutateAsync: createTaskTag, isLoading: taskTagLoading } = useMutation(
   {
     onSuccess: (data) => {
       emit('success', data);
-    },
+    }
   }
 );
-const { mutateAsync: createClientTag, isLoading: clientTagLoading } =
-  useMutation(
+const { mutateAsync: createClientTag, isLoading: clientTagLoading }
+  = useMutation(
     (payload: { tagId: string }) => {
       return useClientCreateTags(props.id as string, payload);
     },
     {
       onSuccess: (data) => {
         emit('success', data);
-      },
+      }
     }
   );
 
@@ -112,61 +113,65 @@ const { mutateAsync: createTags } = useMutation(
       initToast({
         actionType: 'Create',
         summary: `Tag created`,
-        detail: `Tag created successfully.`,
+        detail: `Tag created successfully.`
       });
-    },
+    }
   }
 );
 
-const onSubmit = async () => {
+async function onSubmit() {
   const payload: TagCreatePayload = { ...values } as TagCreatePayload;
 
-  if (props.tagType === 'PROJECT') await createProjectTag(payload);
-  if (props.tagType === 'CLIENT') await createClientTag(payload);
-  if (props.tagType === 'DOCUMENT') await documentAddTag(payload.tagId);
+  if (props.tagType === 'PROJECT')
+    await createProjectTag(payload);
+  if (props.tagType === 'CLIENT')
+    await createClientTag(payload);
+  if (props.tagType === 'DOCUMENT')
+    await documentAddTag(payload.tagId);
   if (
-    props.tagType === 'TASK' ||
-    props.tagType === 'CLIENTTASK' ||
-    props.tagType === 'SUPPORTTASK'
+    props.tagType === 'TASK'
+    || props.tagType === 'CLIENTTASK'
+    || props.tagType === 'SUPPORTTASK'
   )
     await createTaskTag(payload);
-};
+}
 
-const addNewTags = (e: DropdownFilterEvent) => {
+function addNewTags(e: DropdownFilterEvent) {
   addNew.value = e?.value as unknown as string;
-};
-const handelAddNewTag = async () => {
+}
+async function handelAddNewTag() {
   const payload = { name: addNew.value, type: props.tagType };
   await createTags(payload as Tag);
-  const userAddTag = tags.value?.find((el) => el.name === payload.name);
+  const userAddTag = tags.value?.find(el => el.name === payload.name);
   if (userAddTag) {
     if (props.tagType === 'PROJECT')
       createProjectTag({
-        tagId: userAddTag?.id,
+        tagId: userAddTag?.id
       } as unknown as TagCreatePayload);
     if (props.tagType === 'CLIENT')
       createClientTag({
-        tagId: userAddTag?.id,
+        tagId: userAddTag?.id
       } as unknown as TagCreatePayload);
     if (
-      props.tagType === 'TASK' ||
-      props.tagType === 'CLIENTTASK' ||
-      props.tagType === 'SUPPORTTASK'
+      props.tagType === 'TASK'
+      || props.tagType === 'CLIENTTASK'
+      || props.tagType === 'SUPPORTTASK'
     )
       createTaskTag({ tagId: userAddTag?.id } as unknown as TagCreatePayload);
     if (props.tagType === 'DOCUMENT' && !props.isUploader)
       await documentAddTag(userAddTag?.id as string);
   }
-};
+}
 
 watchEffect(() => {
-  const selectedTags = props.tagData?.map((el) => el?.id);
+  const selectedTags = props.tagData?.map(el => el?.id);
   if (props.tagData && tagLoading) {
     const filterTags = tags.value?.filter(
       (val: any) => !selectedTags?.includes(val?.id)
     );
     tagListData.value = filterTags;
-  } else {
+  }
+  else {
     tagListData.value = tags.value as unknown as Tag[];
   }
 });
@@ -183,26 +188,25 @@ watchEffect(() => {
         >
           <span>
             Tag
-            <span v-if="!isUploader" class="text-red-500">*</span></span
-          >
+            <span v-if="!isUploader" class="text-red-500">*</span></span>
         </label>
         <div class="w-full">
-          <VField name="tagId" v-slot="{ handleChange, value, validate }">
+          <VField v-slot="{ handleChange, value, validate }" name="tagId">
             <Dropdown
+              id="id"
               :tabindex="0"
-              @update:model-value="handleChange"
-              @blur="validate()"
               class="w-full"
               name="tagId"
-              id="id"
               :model-value="value"
               :options="tagListData"
-              optionLabel="name"
-              optionValue="id"
+              option-label="name"
+              option-value="id"
               placeholder="Select tag"
               :show-clear="true"
               :loading="tagLoading"
               filter
+              @update:model-value="handleChange"
+              @blur="validate()"
               @filter="addNewTags"
               @change="emit('change', (values as TagCreatePayload).tagId)"
             >
@@ -214,8 +218,10 @@ watchEffect(() => {
               <template #emptyfilter>
                 <div class="card flex justify-content-center items-center">
                   <div class="text-center">
-                    <i class="pi pi-tag" style="font-size: 1.5rem"></i>
-                    <p class="text-base">No tags relevant to your search</p>
+                    <i class="pi pi-tag" style="font-size: 1.5rem" />
+                    <p class="text-base">
+                      No tags relevant to your search
+                    </p>
                   </div>
                 </div>
 
@@ -226,14 +232,14 @@ watchEffect(() => {
                   <Button
                     class="max-w-max font-medium"
                     type="button"
-                    @click="handelAddNewTag"
                     label="Create"
-                  ></Button>
+                    @click="handelAddNewTag"
+                  />
                 </div>
               </template>
-              <template #empty
-                >Searching a term will give option to create Tag</template
-              >
+              <template #empty>
+                Searching a term will give option to create Tag
+              </template>
             </Dropdown>
           </VField>
         </div>
@@ -242,7 +248,7 @@ watchEffect(() => {
         <FormFeedbackMessage
           :errors="errors"
           :values="values"
-          errorKey="tagId"
+          error-key="tagId"
           :feedback="false"
         />
       </transition>
@@ -261,13 +267,13 @@ watchEffect(() => {
         :disabled="!meta.valid"
         type="submit"
         label="Submit"
-        @click.prevent="onSubmit"
         :loading="
-          projectTagLoading ||
-          clientTagLoading ||
-          taskTagLoading ||
-          documentIsLoading
+          projectTagLoading
+            || clientTagLoading
+            || taskTagLoading
+            || documentIsLoading
         "
+        @click.prevent="onSubmit"
       />
     </div>
   </form>

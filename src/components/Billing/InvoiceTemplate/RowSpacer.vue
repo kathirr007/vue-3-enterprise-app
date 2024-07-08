@@ -5,7 +5,7 @@ const props = withDefaults(
     background?: string;
   }>(),
   {
-    height: 15,
+    height: 15
   }
 );
 </script>

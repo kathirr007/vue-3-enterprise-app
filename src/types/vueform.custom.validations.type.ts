@@ -1,8 +1,6 @@
-import { parsePhoneNumber } from 'awesome-phonenumber';
 import isMobilePhone, {
-  type MobilePhoneLocale,
+  type MobilePhoneLocale
 } from 'validator/es/lib/isMobilePhone';
-import isPostalCode from 'validator/lib/isPostalCode';
 import { Validator } from '@vueform/vueform';
 
 export const validate_phone = class extends Validator {

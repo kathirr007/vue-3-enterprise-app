@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import type { Client } from '@/types/client.type';
 import type { TagType } from '@/types/tags.type';
-import type { Task } from '@/types/tasks.type';
+import type { EntityType, Task } from '@/types/tasks.type';
 import type { Project } from '@/types/project.type';
-import type { EntityType } from '@/types/tasks.type';
-import { useMutation, useQuery, useQueryClient } from 'vue-query';
-const { defaultBreakpoints, styles } = useCommonBreakPoints();
+
+import { useMutation, useQueryClient } from 'vue-query';
 
 const props = defineProps<{
   tagType?: TagType;
@@ -18,6 +17,8 @@ const props = defineProps<{
   folderId?: string | null;
   disableCreate?: boolean;
 }>();
+
+const { defaultBreakpoints, styles } = useCommonBreakPoints();
 
 const isDialogVisible = ref(false);
 const queryClient = useQueryClient();
@@ -36,12 +37,12 @@ const { mutateAsync: removeTag } = useMutation(
       await deleteDocumentTag({
         clientId: props.clientId as string,
         fileId: props.fileId as string,
-        tagId: tagId,
+        tagId
       });
     if (
-      props.tagType === 'TASK' ||
-      props.tagType === 'CLIENTTASK' ||
-      props.tagType === 'SUPPORTTASK'
+      props.tagType === 'TASK'
+      || props.tagType === 'CLIENTTASK'
+      || props.tagType === 'SUPPORTTASK'
     ) {
       await useTaskDeleteTags(
         !!props?.isPortal,
@@ -54,28 +55,28 @@ const { mutateAsync: removeTag } = useMutation(
   {
     onSuccess: () => {
       handleInvalidateQueries();
-    },
+    }
   }
 );
 
-const handleCreate = () => {
+function handleCreate() {
   initToast({
     actionType: 'Add',
     summary: `Tag added`,
-    detail: `Tag added successfully.`,
+    detail: `Tag added successfully.`
   });
   isDialogVisible.value = false;
   handleInvalidateQueries();
-};
-const handleInvalidateQueries = () => {
+}
+function handleInvalidateQueries() {
   if (props.tagType === 'CLIENT')
     queryClient.invalidateQueries('client-details');
   if (props.tagType === 'PROJECT')
     queryClient.invalidateQueries('project-details');
   if (
-    props.tagType === 'TASK' ||
-    props.tagType === 'CLIENTTASK' ||
-    props.tagType === 'SUPPORTTASK'
+    props.tagType === 'TASK'
+    || props.tagType === 'CLIENTTASK'
+    || props.tagType === 'SUPPORTTASK'
   ) {
     queryClient.invalidateQueries('task-details');
     queryClient.invalidateQueries('tasks-list');
@@ -84,8 +85,9 @@ const handleInvalidateQueries = () => {
     queryClient.invalidateQueries('files-list');
     queryClient.invalidateQueries('search-docs');
   }
-};
+}
 </script>
+
 <template>
   <div class="inline-flex align-items-center gap-1 flex-wrap">
     <template v-for="tag in data?.tags" :key="tag.id">
@@ -97,44 +99,44 @@ const handleInvalidateQueries = () => {
             class="pi pi-times text-xs cursor-pointer"
             tabindex="0"
             @click="removeTag(tag.id as string)"
-          ></i>
+          />
         </div>
       </Tag>
     </template>
     <Button
       v-if="!disableCreate && data?.type !== 'SUPPORTTASK' && !isPortal"
+      v-tooltip.right="'Add Tag'"
       class="p-button-xs cursor-pointer p-0 justify-content-center align-items-center"
       :style="{ height: '21.28px', width: '21.28px' }"
       severity="success"
       rounded
       aria-label="tag"
       tabindex="0"
-      v-tooltip.right="'Add Tag'"
       @click="isDialogVisible = true"
     >
-      <i class="pi pi-plus text-xs"></i>
+      <i class="pi pi-plus text-xs" />
     </Button>
   </div>
   <Dialog
-    :modal="true"
-    appendTo="body"
-    :header="'Add Tag'"
     v-model:visible="isDialogVisible"
+    :modal="true"
+    append-to="body"
+    header="Add Tag"
     :breakpoints="defaultBreakpoints"
     :style="styles"
-    :contentClass="'border-round-bottom-md'"
+    content-class="border-round-bottom-md"
     @hide="isDialogVisible = false"
   >
     <TagsAddTag
       :id="currentId"
+      :tag-data="data?.tags"
+      :tag-type="tagType as TagType"
+      :is-portal="isPortal"
+      :entity-type="taskEntityType"
+      :client-id="clientId"
+      :file-id="fileId"
       @close="isDialogVisible = false"
       @success="handleCreate"
-      :tagData="data?.tags"
-      :tagType="tagType as TagType"
-      :isPortal="isPortal"
-      :entityType="taskEntityType"
-      :clientId="clientId"
-      :fileId="fileId"
-    ></TagsAddTag>
+    />
   </Dialog>
 </template>

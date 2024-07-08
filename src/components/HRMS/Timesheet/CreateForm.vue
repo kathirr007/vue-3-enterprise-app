@@ -27,17 +27,17 @@ const initialFilters = useEncodeFilterData(filterData);
 const {
   data: usersList,
   myTeamUsers,
-  isFetching: loadingUsers,
+  isFetching: loadingUsers
 } = getUsers(true, true, initialFilters);
 const { createAttendance, updateAttendance } = useHrmsAttendance();
 
-const showToast = (type: APIActions, data: HRAttendance) => {
+function showToast(type: APIActions, data: HRAttendance) {
   initToast({
     actionType: type,
     title: 'Attendance',
-    actionObj: data,
+    actionObj: data
   });
-};
+}
 
 const { mutateAsync: createUpdateLeaveBalance, isLoading } = useMutation(
   (payload: HRAttendanceCreateInput) => {
@@ -50,12 +50,13 @@ const { mutateAsync: createUpdateLeaveBalance, isLoading } = useMutation(
     onSuccess: (data) => {
       if (props.attendance) {
         showToast('Update', data);
-      } else {
+      }
+      else {
         showToast('Create', data);
       }
       emit('success', data);
       queryClient.invalidateQueries('timesheets-list');
-    },
+    }
   }
 );
 
@@ -74,7 +75,7 @@ const formData = computed<SchemaForm>(() => ({
       optionValue: 'id',
       placeholder: 'Select a user',
       disabled: !!props.attendance,
-      loading: loadingUsers.value,
+      loading: loadingUsers.value
     },
     {
       as: Calendar,
@@ -84,7 +85,7 @@ const formData = computed<SchemaForm>(() => ({
       required: true,
       showTime: true,
       hourFormat: '12',
-      maxDate: dayjs().toDate(),
+      maxDate: dayjs().toDate()
     },
     {
       as: Calendar,
@@ -94,33 +95,33 @@ const formData = computed<SchemaForm>(() => ({
       showTime: true,
       hourFormat: '12',
       required: true,
-      maxDate: dayjs().toDate(),
-    },
+      maxDate: dayjs().toDate()
+    }
   ],
   validationSchema: HRAttendanceCreateInputSchema,
   initialValues: props.attendance
     ? {
         userId: props.attendance.user.id,
         checkIn: props.attendance.checkIn,
-        checkOut: props.attendance.checkOut,
+        checkOut: props.attendance.checkOut
       }
     : undefined,
-  btnText: props.attendance ? 'Update' : 'Submit',
+  btnText: props.attendance ? 'Update' : 'Submit'
 }));
 
-const onSubmit = async (values: Record<string, any>) => {
+async function onSubmit(values: Record<string, any>) {
   await createUpdateLeaveBalance({
     userId: values.userId,
     checkIn: values.checkIn,
-    checkOut: values.checkOut,
+    checkOut: values.checkOut
   } as HRAttendanceCreateInput);
-};
+}
 </script>
 
 <template>
   <CommonSchemaForm
     :data="formData"
-    @submit="onSubmit"
     :primary-btn-loading="isLoading"
-  ></CommonSchemaForm>
+    @submit="onSubmit"
+  />
 </template>

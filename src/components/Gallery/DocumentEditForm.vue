@@ -4,10 +4,9 @@ import type {
   CreateFolderPayload,
   DocOrDirUpdateParams,
   DocumentFile,
-  DocumentFolder,
+  DocumentFolder
 } from '@/types/documents.type';
-import type { EntityType, Task } from '@/types/tasks.type';
-import { useRouteParams, useRouteQuery } from '@vueuse/router';
+import { useRouteQuery } from '@vueuse/router';
 import { useMutation } from 'vue-query';
 import { object, string } from 'yup';
 
@@ -31,24 +30,24 @@ const clientId = ref(route.params.id as string);
 const extension = ref<string | undefined>();
 const validationSchemas: Record<string, unknown> = {
   assignedUserId: object({
-    assignedUserId: string().required().label('Assign User'),
+    assignedUserId: string().required().label('Assign User')
   }),
   rename: object({
-    updatedName: string().required().label('Folder Name'),
+    updatedName: string().required().label('Folder Name')
   }),
   entityPriorityId: object({
-    entityPriorityId: string().required().label('Priority'),
+    entityPriorityId: string().required().label('Priority')
   }),
   dueDate: object({
-    dueDate: string().required().label('Due Date'),
+    dueDate: string().required().label('Due Date')
   }),
   startDate: object({
-    startDate: string().required().label('Start Date'),
-  }),
+    startDate: string().required().label('Start Date')
+  })
 };
 
 const { handleSubmit, errors, validate, meta, setFieldValue } = useForm({
-  validationSchema: validationSchemas[props.editType as string],
+  validationSchema: validationSchemas[props.editType as string]
 });
 
 const { value: assignedUserId } = useField<string>('assignedUserId');
@@ -58,14 +57,14 @@ const { value: dueDate } = useField<string>('dueDate');
 const { value: startDate } = useField<string>('startDate');
 const { updateFile, updateFolder } = useDocuments();
 
-const handleSuccess = () => {
+function handleSuccess() {
   initToast({
     actionType: 'Update',
     summary: `${props.editDataType} Update`,
-    detail: `${props.editDataType} updated successfully.`,
+    detail: `${props.editDataType} updated successfully.`
   });
   emits('success');
-};
+}
 
 const { mutateAsync: updateDoc, isLoading: updatingDoc } = useMutation(
   ['gallery-docment-update'],
@@ -75,13 +74,13 @@ const { mutateAsync: updateDoc, isLoading: updatingDoc } = useMutation(
       fileId: fileId as string,
       folderId: folderId as string,
       isGallery: true,
-      payload: payload as CreateFilePayload,
+      payload: payload as CreateFilePayload
     });
   },
   {
     onSuccess: () => {
       handleSuccess();
-    },
+    }
   }
 );
 const { mutateAsync: updateDir, isLoading: updatingDir } = useMutation(
@@ -91,13 +90,13 @@ const { mutateAsync: updateDir, isLoading: updatingDir } = useMutation(
       id: 'sampleId',
       folderId: folderId as string,
       isGallery: true,
-      payload: payload as CreateFolderPayload,
+      payload: payload as CreateFolderPayload
     });
   },
   {
     onSuccess: () => {
       handleSuccess();
-    },
+    }
   }
 );
 
@@ -109,25 +108,26 @@ const onSubmit = handleSubmit(async (values) => {
       payload: {
         ...props.dataToModify,
         name: values.updatedName + extension.value,
-        folderId: folderId.value as string,
-      } as unknown as CreateFilePayload,
+        folderId: folderId.value as string
+      } as unknown as CreateFilePayload
     });
-  } else {
+  }
+  else {
     await updateDir({
       id: clientId.value as string,
       folderId: props.dataToModify?.id as string,
       payload: {
         ...props.dataToModify,
-        name: values.updatedName,
-      } as unknown as CreateFilePayload,
+        name: values.updatedName
+      } as unknown as CreateFilePayload
     });
   }
 });
 
 onMounted(() => {
-  extension.value = '.' + props.dataToModify?.name.split('.').pop();
-  const filename =
-    props.editDataType === 'File'
+  extension.value = `.${props.dataToModify?.name.split('.').pop()}`;
+  const filename
+    = props.editDataType === 'File'
       ? props.dataToModify?.name.split('.').slice(0, -1).join('')
       : props.dataToModify?.name;
   setFieldValue('updatedName', filename);
@@ -136,7 +136,7 @@ onMounted(() => {
 
 <template>
   <div class="p-4">
-    <form @submit="onSubmit" class="grid p-fluid formgrid">
+    <form class="grid p-fluid formgrid" @submit="onSubmit">
       <div
         v-if="editType === 'rename'"
         class="field col-12 md:col-12 sm:col-12"
@@ -150,10 +150,10 @@ onMounted(() => {
           v-model="updatedName"
           type="updatedName"
           class="w-full"
-          :class="{ 'p-invalid': errors['updatedName'] }"
+          :class="{ 'p-invalid': errors.updatedName }"
           @blur="validate()"
         />
-        <p class="p-error" v-if="errors.updatedName">
+        <p v-if="errors.updatedName" class="p-error">
           {{ errors.updatedName }}
         </p>
       </div>
@@ -164,7 +164,7 @@ onMounted(() => {
           label="Submit"
           :disabled="!meta.valid"
           :loading="updatingDoc || updatingDir"
-        ></Button>
+        />
       </div>
     </form>
   </div>

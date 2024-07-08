@@ -35,7 +35,7 @@ const { data: webformTemplates, isLoading: loadingWebformTemplates } = useQuery(
   () => {
     return getAll({
       filters: initialFilters.value,
-      isTemplate: true,
+      isTemplate: true
     });
   }
 );
@@ -43,29 +43,31 @@ const { data: webformTemplates, isLoading: loadingWebformTemplates } = useQuery(
 const { meta, values, errors } = useForm({
   validationSchema: TemplateSchema,
   initialValues: props.template ? { template: props.template } : {},
-  validateOnMount: false,
+  validateOnMount: false
 });
 
-const onSubmit = () => {
+function onSubmit() {
   const payload: TemplatePayload = { ...values } as TemplatePayload;
   emit('template', payload.template);
-};
+}
 
-const handleCancel = () => {
+function handleCancel() {
   emit('modalClose');
-};
+}
 
-const gotoTemplatesList = () => {
+function gotoTemplatesList() {
   if (route.name === 'admin-webform-templates') {
     emit('modalClose');
-  } else {
+  }
+  else {
     router.push({
       name: 'admin-webform-templates',
-      query: { activeIndex: props.webformType === 'ORGANIZER' ? 0 : 1 },
+      query: { activeIndex: props.webformType === 'ORGANIZER' ? 0 : 1 }
     });
   }
-};
+}
 </script>
+
 <template>
   <form class="grid formgrid">
     <div class="col-12 py-2">
@@ -74,31 +76,31 @@ const gotoTemplatesList = () => {
           <span>Template <span class="text-red-500">*</span></span>
         </label>
         <div class="w-full">
-          <VField name="template" v-slot="{ handleChange, value, validate }">
+          <VField v-slot="{ handleChange, value, validate }" name="template">
             <Dropdown
+              id="template"
               :tabindex="0"
-              @update:model-value="handleChange"
-              @blur="validate()"
               class="w-full"
               name="template"
-              id="template"
               :model-value="value"
               :options="webformTemplates?.results"
-              optionLabel="name"
-              optionValue="id"
+              option-label="name"
+              option-value="id"
               placeholder="Select Template"
               :show-clear="true"
               :loading="loadingWebformTemplates"
+              @update:model-value="handleChange"
+              @blur="validate()"
             >
               <template #header>
                 <span
-                  @click="gotoTemplatesList"
                   class="cursor-pointer flex align-items-center py-2 px-3 font-medium text-sm text-gray-500 hover:text-gray-700"
+                  @click="gotoTemplatesList"
                 >
                   Add New
                   {{
                     titleCase(
-                      webformType === 'ORGANIZER' ? 'Request' : webformType
+                      webformType === 'ORGANIZER' ? 'Request' : webformType,
                     )
                   }}
                   Template
@@ -124,7 +126,7 @@ const gotoTemplatesList = () => {
         <FormFeedbackMessage
           :errors="errors"
           :values="values"
-          errorKey="template"
+          error-key="template"
           :feedback="false"
         />
       </transition>
@@ -133,16 +135,16 @@ const gotoTemplatesList = () => {
       <Button
         class="max-w-max mr-auto"
         label="Cancel"
-        @click="handleCancel"
         severity="danger"
+        @click="handleCancel"
       />
       <Button
         class="max-w-max ml-auto"
         :disabled="!meta.valid"
         type="submit"
         label="Next"
-        @click.prevent="onSubmit"
         :loading="loading"
+        @click.prevent="onSubmit"
       />
     </div>
   </form>

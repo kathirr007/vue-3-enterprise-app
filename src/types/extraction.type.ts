@@ -1,18 +1,18 @@
 import { object, string } from 'yup';
 
-export type CreateExtractionPayload = {
+export interface CreateExtractionPayload {
   name: string;
   clientId?: string;
   fy?: string;
   fileIds: string[];
   creatorId?: string;
-};
+}
 
-export type GetFolderDetailsPayload = {
+export interface GetFolderDetailsPayload {
   name: string;
   clientId?: string;
   creatorId?: string;
-};
+}
 
 export interface ExtractionDocument {
   id: string;
@@ -40,5 +40,5 @@ export interface ExtractionDocument {
 export const ExtractionPayloadSchema = object({
   name: string().min(3).required().label('Name'),
   financialYear: string().optional().nullable().label('Financial Year'),
-  clientId: string().optional().nullable().label('Client'),
+  clientId: string().optional().nullable().label('Client')
 });

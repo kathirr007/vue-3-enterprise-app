@@ -1,20 +1,20 @@
 import $api from '@/plugins/api';
 import type { ContentJSON, PaginatedResponse } from '@/types/common.type';
 import type {
+  AttachTaskPayload,
   Contact,
   Conversation,
-  Inbox,
-  InboxCreatePayload,
-  Thread,
-  ThreadCreatePayload,
   ConversationCreatePayload,
-  AttachTaskPayload,
   DetachTask,
   GenerateSuggestionPayload,
-  GeneratedResponse,
-  ThreadType,
   GenerateSummaryPayload,
+  GeneratedResponse,
+  Inbox,
+  InboxCreatePayload,
   SuggestMessagePayload,
+  Thread,
+  ThreadCreatePayload,
+  ThreadType
 } from '@/types/inbox.type';
 
 const { isJsonStringValid } = useUtilityFns();
@@ -49,7 +49,7 @@ export async function useThreadList({
   filters,
   isPortal,
   clientId,
-  threadType,
+  threadType
 }: {
   inboxId: string;
   page?: number;
@@ -67,8 +67,8 @@ export async function useThreadList({
       params: {
         page,
         limit,
-        filters,
-      },
+        filters
+      }
     }
   );
   data.results = data.results.map((thread) => {
@@ -77,7 +77,7 @@ export async function useThreadList({
       displayExcerpt:
         thread.displayExcerpt && isJsonStringValid(thread.displayExcerpt)
           ? JSON.parse(thread.displayExcerpt).content
-          : thread.displayExcerpt,
+          : thread.displayExcerpt
     };
   });
   return data;
@@ -98,7 +98,7 @@ export async function useThread(
 export async function useConversationList({
   inboxId,
   threadId,
-  isPortal,
+  isPortal
 }: {
   inboxId: string;
   threadId: string;
@@ -115,7 +115,7 @@ export async function useConversationList({
       content: isJsonStringValid(conversation.content)
         ? JSON.parse(conversation.content as string).content
         : (conversation.content as ContentJSON).content,
-      isCollapsed: true,
+      isCollapsed: true
     };
   });
 }
@@ -257,7 +257,7 @@ export async function useGenerateSuggestion(
       html:
         isJsonStringValid(e.html) && e.html.includes('{')
           ? JSON.parse(e.html as string).data?.content
-          : e.html,
+          : e.html
     };
   });
 }
@@ -276,7 +276,7 @@ export async function useRestoreThread(inboxId: string, threadId: string) {
   return data;
 }
 
-export const useBrightAssist = () => {
+export function useBrightAssist() {
   const baseUrl = `brightassist`;
   const getSummary = async (
     payload: GenerateSummaryPayload,
@@ -292,7 +292,7 @@ export const useBrightAssist = () => {
         html:
           isJsonStringValid(e.html) && e.html.includes('{')
             ? JSON.parse(e.html as string).data?.content
-            : e.html,
+            : e.html
       };
     });
   };
@@ -310,13 +310,13 @@ export const useBrightAssist = () => {
         html:
           isJsonStringValid(e.html) && e.html.includes('{')
             ? JSON.parse(e.html as string).data?.content
-            : e.html,
+            : e.html
       };
     });
   };
 
   return {
     getSummary,
-    getAutoreplySuggestions,
+    getAutoreplySuggestions
   };
-};
+}

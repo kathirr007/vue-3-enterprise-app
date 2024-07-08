@@ -111,8 +111,7 @@ const subTotal = computed(() => {
                             line-height: normal;
                             margin: 0;
                           "
-                          >Subtotal</span
-                        >
+                        >Subtotal</span>
                       </td>
                     </tr>
                     <tr style="box-sizing: border-box; line-height: normal">
@@ -137,8 +136,7 @@ const subTotal = computed(() => {
                             line-height: normal;
                             margin: 0;
                           "
-                          >Item Discounts</span
-                        >
+                        >Item Discounts</span>
                       </td>
                     </tr>
                     <tr style="box-sizing: border-box; line-height: normal">
@@ -163,8 +161,7 @@ const subTotal = computed(() => {
                             line-height: normal;
                             margin: 0;
                           "
-                          >Other Charges</span
-                        >
+                        >Other Charges</span>
                       </td>
                     </tr>
                     <tr style="box-sizing: border-box; line-height: normal">
@@ -189,7 +186,7 @@ const subTotal = computed(() => {
                             line-height: normal;
                             margin: 0;
                           "
-                          >Tax
+                        >Tax
                           <template
                             v-if="invoiceTemplateData.templateData.tax?.rate"
                           >
@@ -226,8 +223,7 @@ const subTotal = computed(() => {
                             line-height: normal;
                             margin: 0;
                           "
-                          >Total</span
-                        >
+                        >Total</span>
                       </td>
                     </tr>
                   </table>
@@ -310,7 +306,7 @@ const subTotal = computed(() => {
                           {{
                             getInlCurrencyNumber(
                               invoiceTemplateData.templateData.discount
-                                ?.amount || 0
+                                ?.amount || 0,
                             )
                           }}
                         </span>
@@ -341,7 +337,7 @@ const subTotal = computed(() => {
                         >
                           {{
                             getInlCurrencyNumber(
-                              invoiceTemplateData.templateData.otherCharges || 0
+                              invoiceTemplateData.templateData.otherCharges || 0,
                             )
                           }}
                         </span>
@@ -372,7 +368,7 @@ const subTotal = computed(() => {
                         >
                           {{
                             getInlCurrencyNumber(
-                              invoiceTemplateData.templateData.tax?.amount || 0
+                              invoiceTemplateData.templateData.tax?.amount || 0,
                             )
                           }}
                         </span>
@@ -408,7 +404,7 @@ const subTotal = computed(() => {
                         >
                           {{
                             getInlCurrencyNumber(
-                              invoiceTemplateData.templateData.total
+                              invoiceTemplateData.templateData.total,
                             )
                           }}
                           USD

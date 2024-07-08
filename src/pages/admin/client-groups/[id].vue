@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import TabView from 'primevue/tabview';
-import { useRouteParams, useRouteQuery } from '@vueuse/router';
+import { useRouteQuery } from '@vueuse/router';
 import { useMutation, useQuery, useQueryClient } from 'vue-query';
 
 import type { APIActions } from '@/types/common.type';
 import type {
   ClientGroup,
-  ClientGroupRemovePayload,
+  ClientGroupRemovePayload
 } from '@/types/client-group';
 import type { Client } from '@/types/client.type';
 
@@ -37,42 +37,43 @@ const connectedUsers = computed(() => {
   return false;
 });
 
-const showToast = (type: APIActions) => {
+function showToast(type: APIActions) {
   initToast({
     actionType: type,
     title: 'Client Group',
-    actionObj: { ...clientGroupDetails.value },
+    actionObj: { ...clientGroupDetails.value }
   });
-};
-const handleUpdate = (payload: ClientGroup) => {
+}
+function handleUpdate(payload: ClientGroup) {
   addClientsDialog.value = false;
   // queryClient.invalidateQueries('client-group-details');
   showToast('Update');
-};
+}
 
-const handleRemoveClient = async () => {
+async function handleRemoveClient() {
   await removeClientGroupClient({
     id: clientGroupDetails.value?.id as string,
     payload: {
-      clientId: selectedClientToRemove.value?.id as string,
-    },
+      clientId: selectedClientToRemove.value?.id as string
+    }
   });
   queryClient.invalidateQueries('client-group-details');
-};
+}
 
-const hendleRemoveClientGroup = async () => {
+async function hendleRemoveClientGroup() {
   await removeClientGroup(clientGroupDetails.value?.id as string);
-};
+}
 
-const prepareRemoveClient = (data: Client) => {
+function prepareRemoveClient(data: Client) {
   selectedClientToRemove.value = data;
   removeClientGroupClientDialog.value = true;
-};
+}
 
 const { data: clientGroupDetails } = useQuery(
   ['client-group-details'],
   () => {
-    if (!clientGroupId.value) return;
+    if (!clientGroupId.value)
+      return;
     return getOne(clientGroupId.value as string);
   },
   {
@@ -80,16 +81,16 @@ const { data: clientGroupDetails } = useQuery(
       if (data) {
         clientGroupClients.value = data.clients?.map((client: Client) => ({
           ...client,
-          ['isClientInGroup']: true,
+          isClientInGroup: true
         })) as Client[];
         updateBreadcrumb({
           breadcrumbs: [
             { label: 'Client Groups', to: { name: 'admin-client-groups' } },
-            { label: data.name },
-          ],
+            { label: data.name }
+          ]
         });
       }
-    },
+    }
   }
 );
 
@@ -100,10 +101,10 @@ const { mutateAsync: removeClientGroup } = useMutation(
       initToast({
         actionType: 'Delete',
         title: 'Client Group',
-        detail: `Client group <strong>${clientGroupDetails.value?.name}</strong> has been deleted successfully.`,
+        detail: `Client group <strong>${clientGroupDetails.value?.name}</strong> has been deleted successfully.`
       });
       router.push({ name: 'admin-client-groups' });
-    },
+    }
   }
 );
 const { mutateAsync: removeClientGroupClient } = useMutation(
@@ -116,11 +117,11 @@ const { mutateAsync: removeClientGroupClient } = useMutation(
           actionType: 'Delete',
           severity: 'error',
           summary: 'Delete Client',
-          detail: `Client <strong>${selectedClientToRemove.value?.name}</strong> deleted from <strong>${clientGroupDetails.value?.name}</strong>`,
+          detail: `Client <strong>${selectedClientToRemove.value?.name}</strong> deleted from <strong>${clientGroupDetails.value?.name}</strong>`
         });
         selectedClientToRemove.value = undefined;
       }
-    },
+    }
   }
 );
 
@@ -136,11 +137,13 @@ onMounted(() => {
   }
 });
 </script>
+
 <script lang="ts">
 export default defineComponent({
-  inheritAttrs: false,
+  inheritAttrs: false
 });
 </script>
+
 <template>
   <div>
     <div class="flex flex-column md:flex-row card align-items-end">
@@ -168,18 +171,18 @@ export default defineComponent({
       <div class="w-full md:w-5 flex justify-content-end">
         <Button
           v-if="canDo('client_groups', 'create')"
+          v-tooltip.top="'Add or Remove Clients'"
           icon="pi pi-plus"
           class="p-button-sm p-button-rounded"
           @click="addClientsDialog = true"
-          v-tooltip.top="'Add or Remove Clients'"
         />
         <Button
           v-if="canDo('client_groups', 'delete')"
+          v-tooltip.top="'Delete'"
           icon="pi pi-trash"
           class="p-button-sm p-button-danger p-button-rounded p-button-icon-only ml-2"
+          aria-label="Delete Client Group"
           @click="removeClientGroupDialog = true"
-          v-tooltip.top="'Delete'"
-          :aria-label="'Delete Client Group'"
         />
       </div>
     </div>
@@ -191,8 +194,8 @@ export default defineComponent({
       >
         <TabPanel header="Clients">
           <ClientsList
-            :clientsList="clientGroupClients"
-            hideFilters
+            :clients-list="clientGroupClients"
+            hide-filters
             @delete:client="prepareRemoveClient"
             @create:client="addClientsDialog = true"
           />
@@ -203,45 +206,43 @@ export default defineComponent({
   <CommonConfirmRemoveDialog
     v-if="removeClientGroupDialog"
     :visible="removeClientGroupDialog"
-    :recordToRemove="clientGroupDetails as Record<string, any>"
+    :record-to-remove="clientGroupDetails as Record<string, any>"
     title="Delete Client Group"
     class="remove-dialog"
-    :isRemove="true"
+    :is-remove="true"
     @confirm="hendleRemoveClientGroup"
   >
     <div v-if="connectedUsers && connectedUsers.length > 0">
       There {{ connectedUsers.length > 1 ? 'are' : 'is' }}
       <strong>{{ connectedUsers.length }}</strong>
       {{ connectedUsers.length > 1 ? 'clients' : 'client' }} in
-      <strong>{{ clientGroupDetails?.name }}</strong
-      >. Would you like to delete <strong>{{ clientGroupDetails?.name }}</strong
-      >?
+      <strong>{{ clientGroupDetails?.name }}</strong>. Would you like to delete <strong>{{ clientGroupDetails?.name }}</strong>?
     </div>
   </CommonConfirmRemoveDialog>
   <CommonConfirmRemoveDialog
     v-if="removeClientGroupClientDialog"
     :visible="removeClientGroupClientDialog"
-    :recordToRemove="selectedClientToRemove as Record<string, any>"
+    :record-to-remove="selectedClientToRemove as Record<string, any>"
     title="Delete Client"
     class="remove-dialog"
-    :isRemove="true"
+    :is-remove="true"
     @confirm="handleRemoveClient"
     @hide="removeClientGroupClientDialog = false"
   />
   <Dialog
-    :modal="true"
-    appendTo="body"
-    :header="`Add or Remove Clients`"
     v-model:visible="addClientsDialog"
+    :modal="true"
+    append-to="body"
+    header="Add or Remove Clients"
     :breakpoints="defaultBreakpoints"
     :style="styles"
-    :contentClass="'border-round-bottom-md'"
+    content-class="border-round-bottom-md"
   >
     <ClientGroupsCreateUpdateForm
-      :addClients="true"
-      @addClients="handleUpdate"
-      @removeClients="handleUpdate"
-      :clientGroup="clientGroupDetails"
-    ></ClientGroupsCreateUpdateForm>
+      :add-clients="true"
+      :client-group="clientGroupDetails"
+      @add-clients="handleUpdate"
+      @remove-clients="handleUpdate"
+    />
   </Dialog>
 </template>

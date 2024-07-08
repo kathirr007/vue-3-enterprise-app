@@ -8,7 +8,7 @@ const emit = defineEmits<{
 }>();
 
 const { handleSubmit, errors, values, meta } = useForm({
-  validationSchema: ForgotPasswordSchema,
+  validationSchema: ForgotPasswordSchema
 });
 
 const { value: email } = useField<string>('email');
@@ -20,7 +20,7 @@ const { isLoading, mutateAsync: forgotPassword } = useMutation(
   {
     onSuccess: () => {
       emit('success');
-    },
+    }
   }
 );
 
@@ -30,8 +30,10 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-  <form @submit="onSubmit" class="text-left">
-    <p class="font-medium mb-0">Having trouble logging in?</p>
+  <form class="text-left" @submit="onSubmit">
+    <p class="font-medium mb-0">
+      Having trouble logging in?
+    </p>
     <ul class="mt-1">
       <li>
         Please enter your registered email id to receive the password reset
@@ -48,14 +50,14 @@ const onSubmit = handleSubmit(async (values) => {
         v-model="email"
         type="email"
         class="w-full"
-        :class="{ 'p-invalid': errors['email'] }"
+        :class="{ 'p-invalid': errors.email }"
       />
       <transition mode="out-in" name="field-slide-down">
         <FormFeedbackMessage
-          :success-class="'font-medium'"
+          success-class="font-medium"
           :errors="errors"
           :values="values"
-          :errorKey="'email'"
+          error-key="email"
         />
       </transition>
     </div>
@@ -65,7 +67,7 @@ const onSubmit = handleSubmit(async (values) => {
       :loading="isLoading"
       type="submit"
       class="block mx-auto"
-    ></Button>
+    />
     <div class="font-medium mt-4">
       Do you remember password?
       <router-link class="text-base mt-2" :to="{ name: 'auth-signin' }">

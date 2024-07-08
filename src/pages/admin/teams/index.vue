@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useQueryClient, useMutation } from 'vue-query';
+import { useMutation, useQueryClient } from 'vue-query';
 import type { User } from '@/types/teams.type';
 import type { Ref } from 'vue';
 
@@ -44,7 +44,7 @@ function showToast() {
     summary: `${actionType.value} User`,
     detail: `User <strong>${
       email.value
-    }</strong> ${actionType.value.toLowerCase()}d successfully`,
+    }</strong> ${actionType.value.toLowerCase()}d successfully`
   });
 }
 function handleRemove() {
@@ -61,14 +61,14 @@ const { mutateAsync: userDelete } = useMutation(
     return useUserRemove(id as string);
   },
   {
-    onSuccess: () => handleRemove(),
+    onSuccess: () => handleRemove()
   }
 );
-const deleteUser = () => {
+function deleteUser() {
   if (selectedUser.value !== undefined) {
     userDelete(selectedUser.value.id);
   }
-};
+}
 
 const { mutateAsync: userDisable } = useMutation(
   'userDisable',
@@ -83,15 +83,16 @@ const { mutateAsync: userEnable } = useMutation(
   }
 );
 
-const handleActivation = async () => {
+async function handleActivation() {
   if (selectedUser.value?.isActive) {
     await userDisable(selectedUser.value?.id as string);
     queryClient.invalidateQueries('teams-list');
-  } else {
+  }
+  else {
     await userEnable(selectedUser.value?.id as string);
     queryClient.invalidateQueries('teams-list');
   }
-};
+}
 </script>
 
 <template>
@@ -128,19 +129,18 @@ const handleActivation = async () => {
       </Button> -->
       <Button
         v-if="canDo('users', 'create')"
+        v-tooltip.left="'Add Team Members'"
         icon="pi pi-plus"
         class="p-button-rounded ml-2"
-        v-tooltip.left="'Add Team Members'"
         @click="router.push({ name: 'admin-teams-invite' })"
-      >
-      </Button>
+      />
     </template>
     <TeamsList
       v-if="canDo('users', 'list')"
       @delete:user="prepareForRemove"
       @disable:user="handleDisable"
       @resend-verify:user="handleResendVerify"
-    ></TeamsList>
+    />
     <div v-else class="card">
       <p class="text-center font-medium text-xl">
         You don't have access of the Team Members list.
@@ -148,32 +148,31 @@ const handleActivation = async () => {
     </div>
   </CommonPage>
   <Dialog
-    :modal="true"
-    appendTo="body"
-    :header="'Create Team Memeber'"
-    class="invite-team-member"
     v-model:visible="createTeamMemberDialog"
+    :modal="true"
+    append-to="body"
+    header="Create Team Memeber"
+    class="invite-team-member"
     :breakpoints="defaultBreakpoints"
     :style="{ width: '60vw' }"
-    :contentClass="'border-round-bottom-md'"
+    content-class="border-round-bottom-md"
     @hide="createTeamMemberDialog = false"
   >
-    <TeamsCreateUpdateForm @modalClose="createTeamMemberDialog = false" />
+    <TeamsCreateUpdateForm @modal-close="createTeamMemberDialog = false" />
   </Dialog>
   <CommonConfirmRemoveDialog
     v-if="selectedUser && deleteUserDialog"
     :visible="deleteUserDialog"
-    :recordToRemove="selectedUser as Record<string, any>"
+    :record-to-remove="selectedUser as Record<string, any>"
     title="Confirm Delete User"
     class="remove-dialog"
     @confirm="deleteUser"
     @hide="closeConfirmRemoveDialog"
-  >
-  </CommonConfirmRemoveDialog>
+  />
   <CommonConfirmRemoveDialog
     v-if="selectedUser && disableTeamMemberDialog"
     :visible="disableTeamMemberDialog"
-    :recordToRemove="
+    :record-to-remove="
       { ...selectedUser, name: fullName(selectedUser) } as Record<string, any>
     "
     title="Confirm Disable Team Member"
@@ -183,8 +182,7 @@ const handleActivation = async () => {
     <div>
       Are you sure you want to
       {{ selectedUser.isActive ? 'Deactivate' : 'Activate' }}
-      <strong> {{ fullName(selectedUser) }}</strong
-      >?
+      <strong> {{ fullName(selectedUser) }}</strong>?
     </div>
   </CommonConfirmRemoveDialog>
 </template>

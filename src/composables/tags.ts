@@ -1,5 +1,5 @@
 import $api from '@/plugins/api';
-import type { TagType, Tag } from '@/types/tags.type';
+import type { Tag, TagType } from '@/types/tags.type';
 
 export function useTags() {
   const tagsList = async (type: TagType, isPortal?: boolean) => {
@@ -16,7 +16,7 @@ export function useTags() {
   const deleteDocumentTag = async ({
     clientId,
     fileId,
-    tagId,
+    tagId
   }: {
     clientId: string;
     fileId: string;
@@ -31,7 +31,7 @@ export function useTags() {
     clientId,
     fileId,
     tagId,
-    isPortal,
+    isPortal
   }: {
     clientId: string;
     fileId: string;
@@ -40,7 +40,7 @@ export function useTags() {
   }) => {
     const { data } = await $api.post<void>(
       `${isPortal ? 'portal/' : ''}clients/${
-        isPortal ? '' : clientId + '/'
+        isPortal ? '' : `${clientId}/`
       }files/${fileId}/tags`,
       { tagId }
     );
@@ -50,6 +50,6 @@ export function useTags() {
     tagsList,
     createTag,
     deleteDocumentTag,
-    addDocumentTag,
+    addDocumentTag
   };
 }

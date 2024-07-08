@@ -4,15 +4,14 @@ import { useQuery } from 'vue-query';
 import type { MetaObj } from '@/types/common.type';
 import type { Task } from '@/types/tasks.type';
 
-const route = useRoute();
-const projectId = ref(route.params.id as string);
-const { metaFilter } = useUtilityFns();
-const { isLarge } = useCommonBreakPoints();
 const emit = defineEmits<{
   (e: 'update:project-task', data: Task): void;
   (e: 'remove:project-delete', data: Task): void;
 }>();
-
+const route = useRoute();
+const projectId = ref(route.params.id as string);
+const { metaFilter } = useUtilityFns();
+const { isLarge } = useCommonBreakPoints();
 const { data: projectDetails, isLoading } = useQuery('project-details', () => {
   return useProjectDetails(projectId.value as string);
 });
@@ -21,15 +20,15 @@ const { filters, searchText } = useDatatableFilters();
 
 <template>
   <DataTable
+    v-model:filters="filters"
     :value="projectDetails?.entities"
     :loading="isLoading"
-    responsiveLayout="scroll"
+    responsive-layout="scroll"
     breakpoint="768px"
-    v-model:filters="filters"
-    :globalFilterFields="['name']"
+    :global-filter-fields="['name']"
     :paginator="true"
     :rows="15"
-    :alwaysShowPaginator="false"
+    :always-show-paginator="false"
     :page-link-size="isLarge ? 5 : 3"
   >
     <template #header>
@@ -45,7 +44,9 @@ const { filters, searchText } = useDatatableFilters();
       </div>
     </template>
     <template #empty>
-      <div class="text-center">No tasks found</div>
+      <div class="text-center">
+        No tasks found
+      </div>
     </template>
     <Column field="name" header="Task Name" class="w-4" sortable>
       <template #body="slotProps">
@@ -56,7 +57,9 @@ const { filters, searchText } = useDatatableFilters();
     </Column>
     <Column class="text-center w-2">
       <template #header>
-        <div class="w-full text-center">Actions</div>
+        <div class="w-full text-center">
+          Actions
+        </div>
       </template>
       <template #body="slotProps">
         <div class="flex justify-content-center">
@@ -70,7 +73,7 @@ const { filters, searchText } = useDatatableFilters();
             icon="pi pi-trash"
             class="p-button-sm p-button-rounded p-button-danger"
             @click="emit('remove:project-delete', slotProps.data)"
-          ></Button>
+          />
         </div>
       </template>
     </Column>

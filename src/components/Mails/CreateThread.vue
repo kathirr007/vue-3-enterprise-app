@@ -1,17 +1,16 @@
 <script setup lang="ts">
 import { Field as VField } from 'vee-validate';
 import type {
-  ThreadCreatePayload,
   Contact,
-  ConversationActionType,
   Conversation,
+  ConversationActionType,
   ConversationCreatePayload,
+  ThreadCreatePayload
 } from '@/types/inbox.type';
 import { ThreadCreatePayloadSchema } from '@/types/inbox.type';
 import type {
   SchemaForm,
-  SchemaFormField,
-  SchemaFormRef,
+  SchemaFormRef
 } from '@/types/schemaform.type';
 import InputText from 'primevue/inputtext';
 import type { AutoCompleteCompleteEvent } from 'primevue/autocomplete';
@@ -25,15 +24,13 @@ import type {
   AttachmentContentType,
   AttachmentExtension,
   AttachmentResponse,
-  CreateAttachment,
+  CreateAttachment
 } from '@/types/attachment.type';
 import type { UploadFilesPayload } from '@/types/common.type';
 
 interface InboxContact extends Contact {
   name: string;
 }
-
-const emit = defineEmits(['success', 'cancel']);
 
 const props = withDefaults(
   defineProps<{
@@ -43,9 +40,11 @@ const props = withDefaults(
     conversation?: Conversation;
   }>(),
   {
-    creationTitle: 'Create Thread',
+    creationTitle: 'Create Thread'
   }
 );
+
+const emit = defineEmits(['success', 'cancel']);
 
 const { initToast } = useToasts();
 const { fullName } = useVueFilters();
@@ -60,11 +59,11 @@ const attachmentIds = ref<string[]>([]);
 
 useQuery(['inbox-contacts'], () => useInboxContacts(), {
   onSuccess: (data: Contact[]) => {
-    contacts.value = data.map((contact) => ({
+    contacts.value = data.map(contact => ({
       ...contact,
-      name: fullName(contact),
+      name: fullName(contact)
     })) as InboxContact[];
-  },
+  }
 });
 
 const setInitialValues = computed(() => {
@@ -72,10 +71,10 @@ const setInitialValues = computed(() => {
     ? {
         contact: {
           ...props.conversation.contact,
-          name: fullName(props.conversation.contact),
+          name: fullName(props.conversation.contact)
         },
         content:
-          props.actionType === 'forward' ? props.conversation.content : null,
+          props.actionType === 'forward' ? props.conversation.content : null
       }
     : undefined;
 });
@@ -89,14 +88,14 @@ const formData = computed<SchemaForm>(() => {
         name: 'contact',
         label: 'To',
         required: true,
-        showSlot: true,
+        showSlot: true
       },
       {
         as: InputText,
         name: 'subject',
         label: 'Subject',
         required: true,
-        placeholder: 'Enter Subject',
+        placeholder: 'Enter Subject'
       },
       {
         as: Editor,
@@ -104,7 +103,7 @@ const formData = computed<SchemaForm>(() => {
         name: 'content',
         label: 'Content',
         placeholder: 'Content',
-        editorStyle: 'height: 160px',
+        editorStyle: 'height: 160px'
       },
       {
         as: File,
@@ -117,13 +116,13 @@ const formData = computed<SchemaForm>(() => {
           'image/jpeg, application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         helpText: `Supported formats: jpeg, jpg, pdf, doc, docx, xls, xlsx, ppt, pptx, txt, csv.
       <br />Max size: 5MB.`,
-        hide: props.actionType !== 'reply',
-      },
+        hide: props.actionType !== 'reply'
+      }
     ],
     btnText: 'Submit',
     secondaryBtnText: 'Cancel',
     validationSchema: ThreadCreatePayloadSchema,
-    initialValues: setInitialValues.value,
+    initialValues: setInitialValues.value
   };
 });
 
@@ -137,15 +136,15 @@ const { mutateAsync: createThread, isLoading: creatingThread } = useMutation(
         actionType: 'Create',
         severity: 'success',
         summary: 'Success',
-        detail: 'Thread Created Successfully',
+        detail: 'Thread Created Successfully'
       });
       queryClient.invalidateQueries('threads');
       emit('success');
-    },
+    }
   }
 );
-const { mutateAsync: createConversation, isLoading: creatingConversation } =
-  useMutation(
+const { mutateAsync: createConversation, isLoading: creatingConversation }
+  = useMutation(
     (values: ConversationCreatePayload) => {
       return useConversationCreate(
         values,
@@ -163,11 +162,11 @@ const { mutateAsync: createConversation, isLoading: creatingConversation } =
             props.actionType === 'reply'
               ? 'Reply Message Sent Successfully'
               : 'Message Forwarded Successfully'
-          }`,
+          }`
         });
         queryClient.invalidateQueries('threads');
         emit('success');
-      },
+      }
     }
   );
 
@@ -177,19 +176,19 @@ const { mutateAsync: uploadFile } = useMutation(
       payloadData: data,
       showToast: false,
       fileUploadRef: 'attachments-upload',
-      schemaFormRef: formRef.value?.schemaFormRefs,
+      schemaFormRef: formRef.value?.schemaFormRefs
     });
   },
   {
     onSuccess: (data: { res: AttachmentResponse; file: File }) => {
       attachmentIds?.value.push(data.res.id);
-    },
+    }
   }
 );
 
-const onSubmit = async (values: Record<string, any>) => {
-  const { subject, content, contact, ...rest } =
-    values as unknown as ThreadCreatePayload;
+async function onSubmit(values: Record<string, any>) {
+  const { subject, content, contact, ...rest }
+    = values as unknown as ThreadCreatePayload;
   const payload = {
     ...rest,
     contact: { ...contact, uid: contact.uid },
@@ -199,28 +198,26 @@ const onSubmit = async (values: Record<string, any>) => {
     status: 'OPEN',
     content: {
       content: content as unknown as string,
-      delta: contentDelta.value,
-    },
+      delta: contentDelta.value
+    }
   };
 
   if (props.actionType === 'reply') {
     await createConversation({
       payload: {
         ...payload,
-        type: 'OUTGOING',
-      },
+        type: 'OUTGOING'
+      }
     } as unknown as ConversationCreatePayload);
     attachmentIds.value = [];
     return;
   }
 
   await createThread(payload as unknown as ThreadCreatePayload);
-};
+}
 
-const contactsSearch = (
-  event: AutoCompleteCompleteEvent,
-  val?: InboxContact[]
-) => {
+function contactsSearch(event: AutoCompleteCompleteEvent,
+  val?: InboxContact[]) {
   /*   const selectedContacts = (val && [...(val as InboxContact[])]) || [];
   contactsSuggesstions.value = contacts.value
     ?.filter((contact: InboxContact) =>
@@ -236,13 +233,13 @@ const contactsSearch = (
   contactsSuggesstions.value = contacts.value?.filter((contact: InboxContact) =>
     contact.name.toLowerCase().includes(event.query.toLowerCase())
   ) as InboxContact[];
-};
+}
 
-const handleEditorTextChange = (val: EditorTextChangeEvent) => {
+function handleEditorTextChange(val: EditorTextChangeEvent) {
   contentDelta.value = val.delta;
-};
+}
 
-const makeParallelAPIReq = async (payloadArr: File[]) => {
+async function makeParallelAPIReq(payloadArr: File[]) {
   if (payloadArr.length === 0) {
     return;
   }
@@ -253,14 +250,14 @@ const makeParallelAPIReq = async (payloadArr: File[]) => {
         filename: item.name,
         contentType: item.type as unknown as AttachmentContentType,
         extension: item.name.split('.').pop() as unknown as AttachmentExtension,
-        contentLength: item.size,
+        contentLength: item.size
       };
       await uploadFile({ payload, file: fileSelected.value });
     })
   );
-};
+}
 
-const uploadFiles = async (value: UploadFilesPayload) => {
+async function uploadFiles(value: UploadFilesPayload) {
   await makeParallelAPIReq(
     Array.isArray(value.files) ? value.files : [value.files as File]
   );
@@ -270,16 +267,16 @@ const uploadFiles = async (value: UploadFilesPayload) => {
       summary: 'File Upload',
       detail: `Total <strong>${attachmentIds.value?.length}</strong> File${
         attachmentIds.value?.length > 1 ? 's' : ''
-      } uploaded successfully`,
+      } uploaded successfully`
     });
   }
-};
+}
 
 watchEffect(async () => {
   if (attachmentIds.value) {
     formRef.value?.setValues({
       ...formRef.value.schemaFormValues,
-      attachments: attachmentIds.value,
+      attachments: attachmentIds.value
     });
   }
 });
@@ -287,34 +284,34 @@ watchEffect(async () => {
 
 <template>
   <div class="p-3">
-    <div class="font-medium underline text-xl py-3">{{ creationTitle }}</div>
+    <div class="font-medium underline text-xl py-3">
+      {{ creationTitle }}
+    </div>
     <CommonSchemaForm
       ref="formRef"
       :data="formData"
-      @submit="onSubmit"
-      @editorTextChange="handleEditorTextChange"
-      @secondaryBtnClick="$emit('cancel')"
-      @file-upload="(() => uploadFiles)()"
       :primary-btn-loading="creatingThread || creatingConversation"
+      @submit="onSubmit"
+      @editor-text-change="handleEditorTextChange"
+      @secondary-btn-click="$emit('cancel')"
+      @file-upload="(() => uploadFiles)()"
     >
-      <template v-slot:contact="{ ...attrs }">
-        <div :class="'field mb-0'">
-          <label class="block font-medium text-900" for="contact"
-            >{{ attrs.label }}
-            <span v-if="attrs.required" class="text-red-600">*</span></label
-          >
-          <VField name="contact" v-slot="{ handleChange, value, validate }">
+      <template #contact="{ ...attrs }">
+        <div class="field mb-0">
+          <label class="block font-medium text-900" for="contact">{{ attrs.label }}
+            <span v-if="attrs.required" class="text-red-600">*</span></label>
+          <VField v-slot="{ handleChange, value, validate }" name="contact">
             <AutoComplete
               :tabindex="0"
-              @update:model-value="handleChange"
-              @blur="validate()"
               class="w-full p-fluid"
               :model-value="value"
               v-bind="attrs"
-              completeOnFocus
-              :optionLabel="'name'"
-              :emptySearchMessage="`Nothing found`"
+              complete-on-focus
+              option-label="name"
+              empty-search-message="Nothing found"
               :suggestions="contactsSuggesstions"
+              @update:model-value="handleChange"
+              @blur="validate()"
               @complete="contactsSearch($event, value as InboxContact[])"
             />
           </VField>
@@ -322,7 +319,7 @@ watchEffect(async () => {
             <FormFeedbackMessage
               :errors="(attrs.errors as ComputedRef).value"
               :values="(attrs.values as ComputedRef).value"
-              :errorKey="'contact'"
+              error-key="contact"
               :feedback="true"
             />
           </transition>

@@ -106,9 +106,9 @@ useHead({
             .text-black {
                 color: #010101;
             }
-      `,
-    },
-  ],
+      `
+    }
+  ]
 });
 </script>
 
@@ -140,7 +140,7 @@ useHead({
           margin: 0 auto;
         "
       >
-        <!-- Gmail Wrapper start-->
+        <!-- Gmail Wrapper start -->
         <slot />
       </td>
     </tr>

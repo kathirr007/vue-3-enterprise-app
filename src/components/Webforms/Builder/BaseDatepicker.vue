@@ -9,13 +9,14 @@ withDefaults(
     description?: string;
   }>(),
   {
-    label: null,
+    label: null
   }
 );
 </script>
+
 <script lang="ts">
 export default defineComponent({
-  inheritAttrs: false,
+  inheritAttrs: false
 });
 </script>
 
@@ -31,20 +32,20 @@ export default defineComponent({
     <div v-else>
       <slot name="edit" />
     </div>
-    <small class="-mt-1 block" v-if="before">
+    <small v-if="before" class="-mt-1 block">
       {{ before }}
     </small>
     <VField :name="name">
       <Calendar
+        :id="name"
         :tabindex="0"
         :name="name"
-        :id="name"
         v-bind="{ ...$attrs, placeholder: 'dd-MM-yyyy' }"
-        showIcon
-        iconDisplay="input"
+        show-icon
+        icon-display="input"
       />
     </VField>
-    <small class="block" v-if="description">
+    <small v-if="description" class="block">
       {{ description }}
     </small>
   </div>

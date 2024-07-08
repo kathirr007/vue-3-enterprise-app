@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useRouteParams } from '@vueuse/router';
 import { useQuery } from 'vue-query';
 import type { ClientBillingProfile } from '@/types/client-billing.type';
 
@@ -15,7 +14,8 @@ const profileBillingData = ref();
 const { data: clientProfileDetails, isLoading: loadindDetails } = useQuery(
   ['client-profile-details', clientBillingId],
   () => {
-    if (!clientBillingId.value) return;
+    if (!clientBillingId.value)
+      return;
     return getOne(clientBillingId.value as string);
   },
   {
@@ -28,13 +28,13 @@ const { data: clientProfileDetails, isLoading: loadindDetails } = useQuery(
             label: profileBillingData.value?.name,
             to: {
               name: 'admin-client-billing-id',
-              params: { id: profileBillingData.value.id },
-            },
+              params: { id: profileBillingData.value.id }
+            }
           },
-          { label: 'Revisit' },
-        ],
+          { label: 'Revisit' }
+        ]
       });
-    },
+    }
   }
 );
 
@@ -42,9 +42,10 @@ const isRevisit = computed(() => {
   return route?.name?.toString().includes('revisit');
 });
 </script>
+
 <script lang="ts">
 export default defineComponent({
-  inheritAttrs: false,
+  inheritAttrs: false
 });
 </script>
 
@@ -58,15 +59,15 @@ export default defineComponent({
   >
     <div class="border-bottom-2 p-3 default-border-color">
       <h3 class="card-title m-0">
-        {{ 'Revisit ' + (profileBillingData?.name || '') }}
+        {{ `Revisit ${profileBillingData?.name || ''}` }}
       </h3>
     </div>
     <div class="bg-blue-50 py-6">
       <ClientBillingCreate
-        @back="router.push({ name: 'admin-client-billing' })"
-        @success="router.push({ name: 'admin-client-billing' })"
         :revisit="isRevisit"
         :clientbilling="profileBillingData"
+        @back="router.push({ name: 'admin-client-billing' })"
+        @success="router.push({ name: 'admin-client-billing' })"
       />
     </div>
   </div>

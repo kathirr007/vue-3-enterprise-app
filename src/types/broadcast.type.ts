@@ -1,7 +1,7 @@
 import type { InferType } from 'yup';
 import type { ContentJSON } from '@/types/common.type';
 import type { FullNameObj } from './teams.type';
-import { array, object, string, boolean, number } from 'yup';
+import { array, boolean, number, object, string } from 'yup';
 import type { Attachment } from './attachment.type';
 
 export const broadcastType = ['client', 'team'] as const;
@@ -96,13 +96,13 @@ export const BroadcastTypeSchema = object({
   templates: string()
     .when('type', {
       is: 'template',
-      then: string().required().label('Templates'),
+      then: string().required().label('Templates')
     })
     .optional()
     .label('Templates'),
   subject: string().required().label('Subject'),
   body: string().required().label('Message'),
-  attachmentIds: array().of(string()).optional().label('Attachments'),
+  attachmentIds: array().of(string()).optional().label('Attachments')
 });
 
 export type BroadcastTypePayload = InferType<typeof BroadcastTypeSchema>;
@@ -127,12 +127,12 @@ export interface TemplateMessagePayload {
 
 export const BroadcastTemplateSchema = object({
   name: string().required().label('Name'),
-  description: string().required().label('Description'),
+  description: string().required().label('Description')
 });
 export const TemplateAddMessageSchema = object({
   type: string().required().label('Type'),
   body: string().required().label('Message'),
-  subject: string().required().label('Subject'),
+  subject: string().required().label('Subject')
 });
 
 export const teamBroadcastCreateSchema = object({
@@ -140,7 +140,7 @@ export const teamBroadcastCreateSchema = object({
     .optional()
     .when('currentOp', {
       is: 'clone',
-      then: string().required().label('Name'),
+      then: string().required().label('Name')
     })
     .label('Name'),
   subject: string()
@@ -170,7 +170,7 @@ export const teamBroadcastCreateSchema = object({
     .optional()
     .when('isRecurring', {
       is: 'once',
-      then: string().required().label('Schedule Date').nullable(),
+      then: string().required().label('Schedule Date').nullable()
     })
     .label('Schedule Date')
     .nullable(),
@@ -178,7 +178,7 @@ export const teamBroadcastCreateSchema = object({
     .optional()
     .when('isRecurring', {
       is: 'repeat',
-      then: string().required().label('Interval'),
+      then: string().required().label('Interval')
     })
     .label('Schedule Date'),
   teamMemberType: string().required().label('Team Type'),
@@ -211,7 +211,8 @@ export const teamBroadcastCreateSchema = object({
     }),
   hours: number()
     .when('interval', (interval, schema) => {
-      if (interval) return schema.required();
+      if (interval)
+        return schema.required();
       return schema.optional();
     })
     .nullable(),
@@ -224,14 +225,14 @@ export const teamBroadcastCreateSchema = object({
     })
     .nullable(),
   currentOp: string().optional(),
-  isCreate: boolean().optional(),
+  isCreate: boolean().optional()
 });
 export const clientBroadcastCreateSchema = object({
   name: string()
     .optional()
     .when('currentOp', {
       is: 'clone',
-      then: string().required().label('Name'),
+      then: string().required().label('Name')
     })
     .label('Name'),
   subject: string()
@@ -266,7 +267,7 @@ export const clientBroadcastCreateSchema = object({
     .optional()
     .when('isRecurring', {
       is: 'once',
-      then: string().required().label('Schedule Date').nullable(),
+      then: string().required().label('Schedule Date').nullable()
     })
     .label('Schedule Date')
     .nullable(),
@@ -274,7 +275,7 @@ export const clientBroadcastCreateSchema = object({
     .optional()
     .when('isRecurring', {
       is: 'repeat',
-      then: string().required().label('Interval'),
+      then: string().required().label('Interval')
     })
     .label('Schedule Date'),
   clientType: string().required().label('Client Type'),
@@ -307,7 +308,8 @@ export const clientBroadcastCreateSchema = object({
     }),
   hours: number()
     .when('interval', (interval, schema) => {
-      if (interval) return schema.required();
+      if (interval)
+        return schema.required();
       return schema.optional();
     })
     .nullable(),
@@ -321,7 +323,7 @@ export const clientBroadcastCreateSchema = object({
     .nullable(),
 
   currentOp: string().optional(),
-  isCreate: boolean().optional(),
+  isCreate: boolean().optional()
 });
 
 export const CreateTemplateMessageSchema = object().shape({
@@ -329,16 +331,16 @@ export const CreateTemplateMessageSchema = object().shape({
     object().shape({
       type: string().required().nullable().label('Type'),
       subject: string().required().nullable().label('Subject'),
-      body: string().required().nullable().label('Body'),
+      body: string().required().nullable().label('Body')
     })
-  ),
+  )
 });
 
 export const AddMessageSchema = object({
-  message: string().required().nullable().label('Message'),
+  message: string().required().nullable().label('Message')
 });
 export const AddSubjectSchema = object({
-  message: string().required().nullable().label('Subject'),
+  message: string().required().nullable().label('Subject')
 });
 
 export type Interval = 'DAILY' | 'WEEKLY' | 'MONTHLY';

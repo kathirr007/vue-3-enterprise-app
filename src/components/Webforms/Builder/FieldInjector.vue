@@ -13,7 +13,7 @@ const props = withDefaults(
   {
     selectedRowIndex: -1,
     tableColumnIndex: -1,
-    isFirstColumn: true,
+    isFirstColumn: true
   }
 );
 
@@ -29,7 +29,7 @@ const {
   isCheckboxOrRadio,
   isStatic,
   isHeading,
-  isDivider,
+  isDivider
 } = useWebformTemplates();
 
 const injectField = reactive(
@@ -41,7 +41,7 @@ const drag = ref(false);
 const dragOptions = reactive({
   animation: 200,
   group: 'description',
-  disabled: false,
+  disabled: false
 });
 // Store all the options for select tag
 const optionHolder = ref('');
@@ -61,13 +61,13 @@ const isCheckboxOrRadio = computed(() => {
 
 const disableInjectField = computed(() => {
   return (
-    (props.isFirstColumn && !injectField.props.label) ||
-    (injectField.is === 'BaseSwitch' && !injectField.attrs.switchText) ||
-    (injectField.is === 'BaseTable' &&
-      ((props.isFirstColumn && !injectField.props.label) ||
-        !(injectField.props.columns as any[])[0].props.label ||
-        (!props.isFirstColumn &&
-          !(injectField.props.columns as any[])[0].props.label)))
+    (props.isFirstColumn && !injectField.props.label)
+    || (injectField.is === 'BaseSwitch' && !injectField.attrs.switchText)
+    || (injectField.is === 'BaseTable'
+    && ((props.isFirstColumn && !injectField.props.label)
+    || !(injectField.props.columns as any[])[0].props.label
+    || (!props.isFirstColumn
+    && !(injectField.props.columns as any[])[0].props.label)))
   );
 });
 
@@ -88,7 +88,8 @@ function handleOptionHolder() {
         injectField.attrs.isMultiple
           ? injectField.props.options?.push(option)
           : (injectField.props.options = [option]);
-      } else {
+      }
+      else {
         injectField.props.options?.push(option);
       }
     }
@@ -96,11 +97,11 @@ function handleOptionHolder() {
   optionHolder.value = '';
 }
 
-const handleAddField = () => {
+function handleAddField() {
   emits('inject:add', injectField);
-};
+}
 
-const addAutoMap = () => {
+function addAutoMap() {
   // ignore if already there.
   const isExists = new Set(
     autoMapList.value.map((x: any) => x.name.toLowerCase())
@@ -108,40 +109,41 @@ const addAutoMap = () => {
 
   if (!isExists) {
     autoMapList.value.push({
-      name: newMap.value.trim(),
+      name: newMap.value.trim()
     });
   }
   newMap.value = '';
-};
+}
 
-const ejectMap = ({ name }: { name: string }) => {
+function ejectMap({ name }: { name: string }) {
   const index = autoMapList.value
     .map((x: any) => x.name.toLowerCase())
     .indexOf(name.toLowerCase());
-  if (index === -1) return;
+  if (index === -1)
+    return;
   autoMapList.value.splice(index, 1);
-};
+}
 
-const onSubmit = (
-  typeofSubmit: 'add' | 'edit',
+function onSubmit(typeofSubmit: 'add' | 'edit',
   injectField?: TemplateField,
-  columnIndex?: number
-) => {
+  columnIndex?: number) {
   if (typeofSubmit === 'add') {
     handleAddField();
-  } else if (injectField) {
-    if (columnIndex) emits('inject:column:edit', injectField, columnIndex);
+  }
+  else if (injectField) {
+    if (columnIndex)
+      emits('inject:column:edit', injectField, columnIndex);
     else emits('inject:edit', injectField);
   }
-};
+}
 
 watchEffect(() => {
   if (autoMapList.value) {
     injectField.props.autoMapping = autoMapList.value;
   }
   if (
-    [true, false, undefined].includes(injectField.attrs.isMultiple) &&
-    !injectField.isEditing
+    [true, false, undefined].includes(injectField.attrs.isMultiple)
+    && !injectField.isEditing
   ) {
     injectField.props.options = [];
   }
@@ -160,9 +162,10 @@ watch(
   { immediate: true }
 );
 </script>
+
 <script lang="ts">
 export default defineComponent({
-  inheritAttrs: false,
+  inheritAttrs: false
 });
 </script>
 
@@ -186,15 +189,14 @@ export default defineComponent({
             >
               <RadioButton
                 v-model="injectField.attrs.level"
-                :inputId="`headingLevel${headingLevel}`"
+                :input-id="`headingLevel${headingLevel}`"
                 :name="`headingLevel${headingLevel}`"
                 :value="headingLevel"
               />
               <label
                 :for="`headingLevel${headingLevel}`"
                 class="cursor-pointer ml-2"
-                >Heading {{ headingLevel }}</label
-              >
+              >Heading {{ headingLevel }}</label>
             </div>
           </div>
         </div>
@@ -234,7 +236,7 @@ export default defineComponent({
             >
               <RadioButton
                 v-model="injectField.attrs.align"
-                :inputId="`textAlign${idx}`"
+                :input-id="`textAlign${idx}`"
                 :name="`textAlign${idx}`"
                 :value="textAlignment.toLowerCase()"
               />
@@ -281,7 +283,7 @@ export default defineComponent({
             >
               <RadioButton
                 v-model="injectField.attrs.top"
-                :inputId="`spaceTop${idx}`"
+                :input-id="`spaceTop${idx}`"
                 :name="`spaceTop${idx}`"
                 :value="spacer"
               />
@@ -306,7 +308,7 @@ export default defineComponent({
             >
               <RadioButton
                 v-model="injectField.attrs.bottom"
-                :inputId="`spaceBottom${idx}`"
+                :input-id="`spaceBottom${idx}`"
                 :name="`spaceBottom${idx}`"
                 :value="spacer"
               />
@@ -342,8 +344,7 @@ export default defineComponent({
         <label
           class="block font-medium text-900 cursor-pointer"
           for="firstcolumn"
-          >Column Name</label
-        >
+        >Column Name</label>
         <template v-if="tableColumnIndex === -1 && injectField.props.columns">
           <InputText
             id="firstcolumn"
@@ -367,12 +368,11 @@ export default defineComponent({
           <label
             class="block font-medium text-900 cursor-pointer"
             for="automapping"
-            >Use Auto Mapping</label
-          >
+          >Use Auto Mapping</label>
           <Checkbox
-            binary
             id="automapping"
             v-model="isAutoMap"
+            binary
             class="shadow-sm mt-1 ml-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
             name="required"
             type="checkbox"
@@ -424,8 +424,7 @@ export default defineComponent({
                 <label
                   class="block font-medium text-900 cursor-pointer"
                   for="addMap"
-                  >Add New Map</label
-                >
+                >Add New Map</label>
                 <InputText
                   id="addMap"
                   v-model="newMap"
@@ -467,7 +466,7 @@ export default defineComponent({
       <div
         v-if="
           !['BaseDatePicker', 'BaseTable', 'BaseSwitch'].includes(
-            injectField.is
+            injectField.is,
           ) && tableColumnIndex === -1
         "
         class="field"
@@ -491,9 +490,9 @@ export default defineComponent({
       <div v-if="enableIsMultiple" class="flex space-x-2">
         <div class="field flex align-items-center gap-2">
           <Checkbox
-            binary
-            inputId="isFieldMultiple"
             v-model="injectField.attrs.isMultiple"
+            binary
+            input-id="isFieldMultiple"
             class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
             name="isFieldMultiple"
             type="checkbox"
@@ -573,10 +572,10 @@ export default defineComponent({
                     ? 'pointer-events-none'
                     : 'cursor-pointer'
                 "
-                @click="injectField.props.options?.splice(index, 1)"
                 role="link"
+                @click="injectField.props.options?.splice(index, 1)"
                 @keyup.enter="injectField.props.options?.splice(index, 1)"
-              ></i>
+              />
             </div>
           </Tag>
           <!-- <div
@@ -597,9 +596,9 @@ export default defineComponent({
         <Button
           class="disabled:cursor-not-allowed p-button button-primary mt-2"
           :disabled="
-            !optionHolder ||
-            injectField.props.options?.includes(optionHolder) ||
-            Boolean(injectField.predefinedType)
+            !optionHolder
+              || injectField.props.options?.includes(optionHolder)
+              || Boolean(injectField.predefinedType)
           "
           @click.prevent="handleOptionHolder"
         >
@@ -647,19 +646,19 @@ export default defineComponent({
         <div class="field flex align-items-center gap-2">
           <template v-if="injectField.is === 'BaseTable'">
             <Checkbox
-              binary
-              inputId="requiredField"
               v-model="(injectField.props.columns as any[])[0].rules.required"
+              binary
+              input-id="requiredField"
               class="shadow-sm mt-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
               name="required"
               type="checkbox"
             />
           </template>
           <Checkbox
-            binary
             v-else
-            inputId="requiredField"
             v-model="injectField.rules.required"
+            binary
+            input-id="requiredField"
             class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
             name="required"
             type="checkbox"
@@ -675,15 +674,15 @@ export default defineComponent({
     </template>
     <div class="flex flex-row-reverse">
       <Button
-        type="submit"
         v-if="tableColumnIndex !== -1 && injectField.props.columns"
+        type="submit"
         class="button button-primary"
         :disabled="
-          disableInjection ||
-          (injectField.is === 'BaseTable' &&
-            ((isFirstColumn && !injectField.props.label) ||
-              !injectField.props.columns[0].props.label ||
-              (!isFirstColumn && !injectField.props.columns[0].props.label)))
+          disableInjection
+            || (injectField.is === 'BaseTable'
+              && ((isFirstColumn && !injectField.props.label)
+                || !injectField.props.columns[0].props.label
+                || (!isFirstColumn && !injectField.props.columns[0].props.label)))
         "
         @click.prevent="onSubmit('edit', injectField, tableColumnIndex)"
       >

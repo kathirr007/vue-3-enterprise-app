@@ -28,8 +28,8 @@ const containerClass = computed(() => {
       'layout-mobile-active': appMenuControls.staticMenuMobileActive.value,
       'layout-menu-light layout-topbar-light':
         !appMenuControls.isDarkTheme.value,
-      'layout-menu-dark layout-topbar-dark': appMenuControls.isDarkTheme.value,
-    },
+      'layout-menu-dark layout-topbar-dark': appMenuControls.isDarkTheme.value
+    }
   ];
 });
 </script>
@@ -37,7 +37,7 @@ const containerClass = computed(() => {
 <template>
   <div id="layout-main-container" :class="containerClass">
     <div class="layout-content-wrapper">
-      <AppTopbar></AppTopbar>
+      <AppTopbar />
 
       <div class="layout-main" @click="appMenuControls.handleDocumentClick">
         <CommonBreadcrumbs v-if="isLarge" />
@@ -66,6 +66,6 @@ const containerClass = computed(() => {
     <div
       class="layout-mask modal-in"
       @click="appMenuControls.handleDocumentClick"
-    ></div>
+    />
   </div>
 </template>

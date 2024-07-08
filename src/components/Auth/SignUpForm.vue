@@ -5,11 +5,6 @@ import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import { useMutation } from 'vue-query';
 
-dayjs.extend(timezone);
-
-const { checkPasswordRule, strongRegEx } = usePasswordValidator();
-const router = useRouter();
-
 const props = defineProps<{
   email?: string;
 }>();
@@ -18,14 +13,19 @@ const emit = defineEmits<{
   (e: 'success', data: SignUpResponse): void;
 }>();
 
+dayjs.extend(timezone);
+
+const { checkPasswordRule, strongRegEx } = usePasswordValidator();
+const router = useRouter();
+
 const { handleSubmit, errors, values, meta } = useForm({
   validationSchema: SignUpPayloadSchema,
   initialValues: {
     email: props.email as string,
     password: null,
     confirmPassword: null,
-    acceptTerms: false,
-  },
+    acceptTerms: false
+  }
 });
 
 const { value: email } = useField<string>('email');
@@ -41,7 +41,7 @@ const { isLoading, mutateAsync: signUp } = useMutation(
   {
     onSuccess: (data) => {
       emit('success', data);
-    },
+    }
   }
 );
 
@@ -51,7 +51,7 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-  <form @submit="onSubmit" class="text-left">
+  <form class="text-left" @submit="onSubmit">
     <div class="field">
       <label for="email" class="block font-medium text-900">
         Email
@@ -63,14 +63,14 @@ const onSubmit = handleSubmit(async (values) => {
         type="email"
         class="w-full"
         disabled
-        :class="{ 'p-invalid': errors['email'] }"
+        :class="{ 'p-invalid': errors.email }"
       />
       <transition mode="out-in" name="field-slide-down">
         <FormFeedbackMessage
-          :success-class="'font-medium'"
+          success-class="font-medium"
           :errors="errors"
           :values="values"
-          :errorKey="'email'"
+          error-key="email"
         />
       </transition>
     </div>
@@ -81,17 +81,19 @@ const onSubmit = handleSubmit(async (values) => {
       </label>
       <Password
         id="password"
-        name="password"
         v-model="password"
-        toggleMask
+        name="password"
+        toggle-mask
         class="w-full"
-        :class="{ 'p-invalid': errors['password'] }"
+        :class="{ 'p-invalid': errors.password }"
         :strong-regex="strongRegEx"
       >
         <template #footer="sp: any">
           {{ sp.level }}
           <Divider />
-          <p class="mt-2">Suggestions</p>
+          <p class="mt-2">
+            Suggestions
+          </p>
           <ul class="pl-2 ml-2 mt-0" style="line-height: 1.5">
             <li
               :class="{
@@ -129,10 +131,10 @@ const onSubmit = handleSubmit(async (values) => {
       </Password>
       <transition mode="out-in" name="field-slide-down">
         <FormFeedbackMessage
-          :success-class="'font-medium'"
+          success-class="font-medium"
           :errors="errors"
           :values="values"
-          :errorKey="'password'"
+          error-key="password"
         />
       </transition>
     </div>
@@ -143,34 +145,33 @@ const onSubmit = handleSubmit(async (values) => {
       </label>
       <Password
         id="confirmPassword"
-        name="confirmPassword"
         v-model="confirmPassword"
-        toggleMask
+        name="confirmPassword"
+        toggle-mask
         :feedback="false"
         class="w-full"
-        :class="{ 'p-invalid': errors['confirmPassword'] }"
+        :class="{ 'p-invalid': errors.confirmPassword }"
         :strong-regex="strongRegEx"
-      >
-      </Password>
+      />
       <transition mode="out-in" name="field-slide-down">
         <FormFeedbackMessage
-          :success-class="'font-medium'"
+          success-class="font-medium"
           :errors="errors"
           :values="values"
-          :errorKey="'confirmPassword'"
+          error-key="confirmPassword"
           :feedback="false"
         />
       </transition>
     </div>
     <div
       class="field-checkbox mb-1"
-      :class="{ 'p-invalid': errors['acceptTerms'] }"
+      :class="{ 'p-invalid': errors.acceptTerms }"
     >
       <Checkbox
-        inputId="acceptTerms"
+        v-model="acceptTerms"
+        input-id="acceptTerms"
         name="option"
         value="true"
-        v-model="acceptTerms"
         :binary="true"
       />
       <label for="acceptTerms" class="line-height-2 text-sm">
@@ -179,17 +180,16 @@ const onSubmit = handleSubmit(async (values) => {
           :href="`${'https://mudrantar.com/usa/terms-and-conditions.html'}`"
           target="_blank"
           class="underline"
-          >Terms of Services</a
-        >
+        >Terms of Services</a>
         and acknowledge the Privacy Policy.
       </label>
     </div>
     <transition mode="out-in" name="field-slide-down">
       <FormFeedbackMessage
-        :success-class="'font-medium'"
+        success-class="font-medium"
         :errors="errors"
         :values="values"
-        :errorKey="'acceptTerms'"
+        error-key="acceptTerms"
         :feedback="false"
       />
     </transition>
@@ -199,7 +199,7 @@ const onSubmit = handleSubmit(async (values) => {
       :loading="isLoading"
       type="submit"
       class="block mx-auto mt-4"
-    ></Button>
+    />
   </form>
   <div class="font-medium mt-4 text-left">
     <a

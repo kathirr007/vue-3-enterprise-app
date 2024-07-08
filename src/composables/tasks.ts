@@ -2,18 +2,18 @@ import $api from '@/plugins/api';
 import type {
   ContentJSON,
   MetaObj,
-  PaginatedResponse,
+  PaginatedResponse
 } from '@/types/common.type';
 import type { Conversation } from '@/types/inbox.type';
 import type { EntityStatus } from '@/types/status-entity.type';
 import type {
-  Task,
   EntityType,
-  UpdateTask,
-  UpdateTaskPayload,
-  TaskUserRemovePayload,
-  TaskUserAddPayload,
+  Task,
   TaskComments,
+  TaskUserAddPayload,
+  TaskUserRemovePayload,
+  UpdateTask,
+  UpdateTaskPayload
 } from '@/types/tasks.type';
 import type { Tag } from '@/types/tags.type';
 import type { User } from '@/types/teams.type';
@@ -25,7 +25,7 @@ export async function useTasksList({
   status,
   entityType = 'TASK',
   clientId,
-  isPortal,
+  isPortal
 }: {
   status?: 'CLOSED' | 'OPEN';
   entityType?: EntityType;
@@ -49,7 +49,7 @@ export async function useTasksListV2({
   page,
   limit,
   filters,
-  sortBy,
+  sortBy
 }: {
   entityType: EntityType;
   // status?: 'CLOSED' | 'OPEN';
@@ -62,17 +62,20 @@ export async function useTasksListV2({
   sortBy?: string;
 }) {
   let url = `entities${!isPortalUser.value ? `/${entityType}` : ''}?`;
-  if (isPortal) url = 'portal/'.concat(url);
-  if (status) url = url.concat(`status=${status}`);
-  if (clientId) url = url.concat(`&clientId=${clientId}`);
+  if (isPortal)
+    url = 'portal/'.concat(url);
+  if (status)
+    url = url.concat(`status=${status}`);
+  if (clientId)
+    url = url.concat(`&clientId=${clientId}`);
 
   const { data } = await $api.get<PaginatedResponse<Task>>(url, {
     params: {
       page,
       limit,
       filters,
-      sortBy,
-    },
+      sortBy
+    }
   });
   return data;
 }
@@ -87,19 +90,21 @@ export async function useTask(
     }/${id}`
   );
   const schemaDataPaylaod: UpdateTask = {
-    data: data as unknown as UpdateTaskPayload,
+    data: data as unknown as UpdateTaskPayload
   };
 
   schemaDataPaylaod.data.meta?.forEach((meta: MetaObj) => {
     if (meta.metaKey === 'description') {
       schemaDataPaylaod.data[meta.metaKey] = JSON.parse(meta.metaValue).content;
-    } else if (
-      meta.metaKey === 'isNotificationEnabled' ||
-      meta.metaKey === 'isBillingEnabled'
+    }
+    else if (
+      meta.metaKey === 'isNotificationEnabled'
+      || meta.metaKey === 'isBillingEnabled'
     ) {
-      schemaDataPaylaod.data[meta.metaKey] = (meta.metaValue ===
-        'true') as unknown as string;
-    } else {
+      schemaDataPaylaod.data[meta.metaKey] = (meta.metaValue
+      === 'true') as unknown as string;
+    }
+    else {
       schemaDataPaylaod.data[meta.metaKey] = meta.metaValue;
     }
   });
@@ -121,13 +126,15 @@ export async function useTask(
   if (data.assignees && data.assignees.length) {
     schemaDataPaylaod.data.assigneesData = data.assignees;
     schemaDataPaylaod.data.assignees = data.assignees.map((e: User) => e.id)[0];
-  } else {
+  }
+  else {
     schemaDataPaylaod.data.assignees = undefined;
   }
   if (data.watchers) {
     schemaDataPaylaod.data.watchersData = data.watchers;
     schemaDataPaylaod.data.watchers = data.watchers.map((e: User) => e.id);
-  } else {
+  }
+  else {
     schemaDataPaylaod.data.watchers = [];
   }
   if (data.clientUsers && data.clientUsers.length > 0) {
@@ -136,7 +143,8 @@ export async function useTask(
         return clientUser.user?.id as string;
       }
     ) as string[];
-  } else {
+  }
+  else {
     schemaDataPaylaod.data.clientUsers = [];
   }
   if (data.comments.length > 0) {
@@ -145,7 +153,7 @@ export async function useTask(
         return {
           ...comment,
           content: JSON.parse(comment.content as unknown as string),
-          isEditing: false,
+          isEditing: false
         };
       }
     );
@@ -157,7 +165,7 @@ export async function useTask(
           ...conversation,
           content: isJsonStringValid(conversation.content)
             ? JSON.parse(conversation.content as string).content
-            : (conversation.content as ContentJSON).content,
+            : (conversation.content as ContentJSON).content
         };
       }
     );
@@ -168,7 +176,7 @@ export async function useTaskUpdate({
   id,
   payload,
   isPortal,
-  entityType,
+  entityType
 }: {
   id: string;
   entityType: EntityType;
@@ -230,31 +238,31 @@ export async function useTaskUserAdd(
   entityType: EntityType
 ) {
   const { id, userType, ...payload } = values;
-  const { data } =
-    userType === 'watcher'
+  const { data }
+    = userType === 'watcher'
       ? await $api.post<Task>(
           `entities${
             !isPortalUser.value ? `/${entityType}` : ''
           }/${id}/watchers`,
           {
-            ...payload,
+            ...payload
           }
-        )
+      )
       : userType === 'assignee'
-      ? await $api.post<Task>(
+        ? await $api.post<Task>(
           `entities${
             !isPortalUser.value ? `/${entityType}` : ''
           }/${id}/assignees`,
           {
-            ...payload,
+            ...payload
           }
         )
-      : await $api.post<Task>(
+        : await $api.post<Task>(
           `entities${
             !isPortalUser.value ? `/${entityType}` : ''
           }/${id}/clientUsers`,
           {
-            ...payload,
+            ...payload
           }
         );
   return data;
@@ -268,20 +276,20 @@ export async function useTaskUserDelete(
         `entities${!isPortalUser.value ? `/${entityType}` : ''}/${
           payload.id
         }/watchers/${payload.watcherId}`
-      )
+    )
     : payload.assigneeId
-    ? await $api.delete<Task>(
+      ? await $api.delete<Task>(
         `entities${!isPortalUser.value ? `/${entityType}` : ''}/${
           payload.id
         }/assignees/${payload.assigneeId}`
       )
-    : await $api.post<Task>(
+      : await $api.post<Task>(
         `entities${!isPortalUser.value ? `/${entityType}` : ''}/${
           payload.id
         }/clientUsers/remove`,
         {
           clientId: payload.clientId,
-          userId: payload.userId,
+          userId: payload.userId
         }
       );
   return data;
@@ -298,17 +306,17 @@ export async function useTaskCommentCreate(
   return {
     ...data,
     content: JSON.parse(data.content as unknown as string),
-    isEditing: false,
+    isEditing: false
   };
 }
 export async function useTaskComments(taskId: string, isPortal?: boolean) {
   const { data } = await $api.get<TaskComments[]>(
     `${isPortal ? 'portal/' : ''}entities/${taskId}/comments`
   );
-  return data.map((comment) => ({
+  return data.map(comment => ({
     ...comment,
     content: JSON.parse(comment.content as unknown as string),
-    isEditing: false,
+    isEditing: false
   }));
 }
 export async function useTaskCommentUpdate(
@@ -324,7 +332,7 @@ export async function useTaskCommentUpdate(
   return {
     ...data,
     content: JSON.parse(data.content as unknown as string),
-    isEditing: false,
+    isEditing: false
   };
 }
 export async function useTaskCommentDelete(
@@ -350,7 +358,7 @@ export async function useTaskBulkUpdate({
   field,
   value,
   isPortal,
-  entityType,
+  entityType
 }: {
   ids: string[];
   field: string;
@@ -365,7 +373,7 @@ export async function useTaskBulkUpdate({
     {
       ids,
       field,
-      value,
+      value
     }
   );
 }
@@ -436,16 +444,17 @@ export async function useBulkCreateTasks(
   return data;
 }
 
-export const checkAvailability = async (payload: {
+export async function checkAvailability(payload: {
   date: string;
   userId?: string;
-}) => {
-  if (payload.date === undefined || payload.date === null) return true;
+}) {
+  if (payload.date === undefined || payload.date === null)
+    return true;
   const { data } = await $api.post('hrms/check-availability', payload);
   return data;
-};
+}
 
 export const useTaskTypeHumanMap: Record<string, string> = {
   TASK: 'Team Task',
-  CLIENTTASK: 'Client Request',
+  CLIENTTASK: 'Client Request'
 };

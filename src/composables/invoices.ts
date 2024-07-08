@@ -6,7 +6,7 @@ export async function useInvoicesList({
   page,
   limit,
   filters,
-  sortBy,
+  sortBy
 }: {
   page?: number;
   limit?: number;
@@ -18,8 +18,8 @@ export async function useInvoicesList({
       page,
       limit,
       filters,
-      sortBy,
-    },
+      sortBy
+    }
   });
   return data;
 }

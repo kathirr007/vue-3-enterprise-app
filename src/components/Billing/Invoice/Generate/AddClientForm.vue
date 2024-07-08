@@ -1,13 +1,29 @@
 <script setup lang="ts">
 import type {
   ClientBillingProfile,
-  CreateProfileClientPayload,
+  CreateProfileClientPayload
 } from '@/types/client-billing.type';
-import { useMutation, useQuery, useQueryClient } from 'vue-query';
+import { useMutation, useQueryClient } from 'vue-query';
 
 import { CreateProfileClientSchema } from '@/types/client-billing.type';
 import type { Client } from '@/types/client.type';
 import { Field as VField } from 'vee-validate';
+
+const props = defineProps<{
+  billingDetail?: ClientBillingProfile;
+  apiKey?: number;
+  loading?: boolean;
+  revisit?: boolean;
+  addClient?: boolean;
+}>();
+
+const emit = defineEmits<{
+  (e: 'emitStep', step: string): void;
+  (e: 'back', step: 'clientForm'): void;
+  (e: 'skip', step: 'clientForm'): void;
+  (e: 'client-form', value: CreateProfileClientPayload, id?: string): void;
+  (e: 'client-form-remove', value: CreateProfileClientPayload): void;
+}>();
 
 const route = useRoute();
 
@@ -21,31 +37,15 @@ const clientBillingId = ref<string>(route.params.id as string);
 
 const { data: clientData, isLoading: loadingClients } = getClients();
 
-const props = defineProps<{
-  billingDetail?: ClientBillingProfile;
-  apiKey?: number;
-  loading?: boolean;
-  revisit?: boolean;
-  addClient?: boolean;
-}>();
-
 const { errors, values, meta, handleSubmit } = useForm({
   validationSchema: CreateProfileClientSchema,
   initialValues: {
     clients: props.billingDetail
       ? props.billingDetail?.map((client: Client) => client.id)
-      : undefined,
+      : undefined
   },
-  validateOnMount: false,
+  validateOnMount: false
 });
-
-const emit = defineEmits<{
-  (e: 'emitStep', step: string): void;
-  (e: 'back', step: 'clientForm'): void;
-  (e: 'skip', step: 'clientForm'): void;
-  (e: 'client-form', value: CreateProfileClientPayload, id?: string): void;
-  (e: 'client-form-remove', value: CreateProfileClientPayload): void;
-}>();
 
 const { mutateAsync: detachClientsBilling } = useMutation(
   (payload: CreateProfileClientPayload) => {
@@ -60,13 +60,13 @@ const { mutateAsync: detachClientsBilling } = useMutation(
       queryClient.invalidateQueries('clients-details-list');
 
       emit('client-form-remove', data);
-    },
+    }
   }
 );
 
 const onSubmit = handleSubmit((formValues: any) => {
   const payload: CreateProfileClientPayload = {
-    ...formValues,
+    ...formValues
   } as unknown as CreateProfileClientPayload;
   clientsToRemove.value = props.billingDetail
     ?.filter(
@@ -76,7 +76,7 @@ const onSubmit = handleSubmit((formValues: any) => {
     .map((client: Client) => client.id) as string[];
   if (clientsToRemove.value && clientsToRemove.value.length) {
     detachClientsBilling({
-      clients: clientsToRemove.value,
+      clients: clientsToRemove.value
     });
     const clientArry1 = props.billingDetail?.map((val: any) => val.id);
     const clientArray2 = formValues.clients;
@@ -84,15 +84,17 @@ const onSubmit = handleSubmit((formValues: any) => {
       (item: any) => !clientArry1.includes(item)
     );
 
-    emit('client-form', { clients: clients });
-  } else {
+    emit('client-form', { clients });
+  }
+  else {
     emit('client-form', payload);
   }
 });
 </script>
+
 <script lang="ts">
 export default defineComponent({
-  inheritAttrs: false,
+  inheritAttrs: false
 });
 </script>
 
@@ -107,27 +109,26 @@ export default defineComponent({
           <CommonLoading v-if="loadingClients" />
           <VField
             v-else
-            name="clients"
             v-slot="{ handleChange, value, validate }"
+            name="clients"
           >
             <MultiSelect
+              id="clients"
               :tabindex="0"
-              @update:model-value="handleChange"
-              @blur="validate()"
               class="w-full"
               name="clients"
-              id="clients"
               :model-value="value"
               :options="clientData"
-              optionLabel="name"
-              optionValue="id"
+              option-label="name"
+              option-value="id"
               placeholder="Select Client"
               :show-clear="true"
               :loading="loadingClients"
-              :virtualScrollerOptions="{ itemSize: 30 }"
+              :virtual-scroller-options="{ itemSize: 30 }"
               filter
-            >
-            </MultiSelect>
+              @update:model-value="handleChange"
+              @blur="validate()"
+            />
           </VField>
         </div>
       </div>
@@ -135,7 +136,7 @@ export default defineComponent({
         <FormFeedbackMessage
           :errors="errors"
           :values="values"
-          errorKey="clients"
+          error-key="clients"
           :feedback="false"
         />
       </transition>
@@ -155,7 +156,7 @@ export default defineComponent({
           @click="emit('skip', 'clientForm')"
         />
         <Button
-          :label="'Submit'"
+          label="Submit"
           type="submit"
           :loading="loading"
           :disabled="!meta.valid"

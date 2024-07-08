@@ -3,14 +3,13 @@ import type { HandleStepFunc } from '@/types/client.type';
 import type { Step } from '@/types/common.type';
 import type {
   ExtendUnScheduledProjectPayload,
+  Project,
+  ProjectStatus,
   ScheduleProjectPayload,
   ScheduleProjectStep,
   UnPlannedProject,
   UnScheduledProjectEntity,
-  UnScheduledProjectEntityPayload,
-  ProjectMeta,
-  Project,
-  ProjectStatus,
+  UnScheduledProjectEntityPayload
 } from '@/types/project.type';
 
 import { useMutation } from 'vue-query';
@@ -19,17 +18,11 @@ import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import type { Service } from '@/types/service.type';
 
-type UpdateTitle = {
+interface UpdateTitle {
   step: ScheduleProjectStep;
   typeofSchedule: 'Schedule' | 'Extend' | '';
   serviceToSchedule: UnPlannedProject | undefined;
-};
-
-dayjs.extend(isSameOrAfter);
-dayjs.extend(isSameOrBefore);
-
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const handleStep = inject<HandleStepFunc>('handleStep', () => {});
+}
 
 const props = withDefaults(
   defineProps<{
@@ -38,10 +31,9 @@ const props = withDefaults(
   }>(),
   {
     serviceToSchedule: undefined,
-    typeofSchedule: '',
+    typeofSchedule: ''
   }
 );
-
 const emit = defineEmits<{
   (e: 'back'): void;
   (
@@ -49,6 +41,10 @@ const emit = defineEmits<{
     { serviceToSchedule, step, typeofSchedule }: UpdateTitle
   ): void;
 }>();
+dayjs.extend(isSameOrAfter);
+dayjs.extend(isSameOrBefore);
+
+const handleStep = inject<HandleStepFunc>('handleStep', () => {});
 
 const { initToast } = useToasts();
 const route = useRoute();
@@ -80,17 +76,19 @@ const clientDueDate = computed(() => {
   if (clientsSelected.value.length) {
     const selecttedClients = clientId.value
       ? [clientId.value]
-      : clientsSelected.value.map((client) => client.clientId);
+      : clientsSelected.value.map(client => client.clientId);
 
     const dueDate = selecttedClients?.reduce((acc, curr) => {
       const projectMeta = props.serviceToSchedule?.projectMeta.find(
-        (meta) => meta.clientId === curr
+        meta => meta.clientId === curr
       );
       if (!acc) {
         return getProperValidationDate(projectMeta?.dueDate as string);
-      } else if (dayjs(acc).isSameOrAfter(projectMeta?.dueDate)) {
+      }
+      else if (dayjs(acc).isSameOrAfter(projectMeta?.dueDate)) {
         return getProperValidationDate(projectMeta?.dueDate as string);
       }
+      return undefined;
     }, undefined);
 
     return dayjs(dueDate).toDate();
@@ -101,17 +99,19 @@ const clientsMinDueDate = computed(() => {
   if (clientsSelected.value.length) {
     const selecttedClients = clientId.value
       ? [clientId.value]
-      : clientsSelected.value.map((client) => client.clientId);
+      : clientsSelected.value.map(client => client.clientId);
 
     const dueDate = selecttedClients?.reduce((acc, curr) => {
       const projectMeta = props.serviceToSchedule?.projectMeta.find(
-        (meta) => meta.clientId === curr
+        meta => meta.clientId === curr
       );
       if (!acc) {
         return getProperValidationDate(projectMeta?.dueDate as string);
-      } else if (dayjs(acc).isSameOrBefore(projectMeta?.dueDate)) {
+      }
+      else if (dayjs(acc).isSameOrBefore(projectMeta?.dueDate)) {
         return getProperValidationDate(projectMeta?.dueDate as string);
       }
+      return undefined;
     }, undefined);
 
     return dayjs(dueDate).toDate();
@@ -122,17 +122,19 @@ const clientProjectManager = computed(() => {
   if (clientsSelected.value.length) {
     const selecttedClients = clientId.value
       ? [clientId.value]
-      : clientsSelected.value.map((client) => client.clientId);
+      : clientsSelected.value.map(client => client.clientId);
 
     const projectManager = selecttedClients?.reduce((acc, curr) => {
       const projectMeta = props.serviceToSchedule?.projectMeta.find(
-        (meta) => meta.clientId === curr
+        meta => meta.clientId === curr
       );
       if (!acc) {
         return projectMeta?.projectManagerId;
-      } else if (acc === projectMeta?.projectManagerId) {
+      }
+      else if (acc === projectMeta?.projectManagerId) {
         return projectMeta?.projectManagerId;
-      } else return undefined;
+      }
+      else return undefined;
     }, undefined);
     return projectManager;
   }
@@ -146,7 +148,7 @@ function handleSuccess(scheduleType: 'Schedule' | 'Extend') {
     summary: `Project ${scheduleType}`,
     detail: `Project ${scheduleType.toLowerCase()}${
       props.typeofSchedule === 'Extend' ? 'e' : ''
-    }d successfully`,
+    }d successfully`
   });
   backToList();
 }
@@ -155,34 +157,30 @@ const { scheduleProject, extendProject } = useUnplannedProjects();
 
 const {
   mutateAsync: scheduleUnscheduledProject,
-  isLoading: schedulingProject,
+  isLoading: schedulingProject
 } = useMutation('schedule-project', async (payload: ScheduleProjectPayload) => {
   return scheduleProject(payload);
 });
 
-const { mutateAsync: extendUnscheduledProject, isLoading: extendingProject } =
-  useMutation(
+const { mutateAsync: extendUnscheduledProject, isLoading: extendingProject }
+  = useMutation(
     'extend-project',
     async (payload: ExtendUnScheduledProjectPayload) => {
       return extendProject(payload);
     }
   );
 
-const prepareForPrevStep = (
-  stepName: ScheduleProjectStep,
-  formValues?: Record<string, any>
-) => {
+function prepareForPrevStep(stepName: ScheduleProjectStep,
+  formValues?: Record<string, any>) {
   step.value = stepName;
   if (formValues?.entities) {
     entities.value = formValues.entities;
     entityTemplatesModified.value = formValues.entityTemplatesModified;
   }
-};
+}
 
-const prepareForNextStep = (
-  formValues: Record<string, any>,
-  stepName?: ScheduleProjectStep
-) => {
+function prepareForNextStep(formValues: Record<string, any>,
+  stepName?: ScheduleProjectStep) {
   if (formValues.reminderDate && props.typeofSchedule === 'Extend') {
     onSubmit(formValues as Partial<ExtendUnScheduledProjectPayload>);
     return;
@@ -205,7 +203,7 @@ const prepareForNextStep = (
     projectDetails.value = formValues.formValuesData;
     serviceDetails.value = formValues.serviceDetails;
   }
-};
+}
 
 watch(
   () => step.value,
@@ -214,7 +212,7 @@ watch(
       emit('update-title-desc', {
         step: step.value,
         typeofSchedule: props.typeofSchedule,
-        serviceToSchedule: props.serviceToSchedule,
+        serviceToSchedule: props.serviceToSchedule
       });
     }
   },
@@ -228,23 +226,21 @@ onMounted(() => {
       ...(props.serviceToSchedule
         ?.extendedClients as UnScheduledProjectEntity[]),
       ...(props.serviceToSchedule
-        ?.unscheduledClients as UnScheduledProjectEntity[]),
+        ?.unscheduledClients as UnScheduledProjectEntity[])
     ];
     const clientSelectionFormValues = {
       clientSelection: 'single',
       clientsSelected: allClients.find(
         (client: UnScheduledProjectEntity) => client.clientId === clientId.value
-      ),
+      )
     };
     prepareForNextStep(clientSelectionFormValues, 'update project details');
   }
 });
 
-const onSubmit = async (
-  val:
-    | UnScheduledProjectEntityPayload[]
-    | Partial<ExtendUnScheduledProjectPayload>
-) => {
+async function onSubmit(val:
+  | UnScheduledProjectEntityPayload[]
+  | Partial<ExtendUnScheduledProjectPayload>) {
   let payload: ScheduleProjectPayload | ExtendUnScheduledProjectPayload;
   if (props.typeofSchedule === 'Schedule') {
     payload = {
@@ -255,130 +251,131 @@ const onSubmit = async (
       isFederal: !!props.serviceToSchedule?.isFederal,
       entities: [...(val as UnScheduledProjectEntityPayload[])],
       unScheduledProjects: unScheduledProjects.value,
-      stateId: props.serviceToSchedule?.stateId,
+      stateId: props.serviceToSchedule?.stateId
     } as unknown as ScheduleProjectPayload;
 
     await scheduleUnscheduledProject(payload);
     handleSuccess('Schedule');
-  } else {
+  }
+  else {
     payload = {
       ...(val as Partial<ExtendUnScheduledProjectPayload>),
       unscheduledProjectIds: unScheduledProjects.value?.map(
-        (item) => item.unScheduledProjectId
-      ) as unknown as string[],
+        item => item.unScheduledProjectId
+      ) as unknown as string[]
     } as ExtendUnScheduledProjectPayload;
     await extendUnscheduledProject(payload as ExtendUnScheduledProjectPayload);
     handleSuccess('Extend');
   }
-};
+}
 
 const stepItems = computed(() => {
   const steps: Step[] = [
     {
       name: 'select clients',
-      label: 'Select Client(s)',
+      label: 'Select Client(s)'
     },
     {
       name: 'update project details',
       label:
         props.typeofSchedule === 'Schedule'
           ? 'Update Project Details'
-          : 'Select Reminder Date & Due Date',
+          : 'Select Reminder Date & Due Date'
     },
     {
       name: 'pipeline',
-      label: 'View Stages',
+      label: 'View Stages'
     },
     {
       name: 'update tasks',
-      label: 'Update Tasks',
-    },
+      label: 'Update Tasks'
+    }
   ];
   return props.typeofSchedule === 'Extend'
     ? steps.filter((e) => {
-        const stepsToExclude = ['pipeline', 'update tasks'];
-        return !stepsToExclude.includes(e.name);
-      })
+      const stepsToExclude = ['pipeline', 'update tasks'];
+      return !stepsToExclude.includes(e.name);
+    })
     : steps;
 });
 
-const backToList = () => {
+function backToList() {
   if (clientId.value) {
     handleStep('Automation');
-  } else {
+  }
+  else {
     router.push({
       name: 'admin-projects',
       query: {
-        activeIndex: 1,
-      },
+        activeIndex: 1
+      }
     });
   }
-};
+}
 </script>
 
 <template>
   <div :class="{ 'md:w-8 xl:w-6 mx-auto': step !== 'update tasks' }">
     <CommonSteps
-      readonly
       id="abc"
+      :key="step"
+      readonly
       :items="stepItems"
       class="mb-4"
       :current="step"
-      :key="step"
       :class="step === 'update tasks' ? 'w-6 mx-auto' : ''"
     />
     <template v-if="step === 'select clients'">
       <ProjectScheduleClientSelection
-        :typeofSchedule="typeofSchedule"
-        :serviceToSchedule="serviceToSchedule as UnPlannedProject"
-        :formValues="clientSelectValues"
-        @secondaryBtnClick="$emit('back')"
-        @submit="prepareForNextStep"
+        :typeof-schedule="typeofSchedule"
+        :service-to-schedule="serviceToSchedule as UnPlannedProject"
+        :form-values="clientSelectValues"
         class="card border-2 border-round default-border-color border-round-lg"
+        @secondary-btn-click="$emit('back')"
+        @submit="prepareForNextStep"
       />
     </template>
     <template v-else-if="step === 'update project details'">
       <ProjectScheduleUpdateProject
-        :typeofSchedule="typeofSchedule"
-        :serviceToSchedule="serviceToSchedule as UnPlannedProject"
-        :formValues="projectDetails"
-        :clientsSelected="clientsSelected"
-        @secondaryBtnClick="prepareForPrevStep('select clients')"
-        @submit="prepareForNextStep"
-        :dueDate="clientDueDate"
+        :typeof-schedule="typeofSchedule"
+        :service-to-schedule="serviceToSchedule as UnPlannedProject"
+        :form-values="projectDetails"
+        :clients-selected="clientsSelected"
+        :due-date="clientDueDate"
         class="card border-2 border-round default-border-color border-round-lg"
+        @secondary-btn-click="prepareForPrevStep('select clients')"
+        @submit="prepareForNextStep"
       />
     </template>
     <ServiceAddStageForm
-      class="card border-2 mx-auto border-round default-border-color border-round-lg"
       v-else-if="step === 'pipeline'"
+      class="card border-2 mx-auto border-round default-border-color border-round-lg"
       :stages="serviceDetails?.OrderedPipelineStages"
-      @stageSchedule="prepareForNextStep"
+      :is-project-create="true"
+      :is-project-schedule="true"
+      @stage-schedule="prepareForNextStep"
       @back="prepareForPrevStep('update project details')"
-      :isProjectCreate="true"
-      :isProjectSchedule="true"
     />
     <template v-else>
       <ProjectScheduleUpdateTasks
-        :typeofSchedule="typeofSchedule"
-        :serviceToSchedule="serviceToSchedule"
-        :projectDetails="projectDetails as unknown as Project"
-        :clientsSelected="clientsSelected"
+        :typeof-schedule="typeofSchedule"
+        :service-to-schedule="serviceToSchedule"
+        :project-details="projectDetails as unknown as Project"
+        :clients-selected="clientsSelected"
         :entities="entities"
-        :entityTemplatesModified="entityTemplatesModified"
-        @secondaryBtnClick="prepareForPrevStep"
+        :entity-templates-modified="entityTemplatesModified"
+        :is-loading="schedulingProject || extendingProject"
+        :due-date="clientsMinDueDate as Date"
+        :project-manager="clientProjectManager"
+        @secondary-btn-click="prepareForPrevStep"
         @submit="onSubmit"
-        :isLoading="schedulingProject || extendingProject"
-        :dueDate="clientsMinDueDate as Date"
-        :projectManager="clientProjectManager"
       />
     </template>
     <span
       v-if="step !== stepItems[0].name"
-      :key="'backToList'"
+      key="backToList"
       class="inline-block underline font-medium mt-3 text-lg cursor-pointer text-blue-600 hover:text-blue-800"
       @click="backToList"
-      >Back to List</span
-    >
+    >Back to List</span>
   </div>
 </template>

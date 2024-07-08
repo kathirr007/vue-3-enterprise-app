@@ -17,11 +17,11 @@ defineProps<{
       }}
     </h5>
     <div
-      class="w-full inline-flex align-items-center space-x-2.5"
       v-if="
-        isClientUser &&
-        (verifyUserData?.clientCity || verifyUserData?.clientState)
+        isClientUser
+          && (verifyUserData?.clientCity || verifyUserData?.clientState)
       "
+      class="w-full inline-flex align-items-center space-x-2.5"
     >
       <Icon icon="fa6-solid:location-dot" class="text-2xl text-primary" />
       <span class="text-gray-800 text-lg flex-1 text-left">
@@ -34,8 +34,8 @@ defineProps<{
       </span>
     </div>
     <div
-      class="w-full inline-flex align-items-center space-x-2.5"
       v-else-if="verifyUserData?.orgCity || verifyUserData?.orgState"
+      class="w-full inline-flex align-items-center space-x-2.5"
     >
       <Icon icon="fa6-solid:location-dot" class="text-2xl text-primary" />
 
@@ -50,8 +50,8 @@ defineProps<{
       </span>
     </div>
     <div
-      class="w-full inline-flex align-items-center space-x-2.5"
       v-if="verifyUserData?.orgEmail || verifyUserData?.clientEmail"
+      class="w-full inline-flex align-items-center space-x-2.5"
     >
       <Icon icon="fa6-solid:envelope" class="text-2xl text-primary" />
 

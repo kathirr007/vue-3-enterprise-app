@@ -2,10 +2,6 @@
 import type { WebformType } from '@/types/webforms.type';
 import { useQueryClient } from 'vue-query';
 
-const emit = defineEmits<{
-  (e: 'modalClose'): void;
-}>();
-
 const props = defineProps<{
   webformType: WebformType;
   webformId: string;
@@ -14,18 +10,22 @@ const props = defineProps<{
   isRevisit?: boolean;
 }>();
 
+const emit = defineEmits<{
+  (e: 'modalClose'): void;
+}>();
+
 const route = useRoute();
 const queryClient = useQueryClient();
 const { webformId: webformIdProp } = toRefs(props);
 
-const handleBack = () => {
+function handleBack() {
   emit('modalClose');
-};
+}
 
-const handleSuccess = () => {
+function handleSuccess() {
   // queryClient.invalidateQueries('get-webform-details');
   emit('modalClose');
-};
+}
 </script>
 
 <template>
@@ -34,14 +34,14 @@ const handleSuccess = () => {
     class="mx-auto p-3 border-2 border-round default-border-color border-round-lg"
   >
     <WebformsBuilder
+      :key="route.fullPath"
       :webform-type="webformType"
       :webform-id="webformIdProp"
       is-from-client
-      @back="handleBack"
-      @success="handleSuccess"
       hide-values
       disable-form
-      :key="route.fullPath"
+      @back="handleBack"
+      @success="handleSuccess"
     />
   </div>
 </template>

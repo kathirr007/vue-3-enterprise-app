@@ -15,6 +15,7 @@ const logoUrl = computed(() => {
     : '/images/logos/bright-return-2.svg';
 });
 </script>
+
 <template>
   <table
     cellpadding="0"
@@ -30,8 +31,8 @@ const logoUrl = computed(() => {
     "
   >
     <tbody style="box-sizing: border-box; line-height: normal">
-      <!-- Pre header start-->
-      <!-- Pre-header end-->
+      <!-- Pre header start -->
+      <!-- Pre-header end -->
       <tr style="box-sizing: border-box; line-height: normal">
         <td
           valign="top"
@@ -43,7 +44,7 @@ const logoUrl = computed(() => {
             margin: 0 auto;
           "
         >
-          <!-- Header block start-->
+          <!-- Header block start -->
           <table
             class="align-center"
             border="0"
@@ -60,9 +61,9 @@ const logoUrl = computed(() => {
             "
           >
             <tbody style="box-sizing: border-box; line-height: normal">
-              <!-- Spacer 15 start-->
+              <!-- Spacer 15 start -->
               <BillingInvoiceTemplateRowSpacer />
-              <!-- Spacer 15 end-->
+              <!-- Spacer 15 end -->
               <tr style="box-sizing: border-box; line-height: normal">
                 <td
                   class="text-center"
@@ -145,7 +146,7 @@ const logoUrl = computed(() => {
                                   height: auto;
                                   max-width: 100%;
                                 "
-                              />
+                              >
                             </td>
                           </tr>
                         </table>
@@ -172,19 +173,18 @@ const logoUrl = computed(() => {
                             margin: 0;
                             font-weight: bold;
                           "
-                          >INVOICE</span
-                        >
+                        >INVOICE</span>
                       </td>
                     </tr>
                   </table>
                 </td>
               </tr>
-              <!-- Spacer 15 start-->
+              <!-- Spacer 15 start -->
               <BillingInvoiceTemplateRowSpacer />
-              <!-- Spacer 15 end-->
+              <!-- Spacer 15 end -->
             </tbody>
           </table>
-          <!-- Header block end-->
+          <!-- Header block end -->
         </td>
       </tr>
     </tbody>

@@ -20,7 +20,7 @@ const {
   queryFilters,
   querySortBy,
   queryKeys,
-  tableRecords,
+  tableRecords
 } = useDataTableUtils();
 
 const { canDo, canDoSome } = usePermissions();
@@ -39,7 +39,7 @@ const { data: broadcastTemplatesList, isLoading } = useQuery(
       page: currentPage.value,
       limit: currentLimit.value,
       filters: queryFilters.value ? queryFilters.value : initialFilters,
-      sortBy: querySortBy.value,
+      sortBy: querySortBy.value
     });
   }
 );
@@ -51,10 +51,10 @@ const { data: broadcastTemplatesList, isLoading } = useQuery(
   queryKeys,
 }); */
 
-const handleDelete = (data: BroadcastTemplate) => {
+function handleDelete(data: BroadcastTemplate) {
   selectedTemplate.value = data;
   openTemplateDeleteModal.value = true;
-};
+}
 
 watchEffect(() => {
   if (broadcastTemplatesList.value) {
@@ -65,22 +65,22 @@ watchEffect(() => {
 const filters = ref({
   global: { value: null, matchMode: FilterMatchMode.CONTAINS },
   name: { value: null, matchMode: FilterMatchMode.IN },
-  businessEntity: { value: null, matchMode: FilterMatchMode.IN },
+  businessEntity: { value: null, matchMode: FilterMatchMode.IN }
 });
 </script>
 
 <template>
   <DataTable
-    @page="handlePageOrLimitChange($event)"
-    dataKey="id"
-    :loading="isLoading"
-    responsiveLayout="scroll"
-    breakpoint="768px"
     v-model:filters="filters"
-    :globalFilterFields="['name']"
+    data-key="id"
+    :loading="isLoading"
+    responsive-layout="scroll"
+    breakpoint="768px"
+    :global-filter-fields="['name']"
     :value="broadcastTemplatesList?.results"
-    :totalRecords="broadcastTemplatesList?.total"
+    :total-records="broadcastTemplatesList?.total"
     v-bind="tableAttrs"
+    @page="handlePageOrLimitChange($event)"
   >
     <template #header>
       <div class="flex justify-content-end">
@@ -96,7 +96,9 @@ const filters = ref({
       </div>
     </template>
     <template #empty>
-      <div class="text-center">No record found.</div>
+      <div class="text-center">
+        No record found.
+      </div>
     </template>
     <Column field="name" header="Name" class="w-4">
       <template #body="slotProps">
@@ -113,10 +115,12 @@ const filters = ref({
       class="text-center w-2"
     >
       <template #header>
-        <div class="w-full text-center">Actions</div>
+        <div class="w-full text-center">
+          Actions
+        </div>
       </template>
       <template #body="slotProps">
-        <div class="md:w-full w-6rem" v-if="slotProps.data.org">
+        <div v-if="slotProps.data.org" class="md:w-full w-6rem">
           <Button
             v-if="canDo('broadcast_templates', 'edit')"
             v-tooltip.top="'Revisit'"
@@ -133,17 +137,19 @@ const filters = ref({
               })
             "
           >
-            <span class="pi pi-custom pi-revisit p-button-icon"></span>
+            <span class="pi pi-custom pi-revisit p-button-icon" />
           </Button>
           <Button
             v-if="canDo('broadcast_templates', 'delete')"
+            v-tooltip.top="'Delete'"
             icon="pi pi-trash"
             class="p-button-sm p-button-rounded p-button-danger ml-2"
             @click="handleDelete(slotProps.data)"
-            v-tooltip.top="'Delete'"
           />
         </div>
-        <div v-else class="text-orange-500 text-center">Predefined</div>
+        <div v-else class="text-orange-500 text-center">
+          Predefined
+        </div>
       </template>
     </Column>
   </DataTable>
@@ -151,9 +157,9 @@ const filters = ref({
     v-if="openTemplateDeleteModal"
     :visible="openTemplateDeleteModal"
     :title="`Confirm Delete ${titleCase(
-      broadcastTo as string
+      broadcastTo as string,
     )} Broadcast Template`"
-    :recordToRemove="{ ...selectedTemplate }"
+    :record-to-remove="{ ...selectedTemplate }"
     @confirm="emit('delete', selectedTemplate?.id as unknown as string)"
     @hide="openTemplateDeleteModal = false"
   />

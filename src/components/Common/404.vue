@@ -7,14 +7,14 @@ const props = withDefaults(
     hideNavigations?: boolean;
   }>(),
   {
-    hideNavigations: false,
+    hideNavigations: false
   }
 );
 
 const loggedIn = computed(() => isLoggedIn);
 
 const backgroundStyle = {
-  background: `radial-gradient(50% 109137.91% at 50% 50%, rgba(233, 30, 99, 0.1) 0%, rgba(254, 244, 247, 0) 100%)`,
+  background: `radial-gradient(50% 109137.91% at 50% 50%, rgba(233, 30, 99, 0.1) 0%, rgba(254, 244, 247, 0) 100%)`
 };
 </script>
 
@@ -32,18 +32,18 @@ const backgroundStyle = {
     <p class="text-700 text-3xl text-primary mt-0 mb-6 text-center">
       Sorry, we couldn't find the page.
     </p>
-    <div class="text-center" v-if="!hideNavigations">
+    <div v-if="!hideNavigations" class="text-center">
       <Button
         class="p-button-text mr-2"
         label="Go Back"
         icon="pi pi-chevron-left"
         @click="$router.go(-1)"
-      ></Button>
+      />
       <Button
         :label="loggedIn ? 'Go to Home' : 'Go to Sign in'"
         icon="pi pi-lock"
         @click="$router.push({ name: 'auth-signin' })"
-      ></Button>
+      />
     </div>
   </div>
 </template>

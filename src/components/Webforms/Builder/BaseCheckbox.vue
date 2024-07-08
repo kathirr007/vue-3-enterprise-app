@@ -11,21 +11,23 @@ withDefaults(
   }>(),
   {
     label: null,
-    options: () => [],
+    options: () => []
   }
 );
 </script>
+
 <script lang="ts">
 export default defineComponent({
-  inheritAttrs: false,
+  inheritAttrs: false
 });
 </script>
+
 <template>
   <div class="flex flex-column gap-1 w-full field mb-0">
     <div>
       <slot name="edit" />
     </div>
-    <small class="-mt-1 block" v-if="before">
+    <small v-if="before" class="-mt-1 block">
       {{ before }}
     </small>
     <div class="w-full flex flex-column gap-1">
@@ -35,12 +37,12 @@ export default defineComponent({
           :key="index"
           class="flex align-items-center gap-1"
         >
-          <Checkbox :inputId="name" :name="name" disabled />
+          <Checkbox :input-id="name" :name="name" disabled />
           <label :for="name" class="ml-2">{{ item }}</label>
         </div>
       </VField>
     </div>
-    <small class="block" v-if="description">
+    <small v-if="description" class="block">
       {{ description }}
     </small>
   </div>

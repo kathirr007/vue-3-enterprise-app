@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import type { DocumentFolder } from '@/types/documents.type';
-import type { valueOrDefault } from 'chart.js/dist/helpers/helpers.core';
 import type { TreeNode } from 'primevue/treenode';
-import type { MailsAttachmentResponse } from '@/types/inbox.type';
 import { useQuery } from 'vue-query';
 
 const emits = defineEmits<{
@@ -31,7 +29,7 @@ const filterValue = computed(() => {
 
 const {
   isLoading: loadingFilesAndFolders,
-  isFetching: fetchingFilesAndFolders,
+  isFetching: fetchingFilesAndFolders
 } = useQuery(
   ['get-folder', selectedId, filterValue],
   async () => {
@@ -39,23 +37,24 @@ const {
       const folders = await getFolder({
         id: 'sampleId',
         folderId: selectedId.value,
-        isGallery: true,
+        isGallery: true
       });
       const files = await getFiles({
         id: 'sampleId',
         folderId: selectedId.value,
         isGallery: true,
-        term: (treeRef.value as any)?.filterValue,
+        term: (treeRef.value as any)?.filterValue
       });
       return { folders, files };
-    } else {
+    }
+    else {
       const folders = await getFolders({
         id: 'sampleId',
-        isGallery: true,
+        isGallery: true
       });
       const files = await getFiles({
         id: 'sampleId',
-        isGallery: true,
+        isGallery: true
       });
       return { folders, files };
     }
@@ -79,10 +78,10 @@ const {
                       id: 'no-files',
                       label: 'No Files or Folder',
                       name: 'No Files or Folder',
-                      selectable: false,
-                    },
+                      selectable: false
+                    }
                   ],
-              selectable: false,
+              selectable: false
             };
           }
         );
@@ -94,7 +93,7 @@ const {
             name: file.name,
             selectable: true,
             path: file.path,
-            type: file.contentType,
+            type: file.contentType
           });
         });
         if (!(folders as DocumentFolder)?.children?.length && !files.length) {
@@ -104,13 +103,14 @@ const {
               id: 'no-files',
               label: 'No Files or Folders Found',
               name: 'No Files or Folders Found',
-              selectable: false,
-            },
+              selectable: false
+            }
           ];
         }
-      } else {
+      }
+      else {
         const subFolders = (data.folders as DocumentFolder[])
-          .filter((e) => !(e.isSmartFolder || e.isExtractionFolder))
+          .filter(e => !(e.isSmartFolder || e.isExtractionFolder))
           .map((val: DocumentFolder) => {
             return {
               key: val.id,
@@ -119,23 +119,23 @@ const {
               name: val.name,
               children: val.children?.length
                 ? val.children?.map((el: DocumentFolder) => {
-                    return {
-                      key: el.id,
-                      id: el.id,
-                      name: el.name,
-                      label: el.name,
-                    };
-                  })
+                  return {
+                    key: el.id,
+                    id: el.id,
+                    name: el.name,
+                    label: el.name
+                  };
+                })
                 : [
                     {
                       key: 'no-files',
                       id: 'no-files',
                       Label: 'No Files or Folders Found',
                       name: 'No Files or Folders Found',
-                      selectable: false,
-                    },
+                      selectable: false
+                    }
                   ],
-              selectable: false,
+              selectable: false
             };
           }) as unknown as DocumentFolder[];
         files.forEach((file) => {
@@ -146,7 +146,7 @@ const {
             name: file.name,
             selectable: true,
             path: file.path,
-            type: file.contentType,
+            type: file.contentType
           });
         });
         nodes.value = [
@@ -156,34 +156,35 @@ const {
             label: 'Root',
             name: 'Root',
             children: subFolders,
-            selectable: false,
-          },
+            selectable: false
+          }
         ];
       }
-    },
+    }
   }
 );
 
-const onNodeExpand = (node: TreeNode) => {
-  if (node.key === 'root') return;
+function onNodeExpand(node: TreeNode) {
+  if (node.key === 'root')
+    return;
   selectedId.value = node.key as string;
   selectedNode = node;
-};
+}
 
-const moveSelected = async () => {
+async function moveSelected() {
   uploadingFiles.value = true;
   const filesPayload: File[] = [];
   const getLabel = (node: TreeNode) => {
     if (node.label?.includes('.')) {
       return node.label;
     }
-    return (node.label || '') + '.' + node.type?.split('/')[1];
+    return `${node.label || ''}.${node.type?.split('/')[1]}`;
   };
   await Promise.all(
     selectedFiles.value.map(async (file: any) => {
       const blobFile = await getBlobFileFromUrl(getAttachmentUrl(file.path));
       const renamedFile = new File([blobFile], getLabel(file) as string, {
-        type: file.type,
+        type: file.type
       });
       filesPayload.push(renamedFile);
       return blobFile;
@@ -191,48 +192,49 @@ const moveSelected = async () => {
   );
   // emits('files-selected', selectedFiles.value as MailsAttachmentResponse[]);
   emits('files-selected', { files: filesPayload });
-};
+}
 
-const OnSelect = (node: TreeNode) => {
-  const index = selectedFiles.value.findIndex((e) => e.key === node.key);
-  if (index === -1) selectedFiles.value.push(node);
-};
+function OnSelect(node: TreeNode) {
+  const index = selectedFiles.value.findIndex(e => e.key === node.key);
+  if (index === -1)
+    selectedFiles.value.push(node);
+}
 
-const onUnSelect = (node: TreeNode) => {
-  const index = selectedFiles.value.findIndex((e) => e.key === node.key);
+function onUnSelect(node: TreeNode) {
+  const index = selectedFiles.value.findIndex(e => e.key === node.key);
 
   if (index !== -1) {
     selectedFiles.value.splice(index, 1);
   }
-};
+}
 </script>
 
 <template>
   <div>
     <Tree
-      :value="nodes"
-      @nodeExpand="onNodeExpand"
-      selectionMode="multiple"
+      ref="treeRef"
       v-model:selectionKeys="selectedKeys"
+      :value="nodes"
+      selection-mode="multiple"
+      :meta-key-selection="false"
+      :loading="loadingFilesAndFolders || fetchingFilesAndFolders"
+      @node-expand="onNodeExpand"
       @node-select="OnSelect"
       @node-unselect="onUnSelect"
-      :metaKeySelection="false"
-      ref="treeRef"
-      :loading="loadingFilesAndFolders || fetchingFilesAndFolders"
-    ></Tree>
+    />
     <div class="flex justify-content-between mt-2">
       <Button
         label="Back"
         icon="pi pi-chevron-left"
-        @click="emits('back')"
         class="max-w-max p-button-text"
-      ></Button>
+        @click="emits('back')"
+      />
       <Button
         class="p-button-primary"
         label="Submit"
-        @click="moveSelected"
         :loading="uploadingFiles"
-      ></Button>
+        @click="moveSelected"
+      />
     </div>
   </div>
 </template>

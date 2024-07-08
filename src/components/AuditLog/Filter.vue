@@ -20,7 +20,7 @@ const selectedEvent = ref<string[]>();
 
 defineExpose({
   applyFilters,
-  resetFilters,
+  resetFilters
 });
 
 const { data: auditLogData, isLoading } = useQuery(
@@ -32,8 +32,8 @@ const { data: auditLogData, isLoading } = useQuery(
 const resourceData = computed(() => {
   if (auditLogData.value?.resource) {
     const result = auditLogData.value?.resource.map((name: string) => ({
-      name: name,
-      value: name,
+      name,
+      value: name
     }));
     return result;
   }
@@ -42,8 +42,8 @@ const resourceData = computed(() => {
 const eventData = computed(() => {
   if (auditLogData.value?.event) {
     const result = auditLogData.value?.event.map((name: string) => ({
-      name: name,
-      value: name,
+      name,
+      value: name
     }));
     return result;
   }
@@ -52,7 +52,7 @@ const eventData = computed(() => {
 watchEffect(() => {
   selectedResource.value = allFilters.value.resource.value;
   selectedEvent.value = allFilters.value.Event.value;
-  selectedCreatedBy.value = allFilters.value['CreatedAt']?.value?.map(
+  selectedCreatedBy.value = allFilters.value.CreatedAt?.value?.map(
     (date: string) => dayjs(date).toDate()
   );
 });
@@ -61,15 +61,15 @@ function hasFilter(filterName: string) {
   return !props.disabledFilters?.includes(filterName);
 }
 function getSelectedItemsLabel(itemName: string) {
-  return '{0} ' + itemName + ' selected';
+  return `{0} ${itemName} selected`;
 }
 
 function applyFilters() {
   const shouldApplyFilters = [
     selectedResource.value,
     selectedEvent.value,
-    selectedCreatedBy.value,
-  ].some((filter) => filter?.length);
+    selectedCreatedBy.value
+  ].some(filter => filter?.length);
 
   if (!shouldApplyFilters) {
     if (props.filters) {
@@ -77,8 +77,8 @@ function applyFilters() {
         query: {
           activeIndex: queryActiveIndex.value
             ? queryActiveIndex.value
-            : undefined,
-        },
+            : undefined
+        }
       });
     }
     return;
@@ -99,7 +99,8 @@ function applyFilters() {
   if (selectedCreatedBy.value && selectedCreatedBy.value[1] === null) {
     updateDateValue(selectedCreatedBy as Ref<string[]>);
     applyFilter('CreatedAt', selectedCreatedBy.value);
-  } else {
+  }
+  else {
     applyFilter('CreatedAt', selectedCreatedBy.value);
   }
 
@@ -111,8 +112,8 @@ function applyFilters() {
         activeIndex: queryActiveIndex.value
           ? queryActiveIndex.value
           : undefined,
-        filters: preparedFilters,
-      },
+        filters: preparedFilters
+      }
     });
   }
 }
@@ -128,44 +129,44 @@ function resetFilters() {
   <div class="flex gap-2 flex-wrap">
     <div v-if="hasFilter('CreatedAt')">
       <Calendar
-        class="w-full"
         v-model="selectedCreatedBy"
+        class="w-full"
         placeholder="Select Date"
-        selectionMode="range"
-        dateFormat="dd M yy"
-        hideOnRangeSelection
-        :manualInput="false"
-        showButtonBar
+        selection-mode="range"
+        date-format="dd M yy"
+        hide-on-range-selection
+        :manual-input="false"
+        show-button-bar
       />
     </div>
     <div v-if="hasFilter('resource')">
       <MultiSelect
         v-model="selectedResource"
         :options="resourceData"
-        optionLabel="name"
-        optionValue="value"
-        :placeholder="`Select Resource`"
-        :maxSelectedLabels="1"
+        option-label="name"
+        option-value="value"
+        placeholder="Select Resource"
+        :max-selected-labels="1"
         clearable
         :loading="isLoading"
         filter
-        dataKey="id"
-        :selectedItemsLabel="getSelectedItemsLabel('resource')"
+        data-key="id"
+        :selected-items-label="getSelectedItemsLabel('resource')"
       />
     </div>
     <div v-if="hasFilter('Event')">
       <MultiSelect
         v-model="selectedEvent"
         :options="eventData"
-        optionLabel="name"
-        optionValue="value"
-        :placeholder="`Select Event`"
-        :maxSelectedLabels="1"
+        option-label="name"
+        option-value="value"
+        placeholder="Select Event"
+        :max-selected-labels="1"
         clearable
         :loading="isLoading"
         filter
-        dataKey="id"
-        :selectedItemsLabel="getSelectedItemsLabel('Event')"
+        data-key="id"
+        :selected-items-label="getSelectedItemsLabel('Event')"
       />
     </div>
 
@@ -173,7 +174,7 @@ function resetFilters() {
       label="Apply"
       class="w-full sm:w-auto"
       @click="applyFilters"
-    ></Button>
+    />
   </div>
 </template>
 

@@ -23,12 +23,12 @@ const searchText = ref('');
 defineExpose({
   searchText,
   applyFilters,
-  resetFilters,
+  resetFilters
 });
 
 watchEffect(() => {
   selectedStatus.value = allFilters.value['Doc Sign Status'].value;
-  selectedRequestDate.value = allFilters.value['CreatedAt']?.value?.map(
+  selectedRequestDate.value = allFilters.value.CreatedAt?.value?.map(
     (date: string) => dayjs(date).toDate()
   );
 });
@@ -38,15 +38,15 @@ function hasFilter(filterName: string) {
 }
 
 function getSelectedItemsLabel(itemName: string) {
-  return '{0} ' + itemName + ' selected';
+  return `{0} ${itemName} selected`;
 }
 
 function applyFilters() {
   const shouldApplyFilters = [
     selectedStatus.value,
     searchText.value,
-    selectedRequestDate.value,
-  ].some((filter) => filter?.length);
+    selectedRequestDate.value
+  ].some(filter => filter?.length);
 
   if (!shouldApplyFilters) {
     if (props.filters) {
@@ -55,8 +55,8 @@ function applyFilters() {
           activeIndex: activeIndex.value ? activeIndex.value : undefined,
           nestedActiveIndex: nestedActiveIndex.value
             ? nestedActiveIndex.value
-            : undefined,
-        },
+            : undefined
+        }
       });
     }
     return;
@@ -67,7 +67,8 @@ function applyFilters() {
   if (selectedRequestDate.value && selectedRequestDate.value[1] === null) {
     updateDateValue(selectedRequestDate as Ref<string[]>);
     applyFilter('CreatedAt', selectedRequestDate.value);
-  } else {
+  }
+  else {
     applyFilter('CreatedAt', selectedRequestDate.value);
   }
   applyFilter(
@@ -84,8 +85,8 @@ function applyFilters() {
         nestedActiveIndex: nestedActiveIndex.value
           ? nestedActiveIndex.value
           : undefined,
-        filters: preparedFilters,
-      },
+        filters: preparedFilters
+      }
     });
   }
 }
@@ -104,28 +105,28 @@ function resetFilters() {
       <CommonMultiSelector
         v-model="selectedStatus"
         placeholder="Status"
-        :maxSelectedLabels="1"
-        :selectedItemsLabel="getSelectedItemsLabel('Status')"
+        :max-selected-labels="1"
+        :selected-items-label="getSelectedItemsLabel('Status')"
         :options="signatureStatuses"
-        :optionValue="'value'"
-      ></CommonMultiSelector>
+        option-value="value"
+      />
     </div>
     <div v-if="hasFilter('CreatedAt')">
       <Calendar
-        class="w-full"
         v-model="selectedRequestDate"
+        class="w-full"
         placeholder="Request Date"
-        selectionMode="range"
-        dateFormat="dd M yy"
-        hideOnRangeSelection
-        showButtonBar
+        selection-mode="range"
+        date-format="dd M yy"
+        hide-on-range-selection
+        show-button-bar
       />
     </div>
     <Button
       label="Apply"
       class="w-full sm:w-auto"
       @click="applyFilters"
-    ></Button>
+    />
   </div>
 </template>
 

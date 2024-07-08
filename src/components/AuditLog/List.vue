@@ -8,7 +8,7 @@ const props = withDefaults(
   }>(),
   {
     disabledFilters: () => [],
-    hideFilters: false,
+    hideFilters: false
   }
 );
 
@@ -22,7 +22,7 @@ const {
   currentPage,
   queryFilters,
   querySortBy,
-  queryKeys,
+  queryKeys
 } = useDataTableUtils();
 const { dateToDateTime } = useVueFilters();
 const { filterObjByKeys, isFalsy } = useUtilityFns();
@@ -36,45 +36,47 @@ const filterKeysToExclude = ref(['Client']);
 const filtersApplied = computed(() => {
   return queryFilters.value
     ? filterObjByKeys(
-        useDecodeFilterData(queryFilters.value),
-        filterKeysToExclude.value,
-        true
-      )
+      useDecodeFilterData(queryFilters.value),
+      filterKeysToExclude.value,
+      true
+    )
     : {};
 });
 
 const doesFiltersHasValues = computed(() => {
   return !!Object.values(filtersApplied.value as any)
     .map((item: any) => item.value)
-    .filter((value) => !isFalsy(value)).length;
+    .filter(value => !isFalsy(value)).length;
 });
 
-const toggleFilters = (reset: boolean) => {
+function toggleFilters(reset: boolean) {
   if (reset && filtersRef.value) {
     filtersRef.value.resetFilters();
-  } else {
+  }
+  else {
     isFiltersVisible.value = !isFiltersVisible.value;
   }
-};
+}
 
 const {
   data: auditLogs,
   isLoading: loadingAudiLog,
-  isFetching: fetchingAuditlog,
+  isFetching: fetchingAuditlog
 } = useQuery(
   ['audit-log-list', isFormat, ...queryKeys],
   () => {
     if (isFormat.value) {
       return getAll({
         filters: queryFilters.value,
-        format: isFormat.value,
+        format: isFormat.value
       });
-    } else {
+    }
+    else {
       return getAll({
         page: currentPage.value,
         limit: currentLimit.value,
         filters: queryFilters.value,
-        sortBy: querySortBy.value,
+        sortBy: querySortBy.value
       });
     }
   },
@@ -88,14 +90,14 @@ const {
         isDownload.value = false;
         isFormat.value = undefined;
       }
-    },
+    }
   }
 );
 
-const exportToCSVFile = () => {
+function exportToCSVFile() {
   isFormat.value = 'csv';
   isDownload.value = true;
-};
+}
 
 watchEffect(async () => {
   if (doesFiltersHasValues.value) {
@@ -123,24 +125,24 @@ watchEffect(async () => {
             type="button"
             :icon="doesFiltersHasValues ? 'pi pi-filter-slash' : 'pi pi-filter'"
             class="p-button-icon-only p-button-rounded"
-            @click="toggleFilters(!!doesFiltersHasValues)"
             :class="[{ 'p-button-danger': doesFiltersHasValues }]"
+            @click="toggleFilters(!!doesFiltersHasValues)"
           />
         </div>
         <Button
           v-if="auditLogs && auditLogs.total"
+          v-tooltip.top="'Download'"
           icon="pi pi-download"
           class="p-button-rounded"
-          v-tooltip.top="'Download'"
           @click="exportToCSVFile"
         />
       </div>
-      <div class="my-2" v-if="isFiltersVisible && !hideFilters">
+      <div v-if="isFiltersVisible && !hideFilters" class="my-2">
         <AuditLogFilter
           ref="filtersRef"
           :filters="queryFilters"
-          :disabledFilters="disabledFilters"
-        ></AuditLogFilter>
+          :disabled-filters="disabledFilters"
+        />
       </div>
     </template>
     <Column class="w-2" field="resource" header="Resource Type">
@@ -165,7 +167,9 @@ watchEffect(async () => {
       </template>
     </Column>
     <template #empty>
-      <div class="text-center">No Audit Log Found</div>
+      <div class="text-center">
+        No Audit Log Found
+      </div>
     </template>
   </DataTable>
 </template>

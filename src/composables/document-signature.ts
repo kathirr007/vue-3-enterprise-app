@@ -3,16 +3,15 @@ import type { PaginatedResponse } from '@/types/common.type';
 import type {
   CreateDocumentSignaturePayload,
   CreateDocumentSignatureReqPayload,
-  ESignature,
   NewSignature,
-  SignatureRequest,
+  SignatureRequest
 } from '@/types/esignature.type';
 
-export const useDocumentSignature = () => {
+export function useDocumentSignature() {
   const signatureStatuses = [
     { name: 'Signed', value: 'SIGNED' },
     { name: 'Partially Signed', value: 'PARTIALLY_SIGNED' },
-    { name: 'Pending', value: 'PENDING' },
+    { name: 'Pending', value: 'PENDING' }
     // { name: 'Cancelled', value: 'CANCELLED' },
   ];
 
@@ -21,7 +20,7 @@ export const useDocumentSignature = () => {
     limit,
     filters,
     sortBy,
-    isPortal,
+    isPortal
   }: {
     page?: number;
     limit?: number;
@@ -36,14 +35,15 @@ export const useDocumentSignature = () => {
           page,
           limit,
           filters,
-          sortBy,
-        },
+          sortBy
+        }
       }
     );
     return data;
   };
   const getOne = async (id: string, isPortalUser?: boolean) => {
-    if (!id) return;
+    if (!id)
+      return;
     const { data } = await $api.get<SignatureRequest>(
       `${
         isPortalUser
@@ -75,7 +75,7 @@ export const useDocumentSignature = () => {
   const updateDocumentSignatureRequest = async ({
     id,
     payload,
-    isPortal,
+    isPortal
   }: {
     id: string;
     payload: Partial<CreateDocumentSignatureReqPayload>;
@@ -108,7 +108,7 @@ export const useDocumentSignature = () => {
     id,
     payload,
     isPortalUser,
-    signatureId,
+    signatureId
   }: {
     id: string;
     signatureId: string;
@@ -128,7 +128,7 @@ export const useDocumentSignature = () => {
   const updateSignature = async ({
     id,
     payload,
-    isPortalUser,
+    isPortalUser
   }: {
     id: string;
     payload: Partial<CreateDocumentSignatureReqPayload>;
@@ -162,6 +162,6 @@ export const useDocumentSignature = () => {
     remindDocumentSignature,
     addSignature,
     updateSignature,
-    removeSignature,
+    removeSignature
   };
-};
+}

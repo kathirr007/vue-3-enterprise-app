@@ -19,16 +19,15 @@
         <a
           href="#"
           class="font-medium flex justify-content-end align-items-center"
-          ><i
-            class="pi pi-youtube p-button-icon p-button-icon-left text-3xl text-primary mr-1 mt-1"
-          />
-          <span>Help</span></a
-        >
+        ><i
+           class="pi pi-youtube p-button-icon p-button-icon-left text-3xl text-primary mr-1 mt-1"
+         />
+          <span>Help</span></a>
       </div>
     </template>
 
     <div class="card">
-      <TeamsInviteTeam></TeamsInviteTeam>
+      <TeamsInviteTeam />
     </div>
   </CommonPage>
 </template>

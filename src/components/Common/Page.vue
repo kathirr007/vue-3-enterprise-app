@@ -5,9 +5,10 @@ defineProps<{
 }>();
 const attrs = useAttrs();
 </script>
+
 <script lang="ts">
 export default defineComponent({
-  inheritAttrs: false,
+  inheritAttrs: false
 });
 </script>
 
@@ -25,9 +26,9 @@ export default defineComponent({
         <h1 v-if="!$slots.title" class="font-medium text-3xl text-primary mb-0">
           {{ title }}
         </h1>
-        <slot name="title"></slot>
+        <slot name="title" />
         <div class="text-md">
-          <slot name="description"></slot>
+          <slot name="description" />
         </div>
       </div>
       <div class="mt-2 md:m-0 w-full md:w-4">
@@ -36,21 +37,21 @@ export default defineComponent({
           :class="attrs['help-actions-classes']"
           class="space-y-2.5 md:space-y-0.5 mb-2 text-right"
         >
-          <slot name="helpActions"></slot>
+          <slot name="helpActions" />
         </div>
         <div
           v-if="$slots.actions"
           class="space-y-2.5 md:space-y-0.5 text-right"
           :class="attrs['actions-classes']"
         >
-          <slot name="actions"></slot>
+          <slot name="actions" />
         </div>
       </div>
     </header>
   </div>
   <div class="grid mt-3">
     <div class="col-12" :class="contentClass">
-      <slot></slot>
+      <slot />
     </div>
   </div>
 </template>

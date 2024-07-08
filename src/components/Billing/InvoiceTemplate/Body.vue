@@ -60,7 +60,7 @@ withDefaults(
                   margin: 0 auto;
                 "
               >
-                <!-- Content block start-->
+                <!-- Content block start -->
                 <BillingInvoiceTemplateContent />
               </td>
             </tr>

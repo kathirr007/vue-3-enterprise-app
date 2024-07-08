@@ -11,10 +11,10 @@ export function useEventBus() {
 import type { Emitter } from 'mitt';
 import mitt from 'mitt';
 
-type Events = {
+interface Events {
   'added-new-integration': Record<string, any> | undefined;
   'fetched-all-integrations': Record<string, any> | undefined;
-};
+}
 
 export const emitter: Emitter<Events> = mitt<Events>();
 

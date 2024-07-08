@@ -3,7 +3,7 @@ import type {
   ScheduleProjectStep,
   UnPlannedProject,
   UnScheduledProjectEntity,
-  UnScheduledProjectPayload,
+  UnScheduledProjectPayload
 } from '@/types/project.type';
 import { UnScheduledProjectClientSelectSchema } from '@/types/project.type';
 import type { SchemaForm, SchemaFormRef } from '@/types/schemaform.type';
@@ -50,7 +50,7 @@ const formData: SchemaForm = {
             props.typeofSchedule === 'Schedule'
               ? props.typeofSchedule.toLowerCase()
               : 'reschedule'
-          } the project one client at a time.`,
+          } the project one client at a time.`
         },
         {
           name: 'clientSelection',
@@ -69,9 +69,9 @@ const formData: SchemaForm = {
               ? `(However, you can reassign the team members even after scheduling)`
               : ''
           }`,
-          noteClasses: 'block ml-4 font-medium font-italic',
-        },
-      ],
+          noteClasses: 'block ml-4 font-medium font-italic'
+        }
+      ]
     },
     {
       as: Dropdown,
@@ -83,40 +83,42 @@ const formData: SchemaForm = {
       options: [],
       optionLabel: 'name',
       optionValue: (option: UnScheduledProjectEntity) => option,
-      display: 'chip',
-    },
+      display: 'chip'
+    }
   ],
   validationSchema: UnScheduledProjectClientSelectSchema,
   initialValues: props.formValues || {
     clientSelection: 'single',
-    clientsSelected: '',
+    clientsSelected: ''
   },
   btnText: 'Continue',
-  secondaryBtnText: 'Back',
+  secondaryBtnText: 'Back'
 };
 
-const { updateFieldProp, findFormIndex, updateOptions } =
-  useSchemaForm(formData);
+const { updateFieldProp, findFormIndex, updateOptions }
+  = useSchemaForm(formData);
 
 const clientsListIndex = findFormIndex('clientsSelected');
 
-const setClientsSelected = (data: Record<string, any>) => {
-  if (!data) return;
+function setClientsSelected(data: Record<string, any>) {
+  if (!data)
+    return;
   if (Array.isArray(data.clientsSelected)) {
     return data.clientsSelected.length
       ? data.clientsSelected.map((item: UnScheduledProjectPayload) => item)
       : [];
-  } else {
+  }
+  else {
     return data.clientSelection !== 'multiple' ? data.clientsSelected : [];
   }
-};
+}
 
-const restoreClientSelection = (formValues: Record<string, any>) => {
+function restoreClientSelection(formValues: Record<string, any>) {
   const isMultiple = formValues.clientSelection === 'multiple';
   const setFormValues = () => {
     clientSelectionRef.value?.setValues({
       clientSelection: formValues.clientSelection,
-      clientsSelected: setClientsSelected(formValues as Record<string, any>),
+      clientsSelected: setClientsSelected(formValues as Record<string, any>)
     });
   };
 
@@ -127,7 +129,7 @@ const restoreClientSelection = (formValues: Record<string, any>) => {
     isMultiple ? 'multiSelect' : 'dropdown'
   );
   setFormValues();
-};
+}
 
 watchEffect(() => {
   if (clientSelectionRef.value?.schemaFormValues) {
@@ -137,7 +139,7 @@ watchEffect(() => {
     updateOptions(
       ref([
         ...props.serviceToSchedule.extendedClients,
-        ...props.serviceToSchedule.unscheduledClients,
+        ...props.serviceToSchedule.unscheduledClients
       ]),
       clientsListIndex
     );
@@ -153,22 +155,22 @@ watch(
   },
   {
     deep: true,
-    immediate: true,
+    immediate: true
   }
 );
 
-const onSubmit = (formValues: Record<string, any>) => {
+function onSubmit(formValues: Record<string, any>) {
   emit('submit', formValues, 'update project details');
-};
+}
 </script>
 
 <template>
   <CommonSchemaForm
     ref="clientSelectionRef"
     :data="formData"
-    @secondaryBtnClick="$emit('secondary-btn-click')"
+    @secondary-btn-click="$emit('secondary-btn-click')"
     @submit="onSubmit"
-  ></CommonSchemaForm>
+  />
 </template>
 
 <style lang="scss" scoped></style>

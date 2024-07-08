@@ -3,7 +3,7 @@ import type { PaginatedResponse } from '@/types/common.type';
 import type {
   Designation,
   DesignationCreatePayload,
-  DesignationRemovePayload,
+  DesignationRemovePayload
 } from '@/types/designation.type';
 import type { User } from '@/types/teams.type';
 
@@ -15,7 +15,7 @@ export async function useDesignationListV2({
   page,
   limit,
   filters,
-  sortBy,
+  sortBy
 }: {
   page?: number;
   limit?: number;
@@ -29,8 +29,8 @@ export async function useDesignationListV2({
         page,
         limit,
         filters,
-        sortBy,
-      },
+        sortBy
+      }
     }
   );
   return data;
@@ -52,7 +52,7 @@ export async function useDesignationRemove(
   payload?: DesignationRemovePayload
 ) {
   const { data } = await $api.delete<void>(`designations/${id}`, {
-    data: payload,
+    data: payload
   });
   return data;
 }

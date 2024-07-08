@@ -14,7 +14,7 @@ const props = withDefaults(
     topSpaceHeight: 20,
     bottomSpaceHeight: 20,
     dividerHeight: 1,
-    dividerBackground: '#d4d4d4',
+    dividerBackground: '#d4d4d4'
   }
 );
 </script>
@@ -61,22 +61,22 @@ const props = withDefaults(
               padding: 0;
             "
           >
-            <!-- Spacer 20 start-->
+            <!-- Spacer 20 start -->
             <BillingInvoiceTemplateRowSpacer
               v-if="topSpace"
               :height="topSpaceHeight"
             />
-            <!-- Spacer 20 end-->
+            <!-- Spacer 20 end -->
             <BillingInvoiceTemplateRowSpacer
               :height="dividerHeight"
               :background="dividerBackground"
             />
-            <!-- Spacer 20 start-->
+            <!-- Spacer 20 start -->
             <BillingInvoiceTemplateRowSpacer
               v-if="bottomSpace"
               :height="bottomSpaceHeight"
             />
-            <!-- Spacer 20 end-->
+            <!-- Spacer 20 end -->
           </table>
         </td>
       </tr>

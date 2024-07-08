@@ -7,7 +7,7 @@ withDefaults(
     isCalendlyUrl?: boolean;
   }>(),
   {
-    showHelpText: false,
+    showHelpText: false
   }
 );
 
@@ -17,9 +17,9 @@ const emits = defineEmits<{
 
 const router = useRouter();
 
-const gotoSchedule = () => {
+function gotoSchedule() {
   router.push({ name: 'portal-schedule-meeting' });
-};
+}
 </script>
 
 <template>
@@ -34,10 +34,10 @@ const gotoSchedule = () => {
     </div>
 
     <Button
-      @click="gotoSchedule"
       class="p-button p-component"
       :disabled="!isCalendlyUrl"
       :label="btnText || 'Schedule Call'"
+      @click="gotoSchedule"
     />
   </div>
 </template>

@@ -2,12 +2,12 @@
 
 <template>
   <CommonPage title="Add Leave Balance now">
-    <template #description
-      >Existing/Duplicate Leave balances will be ignored.</template
-    >
+    <template #description>
+      Existing/Duplicate Leave balances will be ignored.
+    </template>
 
     <div class="card">
-      <HRMSLeaveBulkLeave></HRMSLeaveBulkLeave>
+      <HRMSLeaveBulkLeave />
     </div>
   </CommonPage>
 </template>

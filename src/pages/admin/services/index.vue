@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import type { Service } from '@/types/service.type';
-import { useQueryClient } from 'vue-query';
-import { useMutation } from 'vue-query';
+import { useMutation, useQueryClient } from 'vue-query';
+
 import type { Ref } from 'vue';
-import router from '@/router';
 
 const serviceCreationType = ref<'template' | 'scratch'>();
 const serviceState = ref<'list' | 'create'>('list');
@@ -38,7 +37,7 @@ function showToast() {
   initToast({
     actionType: actionType.value,
     title: 'Project Template',
-    actionObj: { ...selectedService.value },
+    actionObj: { ...selectedService.value }
   });
 }
 
@@ -54,35 +53,35 @@ function closeConfirmRemoveDialog() {
 const { mutateAsync: removeService } = useMutation(
   (id: string) => useServiceDelete(id),
   {
-    onSuccess: () => handleRemove(),
+    onSuccess: () => handleRemove()
   }
 );
 
-const deleteService = () => {
+function deleteService() {
   if (selectedService.value !== undefined) {
     removeService(selectedService.value.id);
   }
-};
+}
 
-const handleBackSuccess = (type: 'back' | 'success') => {
+function handleBackSuccess(type: 'back' | 'success') {
   serviceState.value = 'list';
   serviceCreationType.value = undefined;
   if (type === 'success') {
     queryClient.invalidateQueries('service-list');
   }
-};
+}
 
-const prepareForStageCreate = () => {
+function prepareForStageCreate() {
   isStageCreate.value = true;
-};
+}
 </script>
 
 <template>
   <TabView
     ref="tabRef"
     v-model:activeIndex="activeTabIndex"
-    @tab-change="handleTabChange"
     lazy
+    @tab-change="handleTabChange"
   >
     <TabPanel header="Project Templates">
       <CommonPage
@@ -97,10 +96,10 @@ const prepareForStageCreate = () => {
             serviceState === 'list'
               ? 'These are the project templates which are already being shortlisted by you to offer your client. You can also add more project templates or create a new project templates from scratch.'
               : `Setup Project Template ${
-                  serviceCreationType === 'scratch'
-                    ? 'From Scratch'
-                    : 'From Template'
-                }`
+                serviceCreationType === 'scratch'
+                  ? 'From Scratch'
+                  : 'From Template'
+              }`
           }}
         </template>
         <template #helpActions>
@@ -109,11 +108,10 @@ const prepareForStageCreate = () => {
               aria-label="setup project template video"
               class="font-medium flex justify-content-end align-items-center cursor-pointer"
               @click="isHelpVideoOpen = true"
-              ><i
-                class="pi pi-youtube p-button-icon p-button-icon-left text-3xl text-primary mr-1 mt-1"
-              />
-              <span>Help</span></a
-            >
+            ><i
+               class="pi pi-youtube p-button-icon p-button-icon-left text-3xl text-primary mr-1 mt-1"
+             />
+              <span>Help</span></a>
           </div>
         </template>
 
@@ -124,14 +122,14 @@ const prepareForStageCreate = () => {
         @click="$router.push({ name: '' })"
       /> -->
 
-        <template v-slot:actions>
+        <template #actions>
           <template
             v-if="serviceState === 'list' && canDo('services', 'create')"
           >
             <Button
+              v-tooltip.top="'Add Project Template'"
               icon="pi pi-plus"
               class="p-button-sm p-button-rounded"
-              v-tooltip.top="'Add Project Template'"
               @click="OpenServiceCreateModal = true"
             />
           </template>
@@ -139,8 +137,8 @@ const prepareForStageCreate = () => {
 
         <ServiceList
           v-if="serviceState === 'list'"
-          @prepareForRemove="prepareForRemove"
-          @handleBackSuccess="handleBackSuccess"
+          @prepare-for-remove="prepareForRemove"
+          @handle-back-success="handleBackSuccess"
         />
       </CommonPage>
     </TabPanel>
@@ -150,12 +148,12 @@ const prepareForStageCreate = () => {
           Project Stages
         "
       >
-        <template v-slot:actions>
+        <template #actions>
           <template v-if="canDo('services', 'create')">
             <Button
+              v-tooltip.top="'Create'"
               icon="pi pi-plus"
               class="p-button-sm p-button-rounded"
-              v-tooltip.top="'Create'"
               @click="prepareForStageCreate"
             />
           </template>
@@ -167,18 +165,18 @@ const prepareForStageCreate = () => {
   <CommonConfirmRemoveDialog
     v-if="selectedService && deleteServiceDialog"
     :visible="deleteServiceDialog"
-    :recordToRemove="selectedService as Record<string, any>"
+    :record-to-remove="selectedService as Record<string, any>"
     title="Confirm Delete Project Template"
     @confirm="deleteService"
     @hide="closeConfirmRemoveDialog"
   />
   <Dialog
-    :modal="true"
-    appendTo="body"
     v-model:visible="isHelpVideoOpen"
+    :modal="true"
+    append-to="body"
     :breakpoints="defaultBreakpoints"
     :style="{ width: '75vw' }"
-    :contentClass="'border-round-bottom-md'"
+    content-class="border-round-bottom-md"
     header="Setup Project Template"
     @hide="isHelpVideoOpen = false"
   >
@@ -191,29 +189,29 @@ const prepareForStageCreate = () => {
         frameborder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         allowfullscreen
-      ></iframe>
+      />
     </div>
   </Dialog>
 
   <Dialog
-    :modal="true"
-    appendTo="body"
     v-model:visible="isStageCreate"
+    :modal="true"
+    append-to="body"
     :breakpoints="defaultBreakpoints"
     :style="{ width: '40vw' }"
-    :contentClass="'border-round-bottom-md'"
+    content-class="border-round-bottom-md"
     header="Create Project Stage"
     @hide="isStageCreate = false"
   >
     <ServiceStageCreateUpdate @success="isStageCreate = false" />
   </Dialog>
   <Dialog
-    :modal="true"
-    appendTo="body"
     v-model:visible="OpenServiceCreateModal"
+    :modal="true"
+    append-to="body"
     :breakpoints="defaultBreakpoints"
     :style="{ width: '60vw' }"
-    :contentClass="'border-round-bottom-md'"
+    content-class="border-round-bottom-md"
     header="Create Project Template"
     @hide="OpenServiceCreateModal = false"
   >

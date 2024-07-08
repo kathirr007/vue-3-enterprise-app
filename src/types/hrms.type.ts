@@ -1,4 +1,4 @@
-import { boolean, date, object, string, array, number } from 'yup';
+import { array, boolean, date, number, object, string } from 'yup';
 import type { InferType } from 'yup';
 import dayjs from 'dayjs';
 import type { User } from './teams.type';
@@ -103,7 +103,7 @@ export interface UserCheckInStatus {
 export const HRHolidayCreateInputSchema = object({
   name: string().required().min(3).label('Name'),
   description: string().optional().max(255).label('Description'),
-  date: date().required().label('Date'),
+  date: date().required().label('Date')
 });
 
 export type HRHolidayCreateInput = InferType<typeof HRHolidayCreateInputSchema>;
@@ -114,17 +114,17 @@ export const HRLeaveBalanceBulkPayloadSchema = object().shape({
       userId: array().min(1).of(string()).required().label('Team Member'),
       typeId: string().required().label('Leave Type'),
       year: number().nullable().required().label('Year'),
-      days: number().nullable().required().label('Number of days'),
+      days: number().nullable().required().label('Number of days')
     })
-  ),
+  )
 });
 
-export type BulkLeavePayload = {
+export interface BulkLeavePayload {
   userId: string[];
   typeId: string;
   year: number | null;
   days: number | null;
-};
+}
 
 export type HRLeaveBalanceBulkCreateInput = InferType<
   typeof HRLeaveBalanceBulkCreateInputSchema
@@ -134,14 +134,14 @@ export const HRLeaveBalanceBulkCreateInputSchema = object({
   userId: array().of(string()).required().min(3).label('Team Member'),
   typeId: string().required().min(3).label('Leave Type'),
   year: number().required().label('Year'),
-  days: number().required().nullable().label('Number of days'),
+  days: number().required().nullable().label('Number of days')
 });
 
 export const HRLeaveBalanceCreateInputSchema = object({
   userId: string().required().min(3).label('Team Member'),
   typeId: string().required().min(3).label('Leave Type'),
   year: number().required().label('Year'),
-  days: number().required().nullable().label('Number of days'),
+  days: number().required().nullable().label('Number of days')
 });
 
 export type HRLeaveBalanceCreateInput = InferType<
@@ -165,13 +165,13 @@ export const HRHolidayUpdateInputSchema = object({
   id: string().required(),
   name: string().required().min(1).max(255).label('Name'),
   description: string().required().optional().label('Description'),
-  date: date().required().label('Date'),
+  date: date().required().label('Date')
 });
 
 export type HRHolidayUpdateInput = InferType<typeof HRHolidayUpdateInputSchema>;
 
 export const HRHolidaySingleInputSchema = object({
-  id: string().required(),
+  id: string().required()
 });
 
 export type HRHolidaySingleInput = InferType<typeof HRHolidaySingleInputSchema>;
@@ -183,7 +183,7 @@ export const HRAttendanceCreateInputSchema = object({
   isBreak: boolean().optional(),
   activityTypeId: string().optional().label('Activity Type'),
   checkInNote: string().optional().label('Check In Note'),
-  checkOutNote: string().optional().label('Check Out Note'),
+  checkOutNote: string().optional().label('Check Out Note')
 }).test({
   name: 'checkOutisAfterCheckIn',
   test: (values, { createError }) => {
@@ -191,13 +191,13 @@ export const HRAttendanceCreateInputSchema = object({
     if (checkIn && checkOut) {
       return !dayjs(checkOut).isSameOrAfter(dayjs(checkIn))
         ? createError({
-            message: 'Check Out time must be after Check In time',
-            path: 'checkOut', // Fieldname
-          })
+          message: 'Check Out time must be after Check In time',
+          path: 'checkOut' // Fieldname
+        })
         : true;
     }
     return true; // Validation passes if either checkIn or checkOut is missing
-  },
+  }
 });
 
 export type HRAttendanceCreateInput = InferType<
@@ -208,13 +208,13 @@ export const HRAttendanceCheckInInputSchema = object({
   checkIn: date().required().label('Check In'),
   checkInLocation: object({
     lat: string().required(),
-    lng: string().required(),
+    lng: string().required()
   })
     .optional()
     .label('Check In Location'),
   isBreak: boolean().optional(),
   activityTypeId: string().optional().label('Activity Type'),
-  checkInNote: string().optional().label('Check In Note'),
+  checkInNote: string().optional().label('Check In Note')
 });
 
 export type HRAttendanceCheckInInput = InferType<
@@ -226,11 +226,11 @@ export const HRAttendanceCheckOutInputSchema = object({
   checkOut: date().required().label('Check Out'),
   checkOutLocation: object({
     lat: string().required(),
-    lng: string().required(),
+    lng: string().required()
   })
     .optional()
     .label('Check Out Location'),
-  checkOutNote: string().optional().label('Checkout Note'),
+  checkOutNote: string().optional().label('Checkout Note')
 });
 
 export type HRAttendanceCheckOutInput = InferType<
@@ -244,7 +244,7 @@ export const HRLeaveCreateInputSchema = object({
   description: string().required().label('Description'),
   remainingLeaves: number().optional(),
   holidaysInSelectedRange: number().optional(),
-  validateRemainingLeaves: boolean().optional(),
+  validateRemainingLeaves: boolean().optional()
 }).test({
   name: 'remainingLeavesValidation',
   test: (values, { createError }) => {
@@ -252,19 +252,19 @@ export const HRLeaveCreateInputSchema = object({
       remainingLeaves = 0,
       endDate,
       startDate,
-      holidaysInSelectedRange = 0,
+      holidaysInSelectedRange = 0
     } = values;
     if (startDate && endDate) {
       const validWeekdays = dayjs(endDate).businessDiff(dayjs(startDate)) + 1;
       return remainingLeaves + holidaysInSelectedRange - validWeekdays < 0
         ? createError({
-            message: `Selected days are more than the available leaves (Excluding holidays and Saturdays & Sundays in the selected date range).`,
-            path: 'leaveTypeId', // Fieldname
-          })
+          message: `Selected days are more than the available leaves (Excluding holidays and Saturdays & Sundays in the selected date range).`,
+          path: 'leaveTypeId' // Fieldname
+        })
         : true;
     }
     return true; // Validation passes if either checkIn or checkOut is missing
-  },
+  }
 });
 
 export type HRLeaveCreateInput = InferType<typeof HRLeaveCreateInputSchema>;
@@ -274,7 +274,7 @@ export const HRLeaveUpdateInputSchema = object({
   leaveTypeId: string().required().optional(),
   startDate: date().required().optional().label('Date'),
   endDate: date().required().optional().label('Date'),
-  description: string().optional().label('Description'),
+  description: string().optional().label('Description')
 }).when(['startDate', 'endDate'], {
   is: (startDate: number, endDate: number) => {
     if (startDate && endDate) {
@@ -282,7 +282,7 @@ export const HRLeaveUpdateInputSchema = object({
     }
     return string;
   },
-  then: (schema) => schema.required('End date must be after Start date'),
+  then: schema => schema.required('End date must be after Start date')
 });
 
 export type HRLeaveUpdateInput = InferType<typeof HRLeaveUpdateInputSchema>;
@@ -297,7 +297,7 @@ export const HRLeaveActionsInputSchema = object({
       isReject
         ? schema.required().label('Reason For Rejection')
         : schema.optional()
-    ),
+    )
 });
 
 export type HRLeaveActionsInput = InferType<typeof HRLeaveActionsInputSchema>;
@@ -308,15 +308,15 @@ export const HRBreakCreateInputSchema = object({
   checkIn: date().required().default(new Date()),
   checkInLocation: object({
     lat: string().required(),
-    lng: string().required(),
-  }).optional(),
+    lng: string().required()
+  }).optional()
 });
 
 export type HRBreakCreateInput = InferType<typeof HRBreakCreateInputSchema>;
 export const HRTimesheetsFetchInputSchema = object({
   userId: array().of(string()).optional().label('User Id'),
   startDate: date().optional().label('Start Date'),
-  endDate: date().optional().label('End Date'),
+  endDate: date().optional().label('End Date')
 });
 
 export type HRTimesheetsFetchInput = InferType<
@@ -328,7 +328,7 @@ export const HRTimeSheetsBreakDownFilterInputSchema = object({
   startDate: date().default(
     dayjs().subtract(1, 'week').startOf('day').toDate()
   ),
-  endDate: date().default(dayjs().endOf('day').toDate()),
+  endDate: date().default(dayjs().endOf('day').toDate())
 });
 
 export type HRTimeSheetsBreakDownFilterInput = InferType<

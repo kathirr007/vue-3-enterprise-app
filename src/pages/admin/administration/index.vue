@@ -3,7 +3,7 @@
 <template>
   <CommonPage title="Administration">
     <div>
-      <AdministrationList></AdministrationList>
+      <AdministrationList />
     </div>
   </CommonPage>
 </template>

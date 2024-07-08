@@ -1,24 +1,20 @@
 <script setup lang="ts">
 import { Field as VField } from 'vee-validate';
-import { useMutation, useQuery, useQueryClient } from 'vue-query';
+import { useMutation, useQueryClient } from 'vue-query';
 import InputNumber from 'primevue/inputnumber';
 import Dropdown from 'primevue/dropdown';
-import type { User } from '@/types/teams.type';
 import type { Ref } from 'vue';
-import type { AxiosError } from 'axios';
 import router from '@/router';
-import { Icon } from '@iconify/vue';
 import dayjs from 'dayjs';
 import type {
-  HRLeaveBalanceCreateInput,
-  HRLeaveBalance,
-  HRLeaveBalanceBulkCreateInput,
   BulkLeavePayload,
+  HRLeaveBalance,
+  HRLeaveBalanceCreateInput
 } from '@/types/hrms.type';
 import { HRLeaveBalanceBulkPayloadSchema } from '@/types/hrms.type';
 
 type EmptyRecord = BulkLeavePayload & { error: string };
-type teamMembers = { users: BulkLeavePayload[] };
+interface teamMembers { users: BulkLeavePayload[] }
 
 const emit = defineEmits<{
   (e: 'success', data: HRLeaveBalance): void;
@@ -51,7 +47,7 @@ const emptyRecord: EmptyRecord = {
   typeId: '',
   year: null,
   days: null,
-  error: '',
+  error: ''
 };
 
 const lastThreeYears = computed(() => {
@@ -62,35 +58,36 @@ const lastThreeYears = computed(() => {
   return lastThreeYears;
 });
 
-const { handleSubmit, meta, values, errors, setValues, resetForm, validate } =
-  useForm({
+const { handleSubmit, meta, values, errors, setValues, resetForm, validate }
+  = useForm({
     validationSchema: HRLeaveBalanceBulkPayloadSchema,
     validateOnMount: false,
     initialValues: {
-      users: [{ ...emptyRecord }],
-    },
+      users: [{ ...emptyRecord }]
+    }
   });
 
 const { remove, push, fields } = useFieldArray('users');
 
-const addNewRecord = () => {
+function addNewRecord() {
   push(emptyRecord);
   validate({
-    mode: 'silent',
+    mode: 'silent'
   });
-};
+}
 
-const removeFieldError = (field: Ref<EmptyRecord>): void => {
-  if (!field.value.error) return;
+function removeFieldError(field: Ref<EmptyRecord>): void {
+  if (!field.value.error)
+    return;
   field.value.error = '';
-};
+}
 
-const handleResetForm = () => {
+function handleResetForm() {
   resetForm();
-};
+}
 
-const { mutateAsync: createBulkLeaveBalance, isLoading: bulkCreateLoading } =
-  useMutation(
+const { mutateAsync: createBulkLeaveBalance, isLoading: bulkCreateLoading }
+  = useMutation(
     (payload: HRLeaveBalanceCreateInput[]) => {
       return createLeaveBalanceBulkCreation(payload);
     },
@@ -102,17 +99,17 @@ const { mutateAsync: createBulkLeaveBalance, isLoading: bulkCreateLoading } =
             summary: 'Create Leave balance',
             detail: `Total of <strong>${data.count}</strong> ${
               data.count > 1 ? 'Leave balances' : 'Leave balance'
-            } successfully created.`,
+            } successfully created.`
           });
         }
         router.push({
           name: 'admin-hrms',
           query: {
-            activeIndex: 1,
-          },
+            activeIndex: 1
+          }
         });
         queryClient.invalidateQueries('leavebalance-list');
-      },
+      }
     }
   );
 
@@ -146,11 +143,15 @@ const onSubmit = handleSubmit(async (values: Record<string, unknown>) => {
               <th role="cell" :style="tableCellStyles">
                 Number of Days <span class="text-red-600">*</span>
               </th>
-              <th role="cell" :style="tableActionStyles">Actions</th>
+              <th role="cell" :style="tableActionStyles">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody class="p-datatable-tbody relative" role="rowgroup">
             <tr
+              v-for="(field, idx) in fields"
+              :key="field.key"
               role="row"
               class="relative"
               :class="[
@@ -160,40 +161,37 @@ const onSubmit = handleSubmit(async (values: Record<string, unknown>) => {
                   ).error,
                 },
               ]"
-              v-for="(field, idx) in fields"
-              :key="field.key"
             >
               <td role="cell" valign="top" :style="tableCellStyles">
                 <label
                   :for="`name_${idx}`"
                   class="mb-2"
                   :class="isMedium ? 'hidden' : 'block'"
-                  >User</label
-                >
+                >User</label>
                 <VField
                   :id="`name_${idx}`"
-                  :name="`users[${idx}].userId`"
                   v-slot="{ handleChange, value, validate }"
+                  :name="`users[${idx}].userId`"
                 >
                   <MultiSelect
                     class="w-full"
+                    :model-value="value"
+                    :options="usersList"
+                    option-label="name"
+                    option-value="id"
+                    :filter="true"
+                    placeholder="Select Team members"
                     @update:model-value="handleChange"
                     @blur="validate()"
                     @change="
                       removeFieldError(field as unknown as Ref<EmptyRecord>)
                     "
-                    :model-value="value"
-                    :options="usersList"
-                    optionLabel="name"
-                    optionValue="id"
-                    :filter="true"
-                    placeholder="Select Team members"
                   />
                   <transition mode="out-in" name="field-slide-down">
                     <FormFeedbackMessage
                       :errors="errors"
                       :values="values"
-                      :errorKey="`users[${idx}].userId`"
+                      :error-key="`users[${idx}].userId`"
                     />
                   </transition>
                 </VField>
@@ -203,34 +201,32 @@ const onSubmit = handleSubmit(async (values: Record<string, unknown>) => {
                   :for="`typeId_${idx}`"
                   class="mb-2"
                   :class="isMedium ? 'hidden' : 'block'"
-                  >Leave Type</label
-                >
+                >Leave Type</label>
                 <VField
                   :id="`typeId_${idx}`"
-                  :name="`users[${idx}].typeId`"
                   v-slot="{ handleChange, value, validate }"
+                  :name="`users[${idx}].typeId`"
                 >
                   <Dropdown
                     class="w-full"
+                    :model-value="value"
+                    :options="leaveTypes"
+                    option-label="name"
+                    option-value="id"
+                    :filter="true"
+                    placeholder="Select a Leave type"
                     @update:model-value="handleChange"
                     @blur="validate()"
                     @change="
                       removeFieldError(field as unknown as Ref<EmptyRecord>)
                     "
-                    :model-value="value"
-                    :options="leaveTypes"
-                    optionLabel="name"
-                    optionValue="id"
-                    :filter="true"
-                    placeholder="Select a Leave type"
-                  >
-                  </Dropdown>
+                  />
                 </VField>
                 <transition mode="out-in" name="field-slide-down">
                   <FormFeedbackMessage
                     :errors="errors"
                     :values="values"
-                    :errorKey="`users[${idx}].typeId`"
+                    :error-key="`users[${idx}].typeId`"
                   />
                 </transition>
               </td>
@@ -239,30 +235,29 @@ const onSubmit = handleSubmit(async (values: Record<string, unknown>) => {
                   :for="`year_${idx}`"
                   class="mb-2"
                   :class="isMedium ? 'hidden' : 'block'"
-                  >Year</label
-                >
+                >Year</label>
                 <VField
                   :id="`year_${idx}`"
-                  :name="`users[${idx}].year`"
                   v-slot="{ handleChange, value, validate }"
+                  :name="`users[${idx}].year`"
                 >
                   <Dropdown
                     class="w-full"
+                    :model-value="value"
+                    :options="lastThreeYears"
+                    :filter="true"
+                    placeholder="Select a year"
                     @update:model-value="handleChange"
                     @blur="validate()"
                     @change="
                       removeFieldError(field as unknown as Ref<EmptyRecord>)
                     "
-                    :model-value="value"
-                    :options="lastThreeYears"
-                    :filter="true"
-                    placeholder="Select a year"
                   />
                   <transition mode="out-in" name="field-slide-down">
                     <FormFeedbackMessage
                       :errors="errors"
                       :values="values"
-                      :errorKey="`users[${idx}].year`"
+                      :error-key="`users[${idx}].year`"
                     />
                   </transition>
                 </VField>
@@ -272,22 +267,21 @@ const onSubmit = handleSubmit(async (values: Record<string, unknown>) => {
                   :for="`days_${idx}`"
                   class="mb-2"
                   :class="isMedium ? 'hidden' : 'block'"
-                  >Number of days</label
-                >
+                >Number of days</label>
                 <VField
                   :id="`days_${idx}`"
-                  :name="`users[${idx}].days`"
                   v-slot="{ handleChange, value, validate }"
+                  :name="`users[${idx}].days`"
                 >
                   <InputNumber
                     placeholder="Enter No. of days"
                     class="w-full"
+                    :model-value="value as number"
                     @update:model-value="handleChange"
                     @blur="validate()"
                     @input="
                       removeFieldError(field as unknown as Ref<EmptyRecord>)
                     "
-                    :model-value="value as number"
                   />
                 </VField>
                 <div
@@ -300,12 +294,12 @@ const onSubmit = handleSubmit(async (values: Record<string, unknown>) => {
                   <FormFeedbackMessage
                     :errors="errors"
                     :values="values"
-                    :errorKey="`users[${idx}].days`"
+                    :error-key="`users[${idx}].days`"
                   />
                 </transition>
                 <div
-                  class="p-error api-error"
                   v-if="(field.value as unknown as EmptyRecord).error"
+                  class="p-error api-error"
                 >
                   {{ (field.value as unknown as EmptyRecord).error }}
                 </div>

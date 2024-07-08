@@ -9,13 +9,14 @@ const menuItems = computed(() => props.items);
 
 const menu = ref();
 
-const toggle = (event: Event) => {
+function toggle(event: Event) {
   menu.value.toggle(event);
-};
+}
 </script>
+
 <script lang="ts">
 export default defineComponent({
-  inheritAttrs: false,
+  inheritAttrs: false
 });
 </script>
 
@@ -23,9 +24,9 @@ export default defineComponent({
   <Button
     type="button"
     label="Toggle"
-    @click="toggle"
     aria-haspopup="true"
     aria-controls="overlay_menu"
+    @click="toggle"
   />
   <Menu
     v-if="menuItems?.length"

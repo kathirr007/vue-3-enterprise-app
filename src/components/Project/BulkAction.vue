@@ -19,7 +19,7 @@ const bulkType = ref<
 >();
 const isModalOpen = computed({
   get: () => !!bulkType.value,
-  set: (value) => (bulkType.value = value ? bulkType.value : undefined),
+  set: value => (bulkType.value = value ? bulkType.value : undefined)
 });
 const modalHeader = computed(() => {
   switch (bulkType.value) {
@@ -51,7 +51,7 @@ function resetComponent() {
   bulkType.value = undefined;
 }
 
-const hideMenuOption = isStatus.value !== 'Archived' ? true : false;
+const hideMenuOption = isStatus.value !== 'Archived';
 
 const bulkActionsMenu = ref([
   {
@@ -60,7 +60,7 @@ const bulkActionsMenu = ref([
     command: () => {
       resetComponent();
       bulkType.value = 'status';
-    },
+    }
   },
   {
     label: 'Project Manager',
@@ -68,7 +68,7 @@ const bulkActionsMenu = ref([
     command: () => {
       resetComponent();
       bulkType.value = 'projectManagerId';
-    },
+    }
   },
   {
     label: 'Reviewer',
@@ -76,30 +76,30 @@ const bulkActionsMenu = ref([
     command: () => {
       resetComponent();
       bulkType.value = 'reviewerId';
-    },
+    }
   },
   {
     label: 'Start Date',
     hideMenuOption,
     command: () => {
       bulkType.value = 'startDate';
-    },
+    }
   },
   {
     label: 'Due Date',
     hideMenuOption,
     command: () => {
       bulkType.value = 'dueDate';
-    },
-  },
+    }
+  }
 ]);
 
-const toggle = (event: any) => {
+function toggle(event: any) {
   menu.value.toggle(event);
-};
+}
 
 const filteredActionsMenu = computed(() => {
-  const data = bulkActionsMenu.value.filter((val) => val.hideMenuOption);
+  const data = bulkActionsMenu.value.filter(val => val.hideMenuOption);
   return data;
 });
 function handleUpdateSucces() {
@@ -110,25 +110,26 @@ function handleUpdateSucces() {
     actionType: 'Update',
     severity: 'success',
     summary: 'Success',
-    detail: 'Project updated successfully',
+    detail: 'Project updated successfully'
   });
 }
 </script>
+
 <template>
   <Button
     type="button"
-    @click="toggle"
     :label="label"
     icon="pi pi-angle-down"
-    iconPos="right"
+    icon-pos="right"
     class="p-button-outlined w-full sm:w-auto flex-order-0 sm:flex-order-1 mr-2"
     v-bind="$attrs"
+    @click="toggle"
   />
   <Menu ref="menu" :model="filteredActionsMenu" :popup="true" />
 
   <Dialog
     v-model:visible="isModalOpen"
-    contentClass="border-round-bottom border-top-1 surface-border p-0"
+    content-class="border-round-bottom border-top-1 surface-border p-0"
     modal
     :header="`Update ${modalHeader}`"
     :breakpoints="{ '640px': '75vw' }"
@@ -137,11 +138,11 @@ function handleUpdateSucces() {
   >
     <ProjectBulkActionForm
       :projects="projects"
-      :updateField="bulkType as string"
-      :statusValue="isStatus"
+      :update-field="bulkType as string"
+      :status-value="isStatus"
+      :min-due-date="dueDate"
+      :max-start-date="startDate"
       @success="handleUpdateSucces"
-      :minDueDate="dueDate"
-      :maxStartDate="startDate"
     />
   </Dialog>
 </template>

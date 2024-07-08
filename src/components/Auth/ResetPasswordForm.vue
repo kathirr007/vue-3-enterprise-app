@@ -3,8 +3,6 @@ import type { ResetPasswordPayload } from '@/types/auth.type';
 import { ResetPasswordSchema } from '@/types/auth.type';
 import { useMutation } from 'vue-query';
 
-const { checkPasswordRule, strongRegEx } = usePasswordValidator();
-
 const props = defineProps<{
   token: string;
   // email: string;
@@ -14,6 +12,8 @@ const emit = defineEmits<{
   (e: 'success'): void;
 }>();
 
+const { checkPasswordRule, strongRegEx } = usePasswordValidator();
+
 const { initToast } = useToasts();
 
 const { handleSubmit, errors, values, meta } = useForm({
@@ -22,8 +22,8 @@ const { handleSubmit, errors, values, meta } = useForm({
     email: '',
     password: '',
     confirmPassword: '',
-    key: '',
-  },
+    key: ''
+  }
 });
 
 // const { value: email } = useField<string>('email');
@@ -37,25 +37,25 @@ const { isLoading, mutateAsync: resetPassword } = useMutation(
   {
     onSuccess: () => {
       emit('success');
-    },
+    }
   }
 );
 
 const onSubmit = handleSubmit(async (values) => {
   await resetPassword({
     password: values.password,
-    key: props.token,
+    key: props.token
   });
   initToast({
     title: 'Reset Password',
     actionType: 'Update',
-    detail: `Password was reset successfully`,
+    detail: `Password was reset successfully`
   });
 });
 </script>
 
 <template>
-  <form @submit="onSubmit" class="text-left">
+  <form class="text-left" @submit="onSubmit">
     <div class="field">
       <label for="password" class="block font-medium text-900">
         Password
@@ -63,17 +63,19 @@ const onSubmit = handleSubmit(async (values) => {
       </label>
       <Password
         id="password"
-        name="password"
         v-model="password"
-        toggleMask
+        name="password"
+        toggle-mask
         class="w-full"
-        :class="{ 'p-invalid': errors['password'] }"
+        :class="{ 'p-invalid': errors.password }"
         :strong-regex="strongRegEx"
       >
         <template #footer="sp: any">
           {{ sp.level }}
           <Divider />
-          <p class="mt-2">Suggestions</p>
+          <p class="mt-2">
+            Suggestions
+          </p>
           <ul class="pl-2 ml-2 mt-0" style="line-height: 1.5">
             <li
               :class="{
@@ -111,10 +113,10 @@ const onSubmit = handleSubmit(async (values) => {
       </Password>
       <transition mode="out-in" name="field-slide-down">
         <FormFeedbackMessage
-          :success-class="'font-medium'"
+          success-class="font-medium"
           :errors="errors"
           :values="values"
-          :errorKey="'password'"
+          error-key="password"
         />
       </transition>
     </div>
@@ -125,21 +127,20 @@ const onSubmit = handleSubmit(async (values) => {
       </label>
       <Password
         id="confirmPassword"
-        name="confirmPassword"
         v-model="confirmPassword"
-        toggleMask
+        name="confirmPassword"
+        toggle-mask
         :feedback="false"
         class="w-full"
-        :class="{ 'p-invalid': errors['confirmPassword'] }"
+        :class="{ 'p-invalid': errors.confirmPassword }"
         :strong-regex="strongRegEx"
-      >
-      </Password>
+      />
       <transition mode="out-in" name="field-slide-down">
         <FormFeedbackMessage
-          :success-class="'font-medium'"
+          success-class="font-medium"
           :errors="errors"
           :values="values"
-          :errorKey="'confirmPassword'"
+          error-key="confirmPassword"
         />
       </transition>
     </div>
@@ -149,7 +150,7 @@ const onSubmit = handleSubmit(async (values) => {
       :loading="isLoading"
       type="submit"
       class="block mx-auto"
-    ></Button>
+    />
     <div class="font-medium mt-4">
       Don't want to reset password?
       <router-link class="text-base mt-2" :to="{ name: 'auth-signin' }">

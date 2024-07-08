@@ -6,7 +6,7 @@ export const ClientPortalSettingSchema = object().shape({
   enablePortalProjectTracking: string().optional().nullable().label('Project'),
   enablePortalTaskTracking: string().optional().nullable().label('Task'),
   enablePortalBrightDesk: string().optional().nullable().label('BrightDesk'),
-  enablePortalDocuments: string().optional().nullable().label('Documents'),
+  enablePortalDocuments: string().optional().nullable().label('Documents')
 });
 
 export type ClientPortalSettingPayload = InferType<

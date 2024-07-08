@@ -9,14 +9,15 @@ const webformId = ref(route.params.id as string);
 const {
   data: webformDetails,
   isLoading: loadingWebform,
-  isError,
+  isError
 } = useQuery(['client-webform-details', webformId], () => {
   return getOne(webformId.value as string);
 });
 </script>
+
 <script lang="ts">
 export default defineComponent({
-  inheritAttrs: false,
+  inheritAttrs: false
 });
 </script>
 
@@ -31,8 +32,10 @@ export default defineComponent({
               <h1 class="text-3xl text-primary mb-0 text-center">
                 {{ webformDetails?.name }}
               </h1>
-              <div class="card mt-3" v-if="webformDetails?.instructions">
-                <h3 class="text-xl text-primary">Instructions</h3>
+              <div v-if="webformDetails?.instructions" class="card mt-3">
+                <h3 class="text-xl text-primary">
+                  Instructions
+                </h3>
                 <div v-html="webformDetails?.instructions" />
               </div>
             </div>
@@ -42,8 +45,8 @@ export default defineComponent({
     </div>
     <Common404
       v-if="isError || !webformDetails"
-      :hideNavigations="true"
-      :title="'Form not found.'"
+      :hide-navigations="true"
+      title="Form not found."
     />
     <div
       v-else

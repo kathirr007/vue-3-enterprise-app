@@ -3,11 +3,11 @@ import type {
   ClientGroup,
   ClientGroupAddClientsPayload,
   ClientGroupCreatePayload,
-  ClientGroupRemovePayload,
+  ClientGroupRemovePayload
 } from '@/types/client-group';
 import type { PaginatedResponse } from '@/types/common.type';
 
-export const useClientGroups = () => {
+export function useClientGroups() {
   const getAll = async () => {
     const { data } = await $api.get<ClientGroup[]>('client-groups');
     return data;
@@ -17,7 +17,7 @@ export const useClientGroups = () => {
     page,
     limit,
     filters,
-    sortBy,
+    sortBy
   }: {
     page?: number;
     limit?: number;
@@ -31,8 +31,8 @@ export const useClientGroups = () => {
           page,
           limit,
           filters,
-          sortBy,
-        },
+          sortBy
+        }
       }
     );
     return data;
@@ -80,7 +80,7 @@ export const useClientGroups = () => {
     payload?: ClientGroupRemovePayload
   ) => {
     const { data } = await $api.delete(`client-groups/${id}/remove-client`, {
-      data: payload,
+      data: payload
     });
     return data;
   };
@@ -105,9 +105,9 @@ export const useClientGroups = () => {
     remove,
     removeClient,
     removeClients,
-    update,
+    update
   };
-};
+}
 
 export async function useClientGroupList() {
   const { data } = await $api.get<ClientGroup[]>('client-groups');
@@ -124,7 +124,7 @@ export async function useClientGroupRemove(
   payload?: ClientGroupRemovePayload
 ) {
   const { data } = await $api.delete<void>(`client-groups/${id}`, {
-    data: payload,
+    data: payload
   });
   return data;
 }

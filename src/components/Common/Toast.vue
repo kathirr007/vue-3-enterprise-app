@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import Toast from 'primevue/toast';
-type toastSlotProps = {
+
+interface toastSlotProps {
   message: any;
-};
-const toastIconClasses = (slotProps: toastSlotProps) => [
-  { 'pi-check': slotProps.message.severity === 'success' },
-  { 'pi-info-circle': slotProps.message.severity === 'info' },
-  {
-    'pi-exclamation-triangle': slotProps.message.severity === 'warning',
-  },
-  { 'pi-times': slotProps.message.severity === 'error' },
-];
+}
+function toastIconClasses(slotProps: toastSlotProps) {
+  return [
+    { 'pi-check': slotProps.message.severity === 'success' },
+    { 'pi-info-circle': slotProps.message.severity === 'info' },
+    {
+      'pi-exclamation-triangle': slotProps.message.severity === 'warning'
+    },
+    { 'pi-times': slotProps.message.severity === 'error' }
+  ];
+}
 </script>
 
 <template>
@@ -19,7 +22,7 @@ const toastIconClasses = (slotProps: toastSlotProps) => [
       <span
         class="p-toast-message-icon pi"
         :class="toastIconClasses(slotProps)"
-      ></span>
+      />
       <div class="my-0 mx-3 flex-1">
         <span class="p-toast-summary block">
           {{ slotProps.message.summary }}

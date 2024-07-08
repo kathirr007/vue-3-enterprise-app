@@ -21,7 +21,9 @@ const emit = defineEmits<{
   <div
     class="h-full w-full bg-gray-100 flex justify-content-between p-2 border-round-lg"
   >
-    <div class="font-medium break-all">{{ attachment.name }}</div>
+    <div class="font-medium break-all">
+      {{ attachment.name }}
+    </div>
     <i
       v-if="iconLoading"
       class="pi pi-spin pi-spinner align-self-center ml-2"
@@ -30,10 +32,10 @@ const emit = defineEmits<{
       <i
         v-for="(iconItem, index) in icon"
         :key="index"
+        v-tooltip="iconItem.tooltip || ''"
         class="p-1 hover:bg-white align-self-center border-circle icon-transistion cursor-pointer"
         :class="iconItem.class"
         @click="emit('icon-click', attachment, iconItem.name)"
-        v-tooltip="iconItem.tooltip || ''"
       />
     </div>
     <i

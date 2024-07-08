@@ -3,11 +3,10 @@ import type {
   CreateServicePayload,
   OrderedPipelineStages,
   ProjectStage,
-  Service,
+  Service
 } from '@/types/service.type';
 import type {
-  TaskTemplate,
-  TaskTemplateSchema,
+  TaskTemplate
 } from '@/types/task-template.type';
 import { useMutation, useQuery } from 'vue-query';
 import ServiceCreateTemplate from '@/components/Service/Create/Template.vue';
@@ -44,27 +43,27 @@ const steps: Record<'template' | 'form' | 'task' | 'stage', unknown> = {
   template: ServiceCreateTemplate,
   form: ServiceAddDetailsForm,
   stage: ServiceAddStageForm,
-  task: ServiceAddTaskForm,
+  task: ServiceAddTaskForm
 };
 
 const stepItems = computed(() => {
   const steps: Step[] = [
     {
       name: 'template',
-      label: 'Select Template',
+      label: 'Select Template'
     },
     {
       name: 'form',
-      label: `${props.revisit ? 'Update/View' : 'Add'} Basic Details`,
+      label: `${props.revisit ? 'Update/View' : 'Add'} Basic Details`
     },
     {
       name: 'stage',
-      label: `${props.revisit ? 'Update/View' : 'Add'} Stages`,
+      label: `${props.revisit ? 'Update/View' : 'Add'} Stages`
     },
     {
       name: 'task',
-      label: `${props.revisit ? 'Update/View' : 'Add'} Task Templates`,
-    },
+      label: `${props.revisit ? 'Update/View' : 'Add'} Task Templates`
+    }
   ];
   return steps.filter((step: Step) => {
     if (step.name === 'template' && !props.template) {
@@ -78,7 +77,8 @@ const stepItems = computed(() => {
 const { isLoading: templateIsLoading } = useQuery(
   ['template-details', selectedTemplate],
   () => {
-    if (!selectedTemplate.value) return;
+    if (!selectedTemplate.value)
+      return;
     return useServiceDetails(selectedTemplate.value);
   },
   {
@@ -88,24 +88,24 @@ const { isLoading: templateIsLoading } = useQuery(
         TemplateDetails.value = data;
         selectedStages.value = data?.OrderedPipelineStages;
         createPayload.value = {
-          name: 'Copy of ' + data.name,
+          name: `Copy of ${data.name}`,
           billingType: data.billingType,
-          billingRate: Number(data?.billingRate),
+          billingRate: Number(data?.billingRate)
         } as CreateServicePayload;
         currentStep.value = 'form';
       }
-    },
+    }
   }
 );
 
-const { mutateAsync: createService, isLoading: createServiceIsLoading } =
-  useMutation((payload: CreateServicePayload) => useServiceCreate(payload), {
+const { mutateAsync: createService, isLoading: createServiceIsLoading }
+  = useMutation((payload: CreateServicePayload) => useServiceCreate(payload), {
     onSuccess: (data) => {
       initToast({
         actionType: 'Create',
         severity: 'success',
         summary: 'Success',
-        detail: 'Project Template created successfully',
+        detail: 'Project Template created successfully'
       });
       emit('success');
       if (Array.isArray(data) && !data.length) {
@@ -114,10 +114,10 @@ const { mutateAsync: createService, isLoading: createServiceIsLoading } =
     },
     onError: () => {
       emptyData.value = true;
-    },
+    }
   });
-const { mutateAsync: updateService, isLoading: updateServiceIsLoading } =
-  useMutation(
+const { mutateAsync: updateService, isLoading: updateServiceIsLoading }
+  = useMutation(
     (payload: Partial<Service>) =>
       useServiceUpdate(`${props?.service?.id}`, payload),
     {
@@ -126,14 +126,15 @@ const { mutateAsync: updateService, isLoading: updateServiceIsLoading } =
           actionType: 'Update',
           severity: 'success',
           summary: 'Success',
-          detail: 'Project Template updated successfully',
+          detail: 'Project Template updated successfully'
         });
-        if (currentStep.value === 'stage') currentStep.value = 'task';
+        if (currentStep.value === 'stage')
+          currentStep.value = 'task';
         else currentStep.value = 'stage';
       },
       onError: () => {
         emptyData.value = true;
-      },
+      }
     }
   );
 
@@ -145,14 +146,14 @@ const stepProps = computed(() => {
   if (currentStep.value === 'template') {
     return {
       template: selectedTemplate.value,
-      loading: templateIsLoading.value,
+      loading: templateIsLoading.value
     };
   }
   if (currentStep.value === 'stage') {
     return {
       stages: selectedStages.value || props.service?.OrderedPipelineStages,
       loading: createServiceIsLoading.value,
-      hideSkip: props.template,
+      hideSkip: props.template
     };
   }
   if (currentStep.value === 'form') {
@@ -162,7 +163,7 @@ const stepProps = computed(() => {
       apiKey: apiKey.value,
       loading: isAddDetailsFormLoading.value,
       showAssist: !props.revisit && !props.template,
-      noDataFound: emptyData.value,
+      noDataFound: emptyData.value
     };
   }
   if (currentStep.value === 'task') {
@@ -173,20 +174,19 @@ const stepProps = computed(() => {
       apiKey: apiKey.value,
       template: props.template,
       loading: createServiceIsLoading.value,
-      revisit: props.revisit,
+      revisit: props.revisit
     };
   }
 });
 
-const handleTemplate = (template: string) => {
-  if (template === selectedTemplate.value) currentStep.value = 'form';
+function handleTemplate(template: string) {
+  if (template === selectedTemplate.value)
+    currentStep.value = 'form';
   selectedTemplate.value = template;
-};
-const prepareForPayload = async (
-  payload: CreateServicePayload,
+}
+async function prepareForPayload(payload: CreateServicePayload,
   id: string,
-  generateTaskPayload: { payload: GenerateTasksPayload }
-) => {
+  generateTaskPayload: { payload: GenerateTasksPayload }) {
   createPayload.value = payload;
   if (generateTaskPayload?.payload) {
     generatingTasks.value = true;
@@ -202,7 +202,7 @@ const prepareForPayload = async (
     }
     generatingTasks.value = false;
     TemplateDetails.value = {
-      taskTemplates: tasks as unknown as TaskTemplate[],
+      taskTemplates: tasks as unknown as TaskTemplate[]
     };
     currentStep.value = 'stage';
     return;
@@ -210,40 +210,45 @@ const prepareForPayload = async (
 
   if (!props.revisit) {
     currentStep.value = 'stage';
-  } else {
+  }
+  else {
     updateService(createPayload.value as Partial<Service>);
   }
-};
-const handleTaskTemplates = (payload: TaskTemplate[]) => {
+}
+function handleTaskTemplates(payload: TaskTemplate[]) {
   const templates = payload.map((template) => {
     const refactoredTemplate = {
       ...template,
-      attachments: template.attachmentIds,
+      attachments: template.attachmentIds
     };
     delete refactoredTemplate.attachmentIds;
     return refactoredTemplate;
   }) as unknown as TaskTemplate[];
-  if (createPayload.value) createPayload.value.entityTemplates = templates;
+  if (createPayload.value)
+    createPayload.value.entityTemplates = templates;
   createService(createPayload.value as CreateServicePayload);
-};
-const getTaskTemplates = () => {
+}
+function getTaskTemplates() {
   return TemplateDetails.value?.taskTemplates?.map((task) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id, ...restTask } = task;
     return restTask;
   });
-};
+}
 
-const handleBack = () => {
-  if (currentStep.value === 'template') emit('back');
+function handleBack() {
+  if (currentStep.value === 'template')
+    emit('back');
   if (currentStep.value === 'form') {
-    if (props.template) currentStep.value = 'template';
+    if (props.template)
+      currentStep.value = 'template';
     else emit('back');
   }
-  if (currentStep.value === 'stage') currentStep.value = 'form';
-  if (currentStep.value === 'task') currentStep.value = 'stage';
-};
-const handleSkip = (type?: 'form') => {
+  if (currentStep.value === 'stage')
+    currentStep.value = 'form';
+  if (currentStep.value === 'task')
+    currentStep.value = 'stage';
+}
+function handleSkip(type?: 'form') {
   if (props.revisit && type === 'form') {
     currentStep.value = 'stage';
     return;
@@ -254,15 +259,16 @@ const handleSkip = (type?: 'form') => {
   }
   if (props.revisit) {
     emit('success');
-  } else createService(createPayload.value as CreateServicePayload);
-};
+  }
+  else createService(createPayload.value as CreateServicePayload);
+}
 
-const handleStages = (stages: ProjectStage[]) => {
+function handleStages(stages: ProjectStage[]) {
   if (props.revisit) {
     updateService({
       pipelineStage: stages.map((stage, index) => {
         return { pipelineStageId: stage.id, order: index + 1 };
-      }),
+      })
     } as Partial<Service>);
     return;
   }
@@ -271,7 +277,7 @@ const handleStages = (stages: ProjectStage[]) => {
       return { pipelineStageId: stage.id, order: index + 1 };
     });
   currentStep.value = 'task';
-};
+}
 
 watch(
   () => props.service,
@@ -286,8 +292,8 @@ watch(
 <template>
   <div :class="currentStep !== 'task' ? 'lg:w-8 xl:w-6 mx-auto' : ''">
     <CommonSteps
-      readonly
       id="abc"
+      readonly
       :items="stepItems"
       class="mb-4"
       :current="currentStep"
@@ -308,9 +314,9 @@ watch(
     >
       <KeepAlive>
         <component
+          :is="steps[currentStep]"
           :key="currentStep"
           :ref="`${currentStep}Ref`"
-          :is="steps[currentStep]"
           v-bind="stepProps"
           @back="handleBack"
           @skip="handleSkip"

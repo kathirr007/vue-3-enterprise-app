@@ -25,8 +25,8 @@ const { arrDiff } = useUtilityFns();
 const { data: filterData, applyFilter } = useFilterColumns();
 applyFilter('Is Active', 'true');
 
-const { data: TaskFilterData, applyFilter: taskApplyFilters } =
-  useFilterColumns();
+const { data: TaskFilterData, applyFilter: taskApplyFilters }
+  = useFilterColumns();
 taskApplyFilters('Type', props.type ? [props.type] : ['TASK']);
 const { getClients } = useCommonListQueries();
 const { metaFilter } = useUtilityFns();
@@ -74,13 +74,13 @@ const { data: projectList } = useQuery(
     applyFilter('Is Active', undefined);
     return useProjectListV2({
       responseStatus: 'ScheduledAndActive',
-      filters: initialFilters.value,
+      filters: initialFilters.value
     });
   },
   {
     onSuccess: (data) => {
       return (projectListData.value = data.results);
-    },
+    }
   }
 );
 
@@ -99,7 +99,7 @@ const { data: tasksList } = useQuery(
     return useTasksListV2({
       status: 'OPEN',
       entityType: 'TASK',
-      filters: taskInitailFilter.value,
+      filters: taskInitailFilter.value
     });
   },
   {
@@ -107,10 +107,10 @@ const { data: tasksList } = useQuery(
       taskOptions.value = data.results?.map((task: Task) => {
         return {
           id: task.id,
-          title: metaFilter(task.meta as MetaObj[], 'title'),
+          title: metaFilter(task.meta as MetaObj[], 'title')
         };
       });
-    },
+    }
   }
 );
 
@@ -119,8 +119,8 @@ const { isLoading: gettingThead, data: thread } = useQuery(
   () => useThread(props.inboxId, props.threadId),
   {
     onSuccess: async (data) => {
-      selectedTasks.value = (data.inboxData?.entities.map((e) => e.id) ||
-        []) as string[];
+      selectedTasks.value = (data.inboxData?.entities.map(e => e.id)
+      || []) as string[];
       setTimeout(() => {
         if (data.inboxData?.clients && data.inboxData?.clients.length > 0) {
           formRef.value?.setFieldValue(
@@ -144,7 +144,7 @@ const { isLoading: gettingThead, data: thread } = useQuery(
       await nextTick(() => {
         instance?.proxy?.$forceUpdate();
       });
-    },
+    }
   }
 );
 
@@ -161,7 +161,7 @@ const formData = computed(() => {
         optionValue: 'id',
         options: clientList.value || [],
         placeholder: 'Select clients',
-        showClear: true,
+        showClear: true
       },
       {
         type: 'dropdown',
@@ -173,7 +173,7 @@ const formData = computed(() => {
         optionValue: 'id',
         placeholder: 'Select project',
         options: projectListData.value || [],
-        showClear: true,
+        showClear: true
       },
       {
         as: MultiSelect,
@@ -185,29 +185,29 @@ const formData = computed(() => {
         placeholder: 'Select task',
         formGridClass: 'md:col-12',
         options: taskOptions.value || [],
-        display: 'chip',
-      },
+        display: 'chip'
+      }
     ],
     btnText: 'Attach',
     secondaryBtnText: 'Cancel',
     validationSchema: AttachTaskPayloadSchema,
     initialValues: { taskIds: selectedTasks.value },
-    validateOnMount: true,
+    validateOnMount: true
   };
 });
 
 const mainBtnLoading = computed(() => {
   return (
-    attachingTask.value ||
-    detachingTask.value ||
-    detachingProject.value ||
-    attachingProject.value ||
-    attachingClient.value
+    attachingTask.value
+    || detachingTask.value
+    || detachingProject.value
+    || attachingProject.value
+    || attachingClient.value
   );
 });
 
-const { findFormIndex, updateOptions, updateFieldProp } =
-  useSchemaForm(formData);
+const { findFormIndex, updateOptions, updateFieldProp }
+  = useSchemaForm(formData);
 const clientIndex: number = findFormIndex('clientId');
 
 watchEffect(() => {
@@ -216,11 +216,11 @@ watchEffect(() => {
   }
 });
 
-const handleCancel = () => {
+function handleCancel() {
   emit('modalClose');
-};
+}
 
-const onSubmit = async (values: Record<string, any>) => {
+async function onSubmit(values: Record<string, any>) {
   const tasksToDetach = arrDiff(
     values.taskIds || [],
     selectedTasks.value || []
@@ -230,18 +230,19 @@ const onSubmit = async (values: Record<string, any>) => {
     values.taskIds || []
   );
 
-  if (tasksToDetach.length > 0) await detachTask({ taskIds: tasksToDetach });
+  if (tasksToDetach.length > 0)
+    await detachTask({ taskIds: tasksToDetach });
   if (tasksToAttach.length > 0)
     await attachTask(values as unknown as AttachTaskPayload);
   if (
-    initailProjectId.value &&
-    initailProjectId.value !== selectProjectId.value
+    initailProjectId.value
+    && initailProjectId.value !== selectProjectId.value
   ) {
     await detachProject({ projectId: initailProjectId.value });
   }
   if (
-    selectProjectId.value &&
-    selectProjectId.value !== initailProjectId.value
+    selectProjectId.value
+    && selectProjectId.value !== initailProjectId.value
   ) {
     await attachProject({ projectId: selectProjectId.value });
   }
@@ -252,58 +253,59 @@ const onSubmit = async (values: Record<string, any>) => {
     initToast({
       actionType: 'Create',
       summary: 'Add Task',
-      detail: `Total <strong>${tasksToAttach.length}</strong> Task(s) Attachment Successfully`,
+      detail: `Total <strong>${tasksToAttach.length}</strong> Task(s) Attachment Successfully`
     });
   }
   if (tasksToDetach.length > 0) {
     initToast({
       actionType: 'Delete',
       summary: 'Delete Task',
-      detail: `Total <strong>${tasksToDetach.length}</strong> Task(s) Deleted Successfully`,
+      detail: `Total <strong>${tasksToDetach.length}</strong> Task(s) Deleted Successfully`
     });
   }
   if (
-    initailProjectId.value &&
-    initailProjectId.value !== selectProjectId.value
+    initailProjectId.value
+    && initailProjectId.value !== selectProjectId.value
   ) {
     initToast({
       actionType: 'Delete',
       summary: 'Delete Project',
-      detail: `Project Detach Successfully`,
+      detail: `Project Detach Successfully`
     });
   }
   if (
-    selectProjectId.value &&
-    selectProjectId.value !== initailProjectId.value
+    selectProjectId.value
+    && selectProjectId.value !== initailProjectId.value
   ) {
     initToast({
       actionType: 'Create',
       summary: 'Add Project',
-      detail: `Project Attach Successfully`,
+      detail: `Project Attach Successfully`
     });
   }
   if (!initailClientId.value) {
     initToast({
       actionType: 'Create',
       summary: 'Add Client',
-      detail: `Client Attach Successfully`,
+      detail: `Client Attach Successfully`
     });
   }
   queryClient.invalidateQueries('threads');
   queryClient.invalidateQueries('thread-details');
   emit('success', initailClientId.value as string);
-};
-const handleDropdownChange = async (val: any, name: string) => {
+}
+async function handleDropdownChange(val: any, name: string) {
   if (name === 'clientId') {
     formRef.value?.setFieldValue('projectId', undefined);
     formRef.value?.setFieldValue('taskIds', undefined);
     selectedClientId.value = val.clientId;
     selectProjectId.value = undefined;
-  } else if (name === 'projectId') {
+  }
+  else if (name === 'projectId') {
     formRef.value?.setFieldValue('taskIds', undefined);
     selectProjectId.value = val.projectId;
   }
-};
+}
 const { mutateAsync: attachTask, isLoading: attachingTask } = useMutation(
   (values: AttachTaskPayload) => {
     return useAttachTask(values, props?.inboxId, props?.threadId);
@@ -331,18 +333,19 @@ const { mutateAsync: attachClient, isLoading: attachingClient } = useMutation(
   }
 );
 </script>
+
 <template>
   <CommonLoading v-if="gettingThead" />
   <CommonSchemaForm
     v-else
-    :data="formData"
     ref="formRef"
+    :data="formData"
+    :form-key="formKey"
+    :primary-btn-loading="mainBtnLoading"
     @secondary-btn-click="handleCancel"
     @submit="onSubmit"
-    :formKey="formKey"
     @dropdown-change="handleDropdownChange"
-    :primary-btn-loading="mainBtnLoading"
-  ></CommonSchemaForm>
+  />
 </template>
 
 <style lang="scss" scoped></style>

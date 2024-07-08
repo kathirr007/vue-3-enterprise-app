@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { FilterMatchMode } from 'primevue/api';
-
 // const filters = ref({
 //   global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 // });
@@ -15,18 +13,18 @@ const { data: roles } = getRoles(true, queryFilters.value);
 <template>
   <DataTable
     ref="roleTableRef"
-    dataKey="id"
-    :value="roles"
-    :totalRecords="roles?.length"
-    responsiveLayout="scroll"
-    breakpoint="768px"
     v-model:filters="filters"
-    :globalFilterFields="['name']"
+    data-key="id"
+    :value="roles"
+    :total-records="roles?.length"
+    responsive-layout="scroll"
+    breakpoint="768px"
+    :global-filter-fields="['name']"
     :paginator="true"
     :rows="15"
-    :alwaysShowPaginator="false"
+    :always-show-paginator="false"
     :page-link-size="isLarge ? 5 : 3"
-    filterDisplay="menu"
+    filter-display="menu"
   >
     <template #header>
       <!-- <div class="flex justify-content-end space-x-2.5">
@@ -43,7 +41,9 @@ const { data: roles } = getRoles(true, queryFilters.value);
       <CommonListSearchInput placeholder="Search Role" />
     </template>
     <template #empty>
-      <div class="text-center">No Role record found.</div>
+      <div class="text-center">
+        No Role record found.
+      </div>
     </template>
     <Column field="name" header="Role" class="w-3" sortable />
     <Column field="description" header="Permissions" />

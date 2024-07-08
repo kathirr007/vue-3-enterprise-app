@@ -5,28 +5,24 @@ import Textarea from 'primevue/textarea';
 import type {
   BrightDirectory,
   BrightDirectoryUpdatePayload,
-  DirectoryServices,
+  DirectoryServices
 } from '@/types/brightdirectory.type';
 import MultiSelect from 'primevue/multiselect';
 import type {
-  SchemaFormField,
-  SchemaFormFieldWithoutDynamicKey,
-  SchemaFormRef,
-} from '@/types/schemaform.type';
-import { useQuery, useMutation, useQueryClient } from 'vue-query';
-import type { SchemaForm } from '@/types/schemaform.type';
+  SchemaForm
+  , SchemaFormRef } from '@/types/schemaform.type';
+import { useMutation, useQuery, useQueryClient } from 'vue-query';
+
 import type {
   FileObject,
-  OmitDynamicKey,
-  UploadFilesPayload,
+  UploadFilesPayload
 } from '@/types/common.type';
 import type {
   Attachment,
   AttachmentResponse,
-  CreateAttachment,
+  CreateAttachment
 } from '@/types/attachment.type';
 import type { Org, OrgCreatePayload } from '@/types/myaccount.type';
-import type { FullNameObj } from '@/types/teams.type';
 
 const props = defineProps<{
   directoryId?: string;
@@ -46,7 +42,8 @@ const servicesListData = ref<DirectoryServices[]>();
 const slugBaseUrl = computed(() => {
   if (isProdBuild) {
     return 'https://directory.brightreturn.com/';
-  } else {
+  }
+  else {
     return 'https://br-directory.fly.dev/';
   }
 });
@@ -64,7 +61,7 @@ const {
   showFileErrorMessages,
   createFilePayload,
   fileSelected,
-  getAttachmentUrl,
+  getAttachmentUrl
 } = useAttachments();
 const { fullName, initials } = useVueFilters();
 
@@ -82,7 +79,7 @@ const { data: BightDirectoryServiceData } = useQuery(
   {
     onSuccess: (data) => {
       return (servicesListData.value = data);
-    },
+    }
   }
 );
 
@@ -95,14 +92,14 @@ const { mutateAsync: removeLogo, isLoading: removingLogo } = useMutation(
       initToast({
         actionType: 'Remove',
         summary: 'Directory Logo Remove',
-        detail: `Directory Logo Removed successfully.`,
+        detail: `Directory Logo Removed successfully.`
       });
-    },
+    }
   }
 );
 
-const { mutateAsync: createUpdateOrg, isLoading: updatingOrgData } =
-  useMutation(
+const { mutateAsync: createUpdateOrg, isLoading: updatingOrgData }
+  = useMutation(
     (payload: Partial<OrgCreatePayload>) => {
       return useOrgUpdate(payload);
     },
@@ -111,41 +108,41 @@ const { mutateAsync: createUpdateOrg, isLoading: updatingOrgData } =
         initToast({
           actionType: 'Update',
           summary: 'Directory Logo Update',
-          detail: 'Directory Logo has been updated successfully',
+          detail: 'Directory Logo has been updated successfully'
         });
-      },
+      }
     }
   );
 
-const handlePostAttachment = async (data: AttachmentResponse) => {
+async function handlePostAttachment(data: AttachmentResponse) {
   await createUpdateOrg({
     name: orgData?.value?.name,
-    logo: data.id,
+    logo: data.id
   } as Partial<OrgCreatePayload>);
   queryClient.invalidateQueries('org-data');
-};
+}
 
 const { mutateAsync: orgAttactments, isLoading: updatingLogo } = useMutation(
   async (data: { payload: CreateAttachment; file: UploadFilesPayload }) => {
     return createAttachment({
-      payloadData: data,
+      payloadData: data
     });
   },
   {
     onSuccess: (data: { res: AttachmentResponse; file: File }) => {
       handlePostAttachment(data.res);
-    },
+    }
   }
 );
 
-const uploadFile = async (value: FileObject) => {
+async function uploadFile(value: FileObject) {
   const { payload } = createFilePayload(value);
   await orgAttactments({ payload, file: fileSelected.value });
-};
+}
 
 const {
   isLoading: gettingBrightDirectoryList,
-  data: BightDirectoryListingData,
+  data: BightDirectoryListingData
 } = useQuery(
   ['bright-directory-list', directoryIdProp],
   () => {
@@ -158,14 +155,14 @@ const {
       emit('listingData', data as BrightDirectory);
       formValues.value = data;
       formRef.value?.setValues({
-        ...data,
+        ...data
       });
-    },
+    }
   }
 );
 
-const { mutateAsync: updateDirectory, isLoading: updateIsLoading } =
-  useMutation(
+const { mutateAsync: updateDirectory, isLoading: updateIsLoading }
+  = useMutation(
     ({ payload }: { payload: BrightDirectoryUpdatePayload }) => {
       return useUpdateListing(directoryIdProp?.value as string, payload);
     },
@@ -176,13 +173,13 @@ const { mutateAsync: updateDirectory, isLoading: updateIsLoading } =
           actionType: 'Update',
           severity: 'success',
           summary: 'Update Directory Page',
-          detail: `Directory page updated sucessfully.`,
+          detail: `Directory page updated sucessfully.`
         });
-      },
+      }
     }
   );
-const { mutateAsync: createDirectory, isLoading: createIsLoading } =
-  useMutation(
+const { mutateAsync: createDirectory, isLoading: createIsLoading }
+  = useMutation(
     ({ payload }: { payload: BrightDirectoryUpdatePayload }) => {
       return useCreateListing(payload);
     },
@@ -193,13 +190,13 @@ const { mutateAsync: createDirectory, isLoading: createIsLoading } =
           actionType: 'Create',
           severity: 'success',
           summary: 'Create Directory Page',
-          detail: `Directory page created sucessfully.`,
+          detail: `Directory page created sucessfully.`
         });
-      },
+      }
     }
   );
 
-const onSubmit = async (values: Record<string, any>) => {
+async function onSubmit(values: Record<string, any>) {
   const selectedDate = new Date(values.foundedYear as string);
   const foundedYear = values.foundedYear
     ? selectedDate.getFullYear()
@@ -211,19 +208,20 @@ const onSubmit = async (values: Record<string, any>) => {
     about,
     stateId,
     services,
-    foundedYear: foundedYear ? +foundedYear : undefined,
+    foundedYear: foundedYear ? +foundedYear : undefined
   };
   if (directoryIdProp?.value) {
     await updateDirectory({
-      payload: payload as unknown as BrightDirectoryUpdatePayload,
+      payload: payload as unknown as BrightDirectoryUpdatePayload
     });
-  } else {
+  }
+  else {
     await createDirectory({
-      payload: payload as unknown as BrightDirectoryUpdatePayload,
+      payload: payload as unknown as BrightDirectoryUpdatePayload
     });
   }
   queryClient.invalidateQueries('bright-directory-list');
-};
+}
 
 const formData: ComputedRef<SchemaForm> = computed(() => {
   return {
@@ -232,7 +230,7 @@ const formData: ComputedRef<SchemaForm> = computed(() => {
         name: 'picture',
         label: 'Directory Logo',
         showSlot: true,
-        formGridClass: 'md:col-6',
+        formGridClass: 'md:col-6'
       },
       {
         name: 'subject',
@@ -240,14 +238,14 @@ const formData: ComputedRef<SchemaForm> = computed(() => {
         as: InputText,
         placeholder: 'Enter Subject ',
         required: true,
-        formGridClass: 'md:col-6',
+        formGridClass: 'md:col-6'
       },
       {
         name: 'name',
         label: 'Organization Name',
         as: InputText,
         placeholder: 'Enter organization name',
-        required: true,
+        required: true
       },
       {
         name: 'slug',
@@ -255,14 +253,14 @@ const formData: ComputedRef<SchemaForm> = computed(() => {
         as: InputText,
         placeholder: 'Enter slug',
         hide: !directoryIdProp?.value,
-        showSlot: true,
+        showSlot: true
       },
       {
         name: 'about',
         label: 'About Us',
         as: Textarea,
         placeholder: 'Enter about us',
-        required: true,
+        required: true
       },
       {
         name: 'stateId',
@@ -272,7 +270,7 @@ const formData: ComputedRef<SchemaForm> = computed(() => {
         required: true,
         optionLabel: 'name',
         optionValue: 'id',
-        options: BightDirectoryStateData.value || [],
+        options: BightDirectoryStateData.value || []
       },
       {
         as: MultiSelect,
@@ -283,7 +281,7 @@ const formData: ComputedRef<SchemaForm> = computed(() => {
         required: true,
         optionLabel: 'name',
         optionValue: 'id',
-        options: servicesListData.value || [],
+        options: servicesListData.value || []
       },
       {
         name: 'foundedYear',
@@ -292,35 +290,36 @@ const formData: ComputedRef<SchemaForm> = computed(() => {
         placeholder: 'Select founded year',
         required: false,
         view: 'year',
-        dateFormat: 'yy',
-      },
+        dateFormat: 'yy'
+      }
     ],
     btnText: 'Submit',
     validationSchema: BrightDirectoryUpdateSchema,
-    initialValues: formValues ? formValues : undefined,
+    initialValues: formValues || undefined
   } as SchemaForm;
 });
 
-const prepareLogoRemove = async (value: string) => {
+async function prepareLogoRemove(value: string) {
   logoId.value = value;
   openLogoDialog.value = true;
-};
-const handleLogoRemove = async () => {
+}
+async function handleLogoRemove() {
   await removeLogo(logoId.value as string);
   queryClient.invalidateQueries('org-data');
-};
+}
 </script>
+
 <template>
   <CommonLoading v-if="gettingBrightDirectoryList" />
   <CommonSchemaForm
     v-else
-    :data="formData"
     ref="formRef"
+    :data="formData"
     class="w-8 mx-auto p-3 border-1 border-gray-100 border-round-md"
-    @submit="onSubmit"
     :primary-btn-loading="updateIsLoading || createIsLoading"
+    @submit="onSubmit"
   >
-    <template v-slot:picture>
+    <template #picture>
       <div class="field w-6">
         <label class="block font-medium text-900"> Directory Logo </label>
 
@@ -335,40 +334,40 @@ const handleLogoRemove = async () => {
               class="text-sm"
               :src="`${getAttachmentUrl((orgData?.logo as Attachment).path)}`"
               style="vertical-align: middle"
-              :alt="`Organization Logo`"
-            />
+              alt="Organization Logo"
+            >
             <div v-tooltip.top="'Update Logo'" class="edit-profile-pic">
               <CommonFileUpload
                 mode="basic"
                 accept="image/*"
-                :customUpload="true"
-                @uploader="uploadFile"
-                @file-error-messages="showFileErrorMessages"
-                hideChooseButtonLabel
-                hideFileUploadMessages
+                :custom-upload="true"
+                hide-choose-button-label
+                hide-file-upload-messages
                 :multiple="false"
                 :auto="true"
-                :uploadIcon="`${
+                :upload-icon="`${
                   updatingLogo || updatingOrgData
                     ? 'pi pi-spin pi-spinner'
                     : 'pi pi-pencil'
                 }`"
                 class="p-button-icon-only p-button-rounded"
+                @uploader="uploadFile"
+                @file-error-messages="showFileErrorMessages"
               />
             </div>
             <Button
+              v-tooltip.top="'Delete Logo'"
               type="button"
               icon="pi pi-trash"
               class="p-button-rounded p-button-danger -mt-4 remove-profile-pic"
-              v-tooltip.top="'Delete Logo'"
               aria-label="Delete"
               @click="
                 prepareLogoRemove(
-                  (orgData?.picture as Attachment)?.id as string
+                  (orgData?.picture as Attachment)?.id as string,
                 )
               "
             >
-              <i class="pi pi-spin pi-spinner" v-if="removingLogo"></i>
+              <i v-if="removingLogo" class="pi pi-spin pi-spinner" />
             </Button>
           </template>
           <template v-else>
@@ -377,26 +376,26 @@ const handleLogoRemove = async () => {
               <CommonFileUpload
                 mode="basic"
                 accept="image/*"
-                :customUpload="true"
-                @uploader="uploadFile"
-                @file-error-messages="showFileErrorMessages"
-                hideFileUploadMessages
-                hideChooseButtonLabel
+                :custom-upload="true"
+                hide-file-upload-messages
+                hide-choose-button-label
                 :multiple="false"
                 :auto="true"
                 class="p-button-icon-only p-button-rounded"
-                :uploadIcon="`${
+                :upload-icon="`${
                   updatingLogo || updatingOrgData
                     ? 'pi pi-spin pi-spinner'
                     : 'pi pi-upload'
                 }`"
+                @uploader="uploadFile"
+                @file-error-messages="showFileErrorMessages"
               />
             </div>
           </template>
         </Avatar>
       </div>
     </template>
-    <template v-slot:slug="{ values }">
+    <template #slug="{ values }">
       <div class="field">
         <label class="block font-medium text-900"> Directory Url </label>
         Directory page is accessible
@@ -413,15 +412,14 @@ const handleLogoRemove = async () => {
   <CommonConfirmRemoveDialog
     v-if="openLogoDialog"
     :visible="openLogoDialog"
-    :recordToRemove="{ name: (orgData?.logo as Attachment)?.name as string }"
+    :record-to-remove="{ name: (orgData?.logo as Attachment)?.name as string }"
     title="Confirm Delete Logo Image"
     @confirm="handleLogoRemove"
     @hide="openLogoDialog = false"
   >
     <div>
       Are you sure you want to {{ 'Delete' }} the logo image for
-      <strong>{{ orgData?.name }}</strong
-      >?
+      <strong>{{ orgData?.name }}</strong>?
     </div>
   </CommonConfirmRemoveDialog>
 </template>

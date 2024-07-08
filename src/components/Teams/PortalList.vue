@@ -22,28 +22,28 @@ const { isLoading: loadingTeams, data } = useQuery(
       teamList.value = data.map((item: UserPortal) => ({
         ...item,
         role: item.role,
-        user: item.user,
+        user: item.user
       }));
-    },
+    }
   }
 );
 
-const getAdmin = (val: string) => {
+function getAdmin(val: string) {
   if (val) {
     return val.charAt(0).toUpperCase() + val.substring(1);
   }
-};
+}
 const { filters, searchText } = useDatatableFilters();
 </script>
 
 <template>
   <DataTable
+    v-model:filters="filters"
     :value="teamList"
     :loading="loadingTeams"
-    responsiveLayout="scroll"
+    responsive-layout="scroll"
     breakpoint="768px"
-    v-model:filters="filters"
-    :globalFilterFields="[
+    :global-filter-fields="[
       'firstName',
       'lastName',
       'email',
@@ -53,7 +53,7 @@ const { filters, searchText } = useDatatableFilters();
     ]"
     :paginator="true"
     :rows="15"
-    :alwaysShowPaginator="false"
+    :always-show-paginator="false"
     :page-link-size="isLarge ? 5 : 3"
   >
     <template #header>
@@ -61,8 +61,8 @@ const { filters, searchText } = useDatatableFilters();
         <div class="p-input-icon-left mr-auto">
           <i class="pi pi-search" />
           <InputText
-            aria-label="Search List"
             v-model="searchText"
+            aria-label="Search List"
             placeholder="Search Team Members"
             type="search"
           />
@@ -70,7 +70,9 @@ const { filters, searchText } = useDatatableFilters();
       </div>
     </template>
     <template #empty>
-      <div class="text-center">No teams record found.</div>
+      <div class="text-center">
+        No teams record found.
+      </div>
     </template>
     <Column header="Name" class="w-3">
       <template #body="{ data }">
@@ -88,8 +90,8 @@ const { filters, searchText } = useDatatableFilters();
               class="text-sm"
               :src="getAttachmentUrl(data.user.picture.path)"
               style="vertical-align: middle"
-              :alt="`Profile Picture`"
-            />
+              alt="Profile Picture"
+            >
             <template v-else>
               {{ initials(fullName(data.user) as string) }}
             </template>
@@ -104,7 +106,7 @@ const { filters, searchText } = useDatatableFilters();
                 'bg-gray-300 opacity-50  py-1 px-2 ':
                   !data.isActive && !data.user.isVerified,
               }"
-              >{{ fullName(data.user) }}
+            >{{ fullName(data.user) }}
             </span>
           </div>
         </div>
@@ -135,8 +137,8 @@ const { filters, searchText } = useDatatableFilters();
       <template #body="{ data }">
         <div class="space-y-1.5">
           <div
-            class="flex align-items-center"
             v-if="metaFilter(data.user.meta, 'mobile')"
+            class="flex align-items-center"
           >
             <a
               :href="`tel:${metaFilter(data.user.meta, 'mobile')}`"
@@ -148,8 +150,8 @@ const { filters, searchText } = useDatatableFilters();
             </a>
           </div>
           <div
-            class="flex align-items-center"
             v-else-if="metaFilter(data.user.meta, 'phone')"
+            class="flex align-items-center"
           >
             <a
               :href="`tel:${metaFilter(data.user.meta, 'phone')}`"
@@ -165,13 +167,13 @@ const { filters, searchText } = useDatatableFilters();
     </Column>
     <Column class="w-1" header="Authorized Member">
       <template #body="{ data }">
-        <span class="align-items-center"
-          >{{ data.isOwner ? 'Yes' : 'No' }}
+        <span class="align-items-center">{{ data.isOwner ? 'Yes' : 'No' }}
         </span>
       </template>
     </Column>
   </DataTable>
 </template>
+
 <style lang="scss">
 .user-name-not-active {
   border-radius: 1rem !important;

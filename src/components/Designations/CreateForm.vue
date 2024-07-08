@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type {
   Designation,
-  DesignationCreatePayload,
+  DesignationCreatePayload
 } from '@/types/designation.type';
 import { DesignationCreatePayloadSchema } from '@/types/designation.type';
 import type { SchemaForm } from '@/types/schemaform.type';
@@ -18,8 +18,8 @@ const emit = defineEmits<{
   (e: 'update', data: Designation): void;
 }>();
 
-const { mutateAsync: createUpdateDesignation, isLoading: createIsLoading } =
-  useMutation(
+const { mutateAsync: createUpdateDesignation, isLoading: createIsLoading }
+  = useMutation(
     (payload: DesignationCreatePayload) => {
       if (props.designation) {
         return useDesignationUpdate(props.designation.id, payload);
@@ -30,18 +30,19 @@ const { mutateAsync: createUpdateDesignation, isLoading: createIsLoading } =
       onSuccess: (data) => {
         if (props.designation) {
           emit('update', data);
-        } else {
+        }
+        else {
           emit('success', data);
         }
-      },
+      }
     }
   );
-const onSubmit = async (values: Record<string, any>) => {
+async function onSubmit(values: Record<string, any>) {
   await createUpdateDesignation({
     name: values.name,
-    description: values.description,
+    description: values.description
   } as unknown as DesignationCreatePayload);
-};
+}
 
 const formData: SchemaForm = {
   fields: [
@@ -50,25 +51,25 @@ const formData: SchemaForm = {
       name: 'name',
       label: 'Designation Name',
       required: true,
-      autocomplete: 'off',
+      autocomplete: 'off'
     },
     {
       as: Textarea,
       name: 'description',
       label: 'Job Description',
-      rows: 4,
-    },
+      rows: 4
+    }
   ],
   validationSchema: DesignationCreatePayloadSchema,
   initialValues: props.designation ? props.designation : undefined,
-  btnText: props.designation ? 'Update' : 'Submit',
+  btnText: props.designation ? 'Update' : 'Submit'
 };
 </script>
 
 <template>
   <CommonSchemaForm
     :data="formData"
-    @submit="onSubmit"
     :primary-btn-loading="createIsLoading"
-  ></CommonSchemaForm>
+    @submit="onSubmit"
+  />
 </template>

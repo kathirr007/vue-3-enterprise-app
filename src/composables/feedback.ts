@@ -1,6 +1,6 @@
 import $api from '@/plugins/api';
 import type { Feedback, FeedbackCreatePayload } from '@/types/feedback.type';
-import type { MetaObj, PaginatedResponse } from '@/types/common.type';
+import type { PaginatedResponse } from '@/types/common.type';
 
 export function useFeedback() {
   const baseUrl = 'feedback';

@@ -1,5 +1,5 @@
 import type { InferType } from 'yup';
-import { object, string, array } from 'yup';
+import { array, object, string } from 'yup';
 import type { Client } from './client.type';
 
 export interface ClientGroup {
@@ -16,13 +16,13 @@ export interface ClientGroup {
 
 export const ClientGroupCreatePayloadSchema = object({
   name: string().required().min(3).label('Client Name'),
-  description: string().optional().max(255).nullable().label('Description'),
+  description: string().optional().max(255).nullable().label('Description')
 });
 export const ClientGroupAddClientsSchema = object({
-  clients: array().of(string()).optional().label('Clients'),
+  clients: array().of(string()).optional().label('Clients')
 });
 export const ClientGroupRemovePayloadSchema = object({
-  clientId: string().required().label('Clients'),
+  clientId: string().required().label('Clients')
 });
 
 export type ClientGroupCreatePayload = InferType<

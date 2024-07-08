@@ -5,25 +5,27 @@ const props = defineProps<{
   user: User;
 }>();
 
-const userStatus = () => {
+function userStatus() {
   if (props.user.isActive && props.user.isVerified) {
     return { statusClass: 'bg-green-500', statusText: 'Verified' };
-  } else if (props.user.isActive && !props.user.isVerified) {
+  }
+  else if (props.user.isActive && !props.user.isVerified) {
     return { statusClass: 'bg-orange-500', statusText: 'Not Verified' };
-  } else {
+  }
+  else {
     return { statusClass: 'bg-red-500', statusText: 'Disabled' };
   }
-};
+}
 </script>
 
 <template>
   <div
+    v-tooltip.bottom="userStatus().statusText"
+    v-tooltip.bottom.focus="userStatus().statusText"
     :class="userStatus().statusClass"
     class="border-round user-status-color cursor-pointer"
     tabindex="0"
-    v-tooltip.bottom="userStatus().statusText"
-    v-tooltip.bottom.focus="userStatus().statusText"
-  ></div>
+  />
 </template>
 
 <style lang="scss">

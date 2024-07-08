@@ -1,7 +1,7 @@
 import $api from '@/plugins/api';
 import type {
   InvoiceEstimate,
-  InvoiceEstimatePayload,
+  InvoiceEstimatePayload
 } from '@/types/integration.type';
 
 export async function useEstimateList(id: string) {

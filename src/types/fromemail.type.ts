@@ -1,4 +1,4 @@
-import { boolean, date, object, string, array, number } from 'yup';
+import { object, string } from 'yup';
 import type { InferType } from 'yup';
 
 export interface FromEmail {
@@ -12,7 +12,7 @@ export interface FromEmail {
 
 export const FromEmailCreateInputSchema = object({
   name: string().required().min(3).label('Name'),
-  email: string().email().required().label('Email'),
+  email: string().email().required().label('Email')
 });
 
 export type FromEmailCreateInput = InferType<typeof FromEmailCreateInputSchema>;

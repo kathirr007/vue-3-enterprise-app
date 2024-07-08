@@ -10,7 +10,7 @@ const {
   tableAttrs,
   currentLimit,
   currentPage,
-  queryKeys,
+  queryKeys
 } = useDataTableUtils();
 const { fullName } = useVueFilters();
 
@@ -20,7 +20,7 @@ const { isLoading, data: leadList } = useQuery(
     return useLeadDirectoryList({
       id: props.listingId,
       page: currentPage.value,
-      limit: currentLimit.value,
+      limit: currentLimit.value
     });
   }
 );
@@ -39,17 +39,19 @@ const { isLoading, data: leadList } = useQuery(
     <Column header="Name">
       <template #body="{ data }">
         {{ fullName(data.user) }}
-      </template></Column
-    >
-    <Column header="Message" field="message"></Column>
+      </template>
+    </Column>
+    <Column header="Message" field="message" />
     <Column header="Phone" field="phone">
       <template #body="{ data }">
-        {{ data.phone ? data.phone : 'None' }}</template
-      ></Column
-    >
-    <Column header="Email" field="user.email"></Column>
+        {{ data.phone ? data.phone : 'None' }}
+      </template>
+    </Column>
+    <Column header="Email" field="user.email" />
     <template #empty>
-      <div class="text-center">No Leads Found</div>
+      <div class="text-center">
+        No Leads Found
+      </div>
     </template>
   </DataTable>
 </template>

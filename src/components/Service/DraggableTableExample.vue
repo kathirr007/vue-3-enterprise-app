@@ -54,22 +54,37 @@ const dragging = ref(false);
 }
 </style> -->
 
+<script setup>
+import { Field, FieldArray, Form } from 'vee-validate';
+import draggable from 'vuedraggable';
+
+// you can set initial values for those array fields
+const initialValues = {
+  links: [{ id: 1, url: 'https://github.com/logaretm' }]
+};
+function onSubmit(values) {
+  console.log(JSON.stringify(values, null, 2));
+}
+</script>
+
 <template>
-  <Form @submit="onSubmit" :initial-values="initialValues">
-    <FieldArray name="links" v-slot="{ fields, push, remove }">
+  <Form :initial-values="initialValues" @submit="onSubmit">
+    <FieldArray v-slot="{ fields, push, remove }" name="links">
       <!-- <draggable :list="fields" tag="tbody" item-key="name"> -->
       <draggable
         :list="fields"
         tag="div"
-        :itemKey="'testing-fieldarray'"
-        :componentData="{
+        item-key="testing-fieldarray"
+        :component-data="{
           list: fields,
         }"
       >
         <template #item="{ element: field, index: idx }">
           <div :key="field.key" class="p-2 border-1 border-round-md mb-2">
             <Field :name="`links[${idx}].url`" type="url" />
-            <button type="button" @click="remove(idx)">Remove</button>
+            <button type="button" @click="remove(idx)">
+              Remove
+            </button>
           </div>
         </template>
       </draggable>
@@ -86,14 +101,3 @@ const dragging = ref(false);
     <button>Submit</button>
   </Form>
 </template>
-<script setup>
-import { Form, Field, FieldArray } from 'vee-validate';
-import draggable from 'vuedraggable';
-// you can set initial values for those array fields
-const initialValues = {
-  links: [{ id: 1, url: 'https://github.com/logaretm' }],
-};
-function onSubmit(values) {
-  alert(JSON.stringify(values, null, 2));
-}
-</script>

@@ -23,7 +23,7 @@ const {
   currentPage,
   queryFilters,
   querySortBy,
-  queryKeys,
+  queryKeys
 } = useDataTableUtils();
 const { getAll } = useHrmsHolidays();
 const { canDo } = usePermissions();
@@ -36,7 +36,7 @@ const { isLoading: loadingHolidays, data: holidays } = useQuery(
       page: currentPage.value,
       limit: currentLimit.value,
       filters: queryFilters.value,
-      sortBy: querySortBy.value,
+      sortBy: querySortBy.value
     });
   }
 );
@@ -90,19 +90,21 @@ defineExpose({
         {{ dateToHumanShort(data.date) }}
       </template>
     </Column>
-    <Column header="Name" field="name"></Column>
-    <Column header="Description" field="description"></Column>
+    <Column header="Name" field="name" />
+    <Column header="Description" field="description" />
     <!-- <Column header="Actions" v-if="!hideActions">
       <template #body="{ data }">
         <HRMSHolidayListActions :holiday-id="data.id"></HRMSHolidayListActions>
       </template>
     </Column> -->
     <Column
-      class="text-center w-2"
       v-if="canDo('holiday', 'edit') && !hideActions"
+      class="text-center w-2"
     >
       <template #header>
-        <div class="w-full text-center">Actions</div>
+        <div class="w-full text-center">
+          Actions
+        </div>
       </template>
       <template #body="slotProps">
         <div class="md:w-full w-6rem">
@@ -125,7 +127,9 @@ defineExpose({
       </template>
     </Column>
     <template #empty>
-      <div class="text-center">No Holidays found</div>
+      <div class="text-center">
+        No Holidays found
+      </div>
     </template>
   </DataTable>
 </template>

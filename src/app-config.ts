@@ -11,13 +11,13 @@ const appData = {
   supportEmail: 'support@eztaxpractice.com',
   termsAndConditions: 'https://mudrantar.com/usa/terms-and-conditions.html',
   zohoSupport:
-    'https://desk.zoho.in/portal/api/web/inapp/73557000000304001?orgId=60014390709',
+    'https://desk.zoho.in/portal/api/web/inapp/73557000000304001?orgId=60014390709'
 };
 
 const AppConfig = appData;
 
 const mock = {
-  enableGlobalMock: import.meta.env.VUE_APP_ENABLE_MOCK_DATA === 'true',
+  enableGlobalMock: import.meta.env.VUE_APP_ENABLE_MOCK_DATA === 'true'
 };
 
 export default AppConfig;

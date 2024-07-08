@@ -4,14 +4,14 @@ const props = withDefaults(
     dots: number;
   }>(),
   {
-    dots: 3,
+    dots: 3
   }
 );
 </script>
 
 <template>
   <div id="dots" class="relative">
-    <span v-for="(dot, index) in dots" :key="index"></span>
+    <span v-for="(dot, index) in dots" :key="index" />
   </div>
 </template>
 

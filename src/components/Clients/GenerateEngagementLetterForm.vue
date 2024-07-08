@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type { SchemaForm, SchemaFormRef } from '@/types/schemaform.type';
 import type {
+  Client,
   engageMentLetterStatesPayload,
   genEngagementLetterPayload,
-  Client,
-  serviceByStatePaylaod,
+  serviceByStatePaylaod
 } from '@/types/client.type';
 import { genEngagementLetterSchema } from '@/types/client.type';
 import { Field as VField } from 'vee-validate';
@@ -14,13 +14,13 @@ import Title from '../Form/Title.vue';
 import RadioButton from 'primevue/radiobutton';
 import InputNumber from 'primevue/inputnumber';
 import type { Ref } from 'vue';
-import { useQuery, useMutation, useQueryClient } from 'vue-query';
+import { useMutation, useQuery, useQueryClient } from 'vue-query';
 import type {
   Attachment,
   AttachmentContentType,
   AttachmentExtension,
   AttachmentResponse,
-  CreateAttachment,
+  CreateAttachment
 } from '@/types/attachment.type';
 import type { Org, OrgCreatePayload } from '@/types/myaccount.type';
 import type { FileObject, UploadFilesPayload } from '@/types/common.type';
@@ -36,8 +36,8 @@ const emits = defineEmits(['success']);
 const { getServices, getUsers } = useCommonListQueries();
 const { data: serviceOptions } = getServices();
 const { data: users } = getUsers(true);
-const { createAttachment, fileSelected, uploadFileRef, getAttachmentUrl } =
-  useAttachments();
+const { createAttachment, fileSelected, uploadFileRef, getAttachmentUrl }
+  = useAttachments();
 const queryClient = useQueryClient();
 const { initToast } = useToasts();
 const { removeFalsyValues } = useUtilityFns();
@@ -65,21 +65,21 @@ const emptyRecord: EmptyRecord = {
   formNumber: '',
   service: '',
   states: [],
-  error: '',
+  error: ''
 };
 
 const radioOptions = [
   { name: 'Yes', value: true, radioLabel: 'Yes' },
-  { name: 'No', value: false, radioLabel: 'No' },
+  { name: 'No', value: false, radioLabel: 'No' }
 ];
 
 const {
   values: stateValues,
   setValues,
   setErrors,
-  errors: stateErrors,
+  errors: stateErrors
 } = useForm({
-  validationSchema: genEngagementLetterSchema,
+  validationSchema: genEngagementLetterSchema
 });
 
 const formData = shallowRef<SchemaForm>({
@@ -88,7 +88,7 @@ const formData = shallowRef<SchemaForm>({
       as: Title,
       name: 'title1',
       fontSize: 'text-lg',
-      label: 'CPA Firm Information',
+      label: 'CPA Firm Information'
     },
     {
       as: InputText,
@@ -96,12 +96,12 @@ const formData = shallowRef<SchemaForm>({
       label: 'CPA Firm Name',
       required: true,
       placeholder: 'Enter name',
-      disabled: true,
+      disabled: true
     },
     {
       type: 'file',
       name: 'cpaFirmLogo',
-      label: 'CPA Firm Logo',
+      label: 'CPA Firm Logo'
     },
     {
       name: 'cpaFirmRepresentative',
@@ -110,14 +110,14 @@ const formData = shallowRef<SchemaForm>({
       placeholder: 'Enter name',
       optionLabel: 'name',
       optionValue: 'id',
-      required: true,
+      required: true
     },
     {
       as: InputText,
       name: 'cpaFirmRepresentativeDesignation',
       label: 'CPA Firm Representative Designation',
       placeholder: 'CPA Firm Representative Designation',
-      disabled: true,
+      disabled: true
     },
     {
       type: 'calender',
@@ -126,7 +126,7 @@ const formData = shallowRef<SchemaForm>({
       placeholder: 'Filing year',
       required: true,
       view: 'year',
-      dateFormat: 'yy',
+      dateFormat: 'yy'
     },
     {
       as: RadioButton,
@@ -134,7 +134,7 @@ const formData = shallowRef<SchemaForm>({
       label: 'Did you file client return last year?',
       name: 'isLastYearFiled',
       options: radioOptions,
-      required: true,
+      required: true
     },
     {
       as: InputNumber,
@@ -149,7 +149,7 @@ const formData = shallowRef<SchemaForm>({
       formGridClass: 'md:col-6',
       placeholder: '$0.00',
       type: 'input-number',
-      required: true,
+      required: true
     },
     {
       type: 'input-number',
@@ -162,14 +162,14 @@ const formData = shallowRef<SchemaForm>({
       placeholder: '0%',
       required: true,
       min: 0,
-      max: 100,
+      max: 100
     },
 
     {
       as: Title,
       name: 'title1',
       fontSize: 'text-lg',
-      label: 'Client Information',
+      label: 'Client Information'
     },
 
     {
@@ -177,56 +177,56 @@ const formData = shallowRef<SchemaForm>({
       name: 'clientName',
       label: 'Client Name',
       placeholder: 'Enter name',
-      required: true,
+      required: true
     },
     {
       as: InputText,
       name: 'clientRepresentative',
       label: 'Client Representative',
-      placeholder: 'Client Representative',
+      placeholder: 'Client Representative'
     },
     {
       as: InputText,
       name: 'clientRepresentativeTitle',
       label: 'Client Representative Title',
-      placeholder: 'Client Representative Title',
+      placeholder: 'Client Representative Title'
     },
     {
       as: InputText,
       name: 'clientStreet',
       label: 'Client Street',
-      placeholder: 'Client Street',
+      placeholder: 'Client Street'
     },
     {
       as: InputText,
       name: 'clientZip',
       label: 'Client Zip',
-      placeholder: 'Client Zip',
+      placeholder: 'Client Zip'
     },
 
     {
       as: InputText,
       name: 'clientState',
       label: 'Client State',
-      placeholder: 'Client State',
+      placeholder: 'Client State'
     },
     {
       as: InputText,
       name: 'clientCity',
       label: 'Client City',
-      placeholder: 'Client City',
+      placeholder: 'Client City'
     },
     {
       as: InputText,
       name: 'clientSpouseName',
       label: 'Client Spouse Name',
       placeholder: 'Client Spouse Name',
-      hide: !isBusinessEntityIndividual.value,
-    },
+      hide: !isBusinessEntityIndividual.value
+    }
   ],
   btnText: 'Submit',
   validationSchema: genEngagementLetterSchema,
-  initialValues: { states: [{ ...emptyRecord }] },
+  initialValues: { states: [{ ...emptyRecord }] }
 });
 
 const { data: initialValues } = useQuery(
@@ -247,7 +247,7 @@ const { data: initialValues } = useQuery(
           formKey.value++;
         }
       }
-    },
+    }
   }
 );
 
@@ -258,13 +258,13 @@ setValues({ states: [{ ...emptyRecord }] });
 const formKey = ref(0);
 const formRef = ref<SchemaFormRef | undefined>();
 
-const onSubmit = (values: Record<string, any>) => {
+function onSubmit(values: Record<string, any>) {
   let paylaod = { ...values };
   if (paylaod.cpaFirmLogo) {
     paylaod.cpaFirmLogo = getAttachmentUrl(paylaod.cpaFirmLogo);
   }
   const cpaUser = users.value?.find(
-    (e) => e.id === values.cpaFirmRepresentative
+    e => e.id === values.cpaFirmRepresentative
   );
 
   paylaod.cpaFirmRepresentative = `${fullName(cpaUser as User)}`;
@@ -274,9 +274,9 @@ const onSubmit = (values: Record<string, any>) => {
       if (row.states?.length) {
         row.states.forEach((state: any) => {
           servicesByStateAndForm.push({
-            state: state,
+            state,
             formNumber: row.formNumber,
-            service: row.service,
+            service: row.service
           });
         });
       }
@@ -294,8 +294,8 @@ const onSubmit = (values: Record<string, any>) => {
     );
     generateEL(paylaod as unknown as genEngagementLetterPayload);
   }
-};
-const updateErrors = (): void => {
+}
+function updateErrors(): void {
   setTimeout(() => {
     setErrors(
       formRef?.value?.errors as unknown as Partial<
@@ -303,13 +303,13 @@ const updateErrors = (): void => {
       > as unknown as Partial<Record<string, string | undefined>>
     );
   }, 300);
-};
+}
 
 onMounted(() => {
   updateErrors();
 });
-const { findFormIndex, updateOptions, updateFieldProp } =
-  useSchemaForm(formData);
+const { findFormIndex, updateOptions, updateFieldProp }
+  = useSchemaForm(formData);
 const cpaFirmRepresentativeNameIndex = findFormIndex('cpaFirmRepresentative');
 
 watchEffect(() => {
@@ -318,17 +318,17 @@ watchEffect(() => {
   }
 });
 
-const handleDropdownChange = (val: Record<string, any>, name: string) => {
+function handleDropdownChange(val: Record<string, any>, name: string) {
   if (name === 'cpaFirmRepresentative') {
     const designationName = users.value?.find(
-      (e) => e.id === val.cpaFirmRepresentative
+      e => e.id === val.cpaFirmRepresentative
     )?.designation?.name;
     formRef.value?.setValues({
       ...formRef.value.schemaFormValues,
-      cpaFirmRepresentativeDesignation: designationName,
+      cpaFirmRepresentativeDesignation: designationName
     });
   }
-};
+}
 
 const { mutateAsync: createUpdateOrg } = useMutation(
   (payload: Partial<OrgCreatePayload>) => {
@@ -339,9 +339,9 @@ const { mutateAsync: createUpdateOrg } = useMutation(
       initToast({
         actionType: 'Update',
         summary: 'Organisation Details Update',
-        detail: 'Organisation Details updated successfully',
+        detail: 'Organisation Details updated successfully'
       });
-    },
+    }
   }
 );
 const { mutateAsync: generateEL, isLoading } = useMutation(
@@ -357,10 +357,10 @@ const { mutateAsync: generateEL, isLoading } = useMutation(
       initToast({
         actionType: 'Create',
         summary: 'Generate Engagement Letter',
-        detail: 'Engagement Letter generated successfully',
+        detail: 'Engagement Letter generated successfully'
       });
       emits('success');
-    },
+    }
   }
 );
 
@@ -369,29 +369,29 @@ const { mutateAsync: orgAttactments } = useMutation(
     return createAttachment({
       payloadData: data,
       fileUploadRef: uploadFileRef,
-      schemaFormRef: formRef.value?.schemaFormRefs,
+      schemaFormRef: formRef.value?.schemaFormRefs
     });
   },
   {
     onSuccess: (data: { res: AttachmentResponse; file: File }) => {
       handlePostAttachment(data.res);
-    },
+    }
   }
 );
 
-const handlePostAttachment = async (data: AttachmentResponse) => {
+async function handlePostAttachment(data: AttachmentResponse) {
   await createUpdateOrg(
     createOrgPayload({
       logo: data.id as unknown as Attachment,
-      name: initialValues.value?.cpaFirmName,
+      name: initialValues.value?.cpaFirmName
     })
   );
   queryClient.invalidateQueries('contract-details');
-};
+}
 
-const createOrgPayload = (values: Partial<Org>) => {
+function createOrgPayload(values: Partial<Org>) {
   const payload: Partial<OrgCreatePayload> = {
-    ...values,
+    ...values
   } as Partial<OrgCreatePayload>;
   if (values.logo && typeof values.logo === 'object') {
     payload.logo = values.logo.id;
@@ -399,23 +399,24 @@ const createOrgPayload = (values: Partial<Org>) => {
   if (values.regCertificate && typeof values.regCertificate === 'object') {
     payload.regCertificate = values.regCertificate.id;
   }
-  if (values.mobile === '') payload.mobile = null;
+  if (values.mobile === '')
+    payload.mobile = null;
   return payload;
-};
+}
 
-const uploadFile = async (val: FileObject) => {
+async function uploadFile(val: FileObject) {
   const payload: CreateAttachment = {
     filename: (val.files as File).name,
     contentType: (val.files as File).type as unknown as AttachmentContentType,
     extension: (val.files as File).type.split(
       '/'
     )[1] as unknown as AttachmentExtension,
-    contentLength: (val.files as File).size,
+    contentLength: (val.files as File).size
   };
   fileSelected.value = val.files;
   uploadFileRef.value = val.name;
   await orgAttactments({ payload, file: fileSelected.value });
-};
+}
 </script>
 
 <template>
@@ -424,10 +425,10 @@ const uploadFile = async (val: FileObject) => {
       ref="formRef"
       :key="formKey"
       :data="formData"
+      :primary-btn-loading="isLoading"
       @submit="onSubmit"
       @dropdown-change="handleDropdownChange"
       @file-upload="(() => uploadFile)()"
-      :primary-btn-loading="isLoading"
     >
       <div class="p-3 overflow-x-hidden">
         <FormTitle title="Client Project Templates" />
@@ -458,6 +459,8 @@ const uploadFile = async (val: FileObject) => {
                 </thead>
                 <tbody class="p-datatable-tbody relative" role="rowgroup">
                   <tr
+                    v-for="(field, idx) in statesFields"
+                    :key="field.key"
                     role="row"
                     class="relative"
                     :class="[
@@ -467,8 +470,6 @@ const uploadFile = async (val: FileObject) => {
                         ).error,
                       },
                     ]"
-                    v-for="(field, idx) in statesFields"
-                    :key="field.key"
                   >
                     <td
                       role="cell"
@@ -477,8 +478,8 @@ const uploadFile = async (val: FileObject) => {
                       :class="[
                         {
                           'pb-4':
-                            (field.value as unknown as EmptyRecord).error &&
-                            isMedium,
+                            (field.value as unknown as EmptyRecord).error
+                            && isMedium,
                         },
                       ]"
                     >
@@ -486,12 +487,11 @@ const uploadFile = async (val: FileObject) => {
                         :for="`formNumber_${idx}`"
                         class="mb-2"
                         :class="isMedium ? 'hidden' : 'block'"
-                        >Form Number</label
-                      >
+                      >Form Number</label>
                       <VField
                         :id="`formNumber_${idx}`"
-                        :name="`states[${idx}].formNumber`"
                         v-slot="{ handleChange, value, validate }"
+                        :name="`states[${idx}].formNumber`"
                       >
                         <InputText
                           placeholder="Form Number"
@@ -512,7 +512,7 @@ const uploadFile = async (val: FileObject) => {
                         <FormFeedbackMessage
                           :errors="stateErrors"
                           :values="stateValues"
-                          :errorKey="`states[${idx}].formNumber`"
+                          :error-key="`states[${idx}].formNumber`"
                         />
                       </transition>
                     </td>
@@ -521,15 +521,19 @@ const uploadFile = async (val: FileObject) => {
                         :for="`service_${idx}`"
                         class="mb-2"
                         :class="isMedium ? 'hidden' : 'block'"
-                        >Service</label
-                      >
+                      >Service</label>
                       <VField
                         :id="`service_${idx}`"
-                        :name="`states[${idx}].service`"
                         v-slot="{ handleChange, value, validate }"
+                        :name="`states[${idx}].service`"
                       >
                         <Dropdown
                           class="w-full"
+                          :model-value="value"
+                          :options="serviceOptions"
+                          option-label="name"
+                          option-value="name"
+                          placeholder="Select a Project Template"
                           @update:model-value="handleChange"
                           @blur="
                             validate();
@@ -539,11 +543,6 @@ const uploadFile = async (val: FileObject) => {
                             validate();
                             updateErrors();
                           "
-                          :model-value="value"
-                          :options="serviceOptions"
-                          optionLabel="name"
-                          optionValue="name"
-                          placeholder="Select a Project Template"
                         />
                       </VField>
 
@@ -551,7 +550,7 @@ const uploadFile = async (val: FileObject) => {
                         <FormFeedbackMessage
                           :errors="stateErrors"
                           :values="stateValues"
-                          :errorKey="`states[${idx}].service`"
+                          :error-key="`states[${idx}].service`"
                         />
                       </transition>
                     </td>
@@ -562,8 +561,8 @@ const uploadFile = async (val: FileObject) => {
                       :class="[
                         {
                           'pb-4':
-                            (field.value as unknown as EmptyRecord).error &&
-                            isMedium,
+                            (field.value as unknown as EmptyRecord).error
+                            && isMedium,
                         },
                       ]"
                     >
@@ -571,15 +570,19 @@ const uploadFile = async (val: FileObject) => {
                         :for="`states_${idx}`"
                         class="mb-2 w-full"
                         :class="isMedium ? 'hidden' : 'block'"
-                        >States</label
-                      >
+                      >States</label>
                       <VField
                         :id="`states_${idx}`"
-                        :name="`states[${idx}].states`"
                         v-slot="{ handleChange, value, validate }"
+                        :name="`states[${idx}].states`"
                       >
                         <MultiSelect
                           class="w-full"
+                          :model-value="value"
+                          :options="stateOptions"
+                          option-label="name"
+                          option-value="name"
+                          placeholder="Select States"
                           @update:model-value="handleChange"
                           @blur="
                             validate();
@@ -589,11 +592,6 @@ const uploadFile = async (val: FileObject) => {
                             validate();
                             updateErrors();
                           "
-                          :model-value="value"
-                          :options="stateOptions"
-                          optionLabel="name"
-                          optionValue="name"
-                          placeholder="Select States"
                         />
                       </VField>
 
@@ -601,7 +599,7 @@ const uploadFile = async (val: FileObject) => {
                         <FormFeedbackMessage
                           :errors="stateErrors"
                           :values="stateValues"
-                          :errorKey="`states[${idx}].states`"
+                          :error-key="`states[${idx}].states`"
                         />
                       </transition>
                     </td>
@@ -642,7 +640,9 @@ const uploadFile = async (val: FileObject) => {
 
       <template #cpaFirmLogo>
         <div v-if="initialValues" class="w-full space-y-1.5">
-          <div class="block font-medium text-900">CPA Firm Logo</div>
+          <div class="block font-medium text-900">
+            CPA Firm Logo
+          </div>
           <Avatar
             class="mr-2 p-avatar-xxl relative"
             size="large"
@@ -652,12 +652,12 @@ const uploadFile = async (val: FileObject) => {
               class="text-sm"
               :src="
                 getAttachmentUrl(
-                  initialValues ? `${initialValues?.cpaFirmLogo}` : ''
+                  initialValues ? `${initialValues?.cpaFirmLogo}` : '',
                 )
               "
               style="vertical-align: middle"
               :alt="initialValues?.cpaFirmName"
-            />
+            >
           </Avatar>
         </div>
       </template>

@@ -8,16 +8,16 @@ const items = ref([
   {
     label: 'Add Client',
     tagline: '',
-    to: '/admin/clients/create',
+    to: '/admin/clients/create'
   },
   {
     label: 'Automation',
-    to: '/admin/clients/create/automation',
+    to: '/admin/clients/create/automation'
   },
   {
     label: 'Client Info',
-    to: '/admin/clients/create/client-info',
-  },
+    to: '/admin/clients/create/client-info'
+  }
 ]);
 </script>
 

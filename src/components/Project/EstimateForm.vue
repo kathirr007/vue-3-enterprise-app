@@ -44,13 +44,13 @@ const { mutateAsync: createEstimateData, isLoading } = useMutation(
         initToast({
           actionType: 'Add',
           summary: 'Estimate',
-          detail: `Invoice generated successfully.`,
+          detail: `Invoice generated successfully.`
         });
         emit('modalClose');
         queryClient.invalidateQueries('project-details');
         openLinkInNewTab(data);
       }
-    },
+    }
   }
 );
 
@@ -62,22 +62,22 @@ interface billingOption {
 const billingTypeValue = ref<billingOption[]>([
   { name: 'None', value: 'NONE', id: '01' },
   { name: 'Fixed', value: 'FIXED', id: '02' },
-  { name: 'Hourly', value: 'HOURLY', id: '03' },
+  { name: 'Hourly', value: 'HOURLY', id: '03' }
 ]);
 
-const convertToTime = (num: number) => {
+function convertToTime(num: number) {
   return convertMinsToHrsMins(num * 60);
-};
-const setInitialValues = () => {
+}
+function setInitialValues() {
   if (estimateList.value) {
     return {
       ...estimateList.value,
       totalTimeSpent: convertToTime(
         estimateList.value.totalTimeSpent as number
-      ),
+      )
     };
   }
-};
+}
 const formData = computed<SchemaForm>(() => {
   return {
     fields: [
@@ -87,7 +87,7 @@ const formData = computed<SchemaForm>(() => {
         label: 'Description',
         rows: 6,
         placeholder: 'Enter a brief Project Description.',
-        disabled: true,
+        disabled: true
       },
       {
         type: 'dropdown',
@@ -100,7 +100,7 @@ const formData = computed<SchemaForm>(() => {
         placeholder: 'Select Billing Type',
         formGridClass: 'md:col-6 ',
         filter: false,
-        disabled: true,
+        disabled: true
       },
       {
         as: InputNumber,
@@ -117,7 +117,7 @@ const formData = computed<SchemaForm>(() => {
         type: 'input-number',
         hide: true,
         inputId: 'billingRate',
-        disabled: true,
+        disabled: true
       },
 
       {
@@ -126,7 +126,7 @@ const formData = computed<SchemaForm>(() => {
         label: 'Total Time Spent',
         formGridClass: 'md:col-6',
         placeholder: 'HH:MM',
-        disabled: true,
+        disabled: true
       },
 
       {
@@ -137,24 +137,24 @@ const formData = computed<SchemaForm>(() => {
         required: true,
         autocomplete: 'off',
         formGridClass: 'md:col-6  ',
-        placeholder: 'Enter Amount',
+        placeholder: 'Enter Amount'
       },
       {
         as: Title,
         name: 'note',
         showSlot: true,
-        label: 'Note',
-      },
+        label: 'Note'
+      }
     ],
     validationSchema: InvoiceEstimatePayloadSchema,
     initialValues: setInitialValues(),
     btnText: 'Submit',
-    secondaryBtnText: 'Cancel',
+    secondaryBtnText: 'Cancel'
   };
 });
 
-const { findFormIndex, updateFieldProp, updateOptions } =
-  useSchemaForm(formData);
+const { findFormIndex, updateFieldProp, updateOptions }
+  = useSchemaForm(formData);
 const billingIndex: number = findFormIndex('billingType');
 const rateIndex: number = findFormIndex('billingRate');
 watchEffect(() => {
@@ -166,42 +166,42 @@ watchEffect(() => {
   updateOptions(billingTypeValue, billingIndex);
 
   if (
-    formValues.value &&
-    formValues.value['billingType'] &&
-    formValues.value['billingType'] !== 'NONE'
+    formValues.value
+    && formValues.value.billingType
+    && formValues.value.billingType !== 'NONE'
   ) {
     updateFieldProp('hide', rateIndex, false);
   }
   if (
-    formValues.value &&
-    (formValues.value['billingType'] === null ||
-      formValues.value['billingType'] === 'NONE')
+    formValues.value
+    && (formValues.value.billingType === null
+    || formValues.value.billingType === 'NONE')
   ) {
     updateFieldProp('hide', rateIndex, true);
   }
 });
 
-const handleCancel = () => {
+function handleCancel() {
   emit('modalClose');
-};
+}
 
-const onSubmit = async (values: Record<string, any>) => {
+async function onSubmit(values: Record<string, any>) {
   const payload = {
     amount: values.finalAmount.toString(),
-    projectId: projectId.value,
+    projectId: projectId.value
   };
   await createEstimateData(payload as unknown as InvoiceEstimatePayload);
-};
+}
 </script>
 
 <template>
   <CommonSchemaForm
-    :data="formData"
     ref="formRef"
     :key="formKey"
+    :data="formData"
+    :primary-btn-loading="isLoading"
     @secondary-btn-click="handleCancel"
     @submit="onSubmit"
-    :primary-btn-loading="isLoading"
   >
     <template #note>
       <div class="text-base my-3">

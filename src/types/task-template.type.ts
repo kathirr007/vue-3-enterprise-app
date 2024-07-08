@@ -1,7 +1,7 @@
 import { array, boolean, number, object, string } from 'yup';
 import type { InferType } from 'yup';
 
-export type TaskAttachment = { id: string; name: string; path: string };
+export interface TaskAttachment { id: string; name: string; path: string }
 export interface TaskTemplate {
   id: string;
   description: string;
@@ -27,7 +27,7 @@ export const TaskTemplateSchema = object().shape(
       .optional()
       .when('title', {
         is: (value: string) => value?.length,
-        then: () => string().min(3).label('Task Title'),
+        then: () => string().min(3).label('Task Title')
       }),
     entityType: string().oneOf(entityType).required().label('Entity Type'),
     description: string().optional().nullable().label('Description'),
@@ -36,7 +36,7 @@ export const TaskTemplateSchema = object().shape(
     enableBilling: boolean().optional().label('Enable Billing'),
     attachmentIds: array().of(string()).optional().label('Attachments'),
     // dueInDays: number().optional().label('Due In Days'),
-    order: number().optional().nullable().label('Order'),
+    order: number().optional().nullable().label('Order')
   },
   [['title', 'title']]
 );
@@ -49,8 +49,8 @@ export const TeamTaskTemplatesSchema = array().of(
         .label('Task Title')
         .when('title', {
           is: (value: string) => value?.length,
-          then: () => string().min(3).label('Task Title'),
-        }),
+          then: () => string().min(3).label('Task Title')
+        })
     },
     [['title', 'title']]
   )
@@ -61,10 +61,10 @@ export const CreateTaskTemplateSchema = object().shape(
   {
     teamTasks: TeamTaskTemplatesSchema.when('teamTasks', {
       is: (value: TaskTemplate[]) =>
-        value && value.length > 1 && value.some((task) => task.title),
-      then: () => array().of(TaskTemplateSchema),
+        value && value.length > 1 && value.some(task => task.title),
+      then: () => array().of(TaskTemplateSchema)
     }),
-    clientTasks: clientTaskSchema,
+    clientTasks: clientTaskSchema
   },
   [['teamTasks', 'teamTasks']]
 );

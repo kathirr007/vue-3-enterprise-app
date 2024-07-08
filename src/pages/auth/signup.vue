@@ -26,16 +26,18 @@ function handleLogin() {
           alt="appData.logoAltText"
           height="70"
           class="mb-3"
-        />
+        >
       </a>
-      <div class="w-full max-w-26rem mx-auto" v-if="!isSignUpComplete">
+      <div v-if="!isSignUpComplete" class="w-full max-w-26rem mx-auto">
         <h1 class="text-xl font-medium text-900 mb-5">
           Sign up for a new account
         </h1>
-        <AuthSignUpForm :email="email" @success="handleLogin"></AuthSignUpForm>
+        <AuthSignUpForm :email="email" @success="handleLogin" />
       </div>
-      <div class="w-full max-w-26rem mx-auto" v-else>
-        <h1 class="text-xl font-medium text-900 mb-5">Sign up success</h1>
+      <div v-else class="w-full max-w-26rem mx-auto">
+        <h1 class="text-xl font-medium text-900 mb-5">
+          Sign up success
+        </h1>
         <p>Your signup is completed, please verify your email to login.</p>
         <p>
           We have sent verification link on your registered email, please follow
@@ -52,19 +54,17 @@ function handleLogin() {
         </div>
       </div>
       <div v-if="false" class="w-full max-w-26rem mx-auto">
-        <a href="#" class="font-medium mt-3 flex align-items-center"
-          ><i
-            class="pi pi-youtube p-button-icon p-button-icon-left text-3xl text-primary mr-1 mt-1"
-          />
-          <span>Help</span></a
-        >
+        <a href="#" class="font-medium mt-3 flex align-items-center"><i
+                                                                       class="pi pi-youtube p-button-icon p-button-icon-left text-3xl text-primary mr-1 mt-1"
+                                                                     />
+          <span>Help</span></a>
       </div>
       <AuthMobileAppDownload />
     </div>
   </div>
   <div
     class="hidden md:block w-6 bg-no-repeat info-graphics login-signup"
-  ></div>
+  />
 </template>
 
 <route lang="yaml">

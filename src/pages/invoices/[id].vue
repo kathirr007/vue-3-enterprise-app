@@ -1,25 +1,24 @@
 <script setup lang="ts">
 import { useMutation, useQuery } from 'vue-query';
 import { usePaperizer } from 'paperizer';
-import axios from 'axios';
 
 useHead({
   titleTemplate: (title?: string) =>
-    !title ? 'App Return Invoice' : `App Return Invoice | ${title}`,
+    !title ? 'App Return Invoice' : `App Return Invoice | ${title}`
 });
 
 const { paperize } = usePaperizer('invoiceWrapper', {
-  styles: ['https://unpkg.com/primeflex@latest/primeflex.css'],
+  styles: ['https://unpkg.com/primeflex@latest/primeflex.css']
 });
-const handleDownload = () => {
+function handleDownload() {
   paperize();
-};
+}
 
 const route = useRoute();
 const { fullName, initials, dateToHumanShort } = useVueFilters();
 const { getAttachmentUrl } = useAttachments();
-const { getOne: getinvoiceTemplateData, getInvoiceTemplate } =
-  useClientBillingInvoices();
+const { getOne: getinvoiceTemplateData, getInvoiceTemplate }
+  = useClientBillingInvoices();
 
 const invoiceId = ref(route.params.id as string);
 const invoiceTemplateString = ref();
@@ -28,7 +27,7 @@ const {
   data: invoiceTemplateData,
   isLoading,
   isFetching,
-  isError,
+  isError
 } = useQuery(['invoice-details', invoiceId.value], () =>
   getInvoiceTemplate(invoiceId.value as string)
 );
@@ -42,13 +41,14 @@ const { mutateAsync: payUsingPaypal, isLoading: loadingPayment } = useMutation(
   }
 );
 
-const handlePayment = () => {
+function handlePayment() {
   window.open(invoiceTemplateData.value?.paymentUrl);
-};
+}
 </script>
+
 <script lang="ts">
 export default defineComponent({
-  inheritAttrs: false,
+  inheritAttrs: false
 });
 </script>
 
@@ -80,21 +80,21 @@ export default defineComponent({
           </div>
           <div class="actions">
             <Button
-              class="max-w-max font-medium"
               v-if="
-                invoiceTemplateData?.paymentUrl &&
-                !['CANCELLED', 'PAID'].includes(invoiceTemplateData.status)
+                invoiceTemplateData?.paymentUrl
+                  && !['CANCELLED', 'PAID'].includes(invoiceTemplateData.status)
               "
-              :label="'Pay'"
               v-tooltip.bottom="'Pay Now'"
-              @click="handlePayment"
+              class="max-w-max font-medium"
+              label="Pay"
               :loading="loadingPayment"
+              @click="handlePayment"
             />
             <Button
+              v-tooltip.left="'Download Invoice'"
               icon="pi"
               class="p-button-sm p-button-rounded ml-2 p-button"
               @click="handleDownload"
-              v-tooltip.left="'Download Invoice'"
             >
               <Icon
                 class="flex-none text-2xl"
@@ -111,11 +111,11 @@ export default defineComponent({
       <CommonLoading v-if="isLoading || isFetching" />
       <Common404
         v-else-if="isError"
-        :hideNavigations="true"
-        :title="'Invoice not found.'"
+        :hide-navigations="true"
+        title="Invoice not found."
       />
       <div v-else id="invoiceWrapper">
-        <BillingInvoiceTemplate :invoiceTemplateData="invoiceTemplateData">
+        <BillingInvoiceTemplate :invoice-template-data="invoiceTemplateData">
           <BillingInvoiceTemplateBody />
         </BillingInvoiceTemplate>
       </div>

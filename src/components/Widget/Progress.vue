@@ -10,7 +10,8 @@ const { getProgressBarColor } = useUtilityFns();
 const { dateToHumanShort } = useVueFilters();
 const compltedEntitiesinPercent = computed(() => {
   const { total, completed } = props;
-  if (total === 0) return 0;
+  if (total === 0)
+    return 0;
   return Math.round((completed / total) * 100);
 });
 </script>
@@ -23,29 +24,24 @@ const compltedEntitiesinPercent = computed(() => {
         <span
           class="font-medium text-900"
           :class="`text-${getProgressBarColor(compltedEntitiesinPercent)}`"
-          >{{ compltedEntitiesinPercent + '%' }}</span
-        >
+        >{{ `${compltedEntitiesinPercent}%` }}</span>
       </div>
     </div>
     <ProgressBar
       class="w-full"
       :value="compltedEntitiesinPercent"
-      :showValue="true"
+      :show-value="true"
     >
       <div
         class="w-full h-full"
         :class="`bg-${getProgressBarColor(compltedEntitiesinPercent)}`"
-      ></div>
+      />
     </ProgressBar>
     <div class="w-full flex justify-content-between align-items-center mt-1">
-      <span class="text-sm text-600"
-        >{{ dateToHumanShort(`${startDate}`) }}
-        <i class="pi pi-info-circle ml-1" v-tooltip.top="'Start Date'"
-      /></span>
-      <span class="text-sm text-600"
-        >{{ dateToHumanShort(`${dueDate}`) }}
-        <i class="pi pi-info-circle ml-1" v-tooltip.top="'Due Date'"
-      /></span>
+      <span class="text-sm text-600">{{ dateToHumanShort(`${startDate}`) }}
+        <i v-tooltip.top="'Start Date'" class="pi pi-info-circle ml-1" /></span>
+      <span class="text-sm text-600">{{ dateToHumanShort(`${dueDate}`) }}
+        <i v-tooltip.top="'Due Date'" class="pi pi-info-circle ml-1" /></span>
     </div>
   </div>
 </template>

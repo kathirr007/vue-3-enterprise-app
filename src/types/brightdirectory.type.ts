@@ -1,16 +1,16 @@
-import { object, string, array, type InferType, number } from 'yup';
+import { type InferType, array, object, string } from 'yup';
 import type { User } from './teams.type';
 
-export type DirectoryServices = {
+export interface DirectoryServices {
   createdAt: string;
   id: string;
   name: string;
   slug?: string;
-};
-export type DirectoryState = {
+}
+export interface DirectoryState {
   id: string;
   name: string;
-};
+}
 export interface LeadDirectory {
   id: string;
   message: string;
@@ -40,7 +40,7 @@ export const BrightDirectoryUpdateSchema = object({
   stateId: string().required().nullable().label('State '),
   services: array(string()).min(1).required().nullable().label('Service'),
   foundedYear: string().optional().nullable().label('Founded Year'),
-  picture: string().optional().nullable().label('Directory Logo'),
+  picture: string().optional().nullable().label('Directory Logo')
 });
 
 export type BrightDirectoryUpdatePayload = InferType<

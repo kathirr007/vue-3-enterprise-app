@@ -40,6 +40,6 @@ export function useDashboardMatrix() {
     getClientDashboard,
     getProjectDashboard,
     getTeamDashboard,
-    getPortalDashboard,
+    getPortalDashboard
   };
 }

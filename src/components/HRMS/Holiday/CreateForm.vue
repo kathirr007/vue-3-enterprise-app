@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { APIActions } from '@/types/common.type';
-import type { HRHolidayCreateInput } from '@/types/hrms.type';
+import type { HRHoliday, HRHolidayCreateInput } from '@/types/hrms.type';
 import { HRHolidayCreateInputSchema } from '@/types/hrms.type';
-import type { HRHoliday } from '@/types/hrms.type';
+
 import type { SchemaForm } from '@/types/schemaform.type';
 import Calendar from 'primevue/calendar';
 import InputText from 'primevue/inputtext';
@@ -22,13 +22,13 @@ const queryClient = useQueryClient();
 const { initToast } = useToasts();
 const { createOne: createHolday, update: updateHoliday } = useHrmsHolidays();
 
-const showToast = (type: APIActions, data: HRHoliday) => {
+function showToast(type: APIActions, data: HRHoliday) {
   initToast({
     actionType: type,
     title: 'Holiday',
-    actionObj: data,
+    actionObj: data
   });
-};
+}
 
 const { mutateAsync: createUpdateHoliday, isLoading } = useMutation(
   (payload: HRHolidayCreateInput) => {
@@ -42,21 +42,22 @@ const { mutateAsync: createUpdateHoliday, isLoading } = useMutation(
       if (props.holiday) {
         showToast('Update', data);
         // emit('update', data);
-      } else {
+      }
+      else {
         showToast('Create', data);
       }
       emit('success', data);
       queryClient.invalidateQueries('holidays-list');
-    },
+    }
   }
 );
-const onSubmit = async (values: Record<string, any>) => {
+async function onSubmit(values: Record<string, any>) {
   await createUpdateHoliday({
     name: values.name,
     date: values.date,
-    description: values.description,
+    description: values.description
   });
-};
+}
 
 const formData: SchemaForm = {
   fields: [
@@ -65,32 +66,32 @@ const formData: SchemaForm = {
       name: 'name',
       label: 'Name',
       required: true,
-      autocomplete: 'off',
+      autocomplete: 'off'
     },
     {
       as: Textarea,
       name: 'description',
       label: 'Description',
-      rows: 4,
+      rows: 4
     },
     {
       as: Calendar,
       type: 'calender',
       name: 'date',
       label: 'Date',
-      required: true,
-    },
+      required: true
+    }
   ],
   validationSchema: HRHolidayCreateInputSchema,
   initialValues: props.holiday ? props.holiday : undefined,
-  btnText: props.holiday ? 'Update' : 'Submit',
+  btnText: props.holiday ? 'Update' : 'Submit'
 };
 </script>
 
 <template>
   <CommonSchemaForm
     :data="formData"
-    @submit="onSubmit"
     :primary-btn-loading="isLoading"
-  ></CommonSchemaForm>
+    @submit="onSubmit"
+  />
 </template>

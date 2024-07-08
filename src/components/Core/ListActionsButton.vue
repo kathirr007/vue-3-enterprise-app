@@ -9,7 +9,7 @@
     icon-pos="right"
   >
     <template v-if="!$attrs.label" #icon>
-      <Icon name="fe:elipsis-v" class="w-6 h-6"></Icon>
+      <Icon name="fe:elipsis-v" class="w-6 h-6" />
     </template>
   </Button>
 </template>

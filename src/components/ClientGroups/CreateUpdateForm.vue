@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import type {
   ClientGroup,
-  ClientGroupCreatePayload,
   ClientGroupAddClientsPayload,
+  ClientGroupCreatePayload
 } from '@/types/client-group';
 import {
-  ClientGroupCreatePayloadSchema,
   ClientGroupAddClientsSchema,
+  ClientGroupCreatePayloadSchema
 } from '@/types/client-group';
 import type { SchemaForm, SchemaFormRef } from '@/types/schemaform.type';
 import InputText from 'primevue/inputtext';
@@ -22,7 +22,7 @@ const props = withDefaults(
     addClients?: boolean;
   }>(),
   {
-    addClients: false,
+    addClients: false
   }
 );
 
@@ -44,8 +44,8 @@ const isCreateRoute = useRouteQuery<string>('create');
 // const { data: clientList } = useQuery(['clients-list'], () => useClientList(), {
 //   enabled: props.addClients,
 // });
-const { data: filterDataClient, applyFilter: applyFilterClient } =
-  useFilterColumns();
+const { data: filterDataClient, applyFilter: applyFilterClient }
+  = useFilterColumns();
 applyFilterClient('Is Active', 'true');
 const clientFilters = useEncodeFilterData(filterDataClient);
 
@@ -58,15 +58,16 @@ const { data: clientList } = useQuery(
   { enabled: props.addClients }
 );
 
-const { mutateAsync: createUpdateClientGroup, isLoading: createIsLoading } =
-  useMutation(
+const { mutateAsync: createUpdateClientGroup, isLoading: createIsLoading }
+  = useMutation(
     (payload: ClientGroupCreatePayload | ClientGroupAddClientsPayload) => {
       if (props.clientGroup && !props.addClients) {
         return update(
           props.clientGroup.id,
           payload as Partial<ClientGroupCreatePayload>
         );
-      } else if (props.addClients) {
+      }
+      else if (props.addClients) {
         return addClients(
           props.clientGroup?.id as string,
           payload as ClientGroupAddClientsPayload
@@ -79,15 +80,16 @@ const { mutateAsync: createUpdateClientGroup, isLoading: createIsLoading } =
         if (props.clientGroup) {
           queryClient.invalidateQueries('client-group-details');
           props.addClients ? emit('add-clients', data) : emit('update', data);
-        } else {
+        }
+        else {
           emit('success', data);
         }
-      },
+      }
     }
   );
 
-const { mutateAsync: removeClientGroupClients, isLoading: removingClients } =
-  useMutation(
+const { mutateAsync: removeClientGroupClients, isLoading: removingClients }
+  = useMutation(
     (payload: ClientGroupAddClientsPayload) => {
       return removeClients(
         props.clientGroup?.id as string,
@@ -98,11 +100,11 @@ const { mutateAsync: removeClientGroupClients, isLoading: removingClients } =
       onSuccess: (data) => {
         queryClient.invalidateQueries('client-group-details');
         emit('remove-clients', data);
-      },
+      }
     }
   );
 
-const onSubmit = async (values: Record<string, any>) => {
+async function onSubmit(values: Record<string, any>) {
   if (props.addClients) {
     clientsToRemove.value = props.clientGroup?.clients
       ?.filter(
@@ -112,19 +114,20 @@ const onSubmit = async (values: Record<string, any>) => {
       .map((client: Client) => client.id) as string[];
     if (clientsToRemove.value.length) {
       await removeClientGroupClients({
-        clients: clientsToRemove.value,
+        clients: clientsToRemove.value
       });
     }
     await createUpdateClientGroup({
-      clients: (values as ClientGroupAddClientsPayload).clients as string[],
-    });
-  } else {
-    await createUpdateClientGroup({
-      name: (values as ClientGroupCreatePayload).name,
-      description: (values as ClientGroupCreatePayload).description,
+      clients: (values as ClientGroupAddClientsPayload).clients as string[]
     });
   }
-};
+  else {
+    await createUpdateClientGroup({
+      name: (values as ClientGroupCreatePayload).name,
+      description: (values as ClientGroupCreatePayload).description
+    });
+  }
+}
 
 const formData: ComputedRef<SchemaForm> = computed(() => {
   return {
@@ -135,7 +138,7 @@ const formData: ComputedRef<SchemaForm> = computed(() => {
         label: 'Name',
         required: true,
         autocomplete: 'off',
-        hide: props.addClients,
+        hide: props.addClients
       },
       {
         as: MultiSelect,
@@ -147,15 +150,15 @@ const formData: ComputedRef<SchemaForm> = computed(() => {
         optionValue: 'id',
         display: 'chip',
         options: clientList.value || [],
-        hide: !props.addClients,
+        hide: !props.addClients
       },
       {
         as: Textarea,
         name: 'description',
         label: 'Description',
         rows: 4,
-        hide: props.addClients,
-      },
+        hide: props.addClients
+      }
     ],
     validationSchema: props.addClients
       ? ClientGroupAddClientsSchema
@@ -165,10 +168,10 @@ const formData: ComputedRef<SchemaForm> = computed(() => {
           ...props.clientGroup,
           clients: props.clientGroup.clients?.map(
             (client: Client) => client.id
-          ),
+          )
         }
       : undefined,
-    btnText: 'Submit',
+    btnText: 'Submit'
   } as SchemaForm;
 });
 
@@ -178,7 +181,7 @@ watch(
     if (val) {
       formRef.value?.setValues({
         ...val,
-        clients: val.clients?.map((client: Client) => client.id),
+        clients: val.clients?.map((client: Client) => client.id)
       });
     }
   }
@@ -187,10 +190,10 @@ watch(
 
 <template>
   <CommonSchemaForm
-    :data="formData"
     ref="formRef"
     :key="formKey"
-    @submit="onSubmit"
+    :data="formData"
     :primary-btn-loading="createIsLoading || removingClients"
-  ></CommonSchemaForm>
+    @submit="onSubmit"
+  />
 </template>

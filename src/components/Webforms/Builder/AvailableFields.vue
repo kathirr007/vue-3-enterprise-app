@@ -2,7 +2,7 @@
 import type {
   FieldType,
   InputAttrType,
-  TemplateField,
+  TemplateField
 } from '@/types/webforms.type';
 
 const props = withDefaults(
@@ -13,7 +13,7 @@ const props = withDefaults(
     serviceModel?: string;
   }>(),
   {
-    alreadyAddedPredefinedFields: () => new Set(),
+    alreadyAddedPredefinedFields: () => new Set()
   }
 );
 
@@ -21,15 +21,15 @@ const emits = defineEmits<{
   (e: 'payload', data: any): void;
 }>();
 
-const predefinedFields = props.fields.filter((field) => field.predefinedType);
+const predefinedFields = props.fields.filter(field => field.predefinedType);
 const normalFields = props.fields.filter(
-  (field) => !(field.predefinedType || field.isStatic)
+  field => !(field.predefinedType || field.isStatic)
 );
-const staticFields = props.fields.filter((field) => field.isStatic);
+const staticFields = props.fields.filter(field => field.isStatic);
 
 // Check if normalFields contain BaseTable and move it to predefinedFields
 const t = normalFields.findIndex(
-  (p) => p.is === 'BaseTable' && !p.predefinedType
+  p => p.is === 'BaseTable' && !p.predefinedType
 );
 if (t !== -1) {
   predefinedFields.push(normalFields[t]);
@@ -39,46 +39,51 @@ if (t !== -1) {
 function getCleanedPayload(payload: FieldType): TemplateField {
   const cleanedPayload = {} as Record<string, any>;
   Object.entries(payload).forEach(([key, value]) => {
-    if (['createdAt', 'updatedAt', 'description', 'icon'].includes(key)) return;
+    if (['createdAt', 'updatedAt', 'description', 'icon'].includes(key))
+      return;
     cleanedPayload[key] = value;
   });
   return cleanedPayload as unknown as TemplateField;
 }
 
-const getPayload = ({
+function getPayload({
   index,
   isPredefined,
-  isStatic,
+  isStatic
 }: {
   index: number;
   isPredefined?: boolean;
   isStatic?: boolean;
-}) => {
+}) {
   let payload: FieldType;
 
   if (isPredefined) {
     payload = structuredClone(toRaw(predefinedFields[index]));
-  } else if (isStatic) {
+  }
+  else if (isStatic) {
     payload = structuredClone(toRaw(staticFields[index]));
-  } else {
+  }
+  else {
     payload = structuredClone(toRaw(normalFields[index]));
   }
 
   // const payload = structuredClone(toRaw(props.fields[index]));
-  // eslint-disable-next-line
+
   // Add a default empty label to v-model it later
-  if (!Object.keys(payload.props).includes('label')) payload.props.label = '';
+  if (!Object.keys(payload.props).includes('label'))
+    payload.props.label = '';
 
   // Add an options entry for base-select if it doesn't exist
   if (
-    ['BaseSelect', 'BaseRadioButton'].includes(payload.is) &&
-    !payload.props.options
+    ['BaseSelect', 'BaseRadioButton'].includes(payload.is)
+    && !payload.props.options
   ) {
     payload.props.options = [];
   }
 
   // If predefinedType exists, add name of the field as the label
-  if (payload.predefinedType) payload.props.label = payload.name;
+  if (payload.predefinedType)
+    payload.props.label = payload.name;
 
   // add fieldId for template updation
   payload.fieldId = payload.id;
@@ -92,22 +97,24 @@ const getPayload = ({
   }
 
   return getCleanedPayload(payload);
-};
+}
 </script>
 
 <template>
   <div class="flex gap-3 flex-column">
     <Card>
       <template #title>
-        <h3 class="text-2xl mb-0">Normal Fields</h3>
+        <h3 class="text-2xl mb-0">
+          Normal Fields
+        </h3>
       </template>
       <template #content>
         <div class="flex flex-wrap gap-2">
           <div v-for="(field, index) in normalFields" :key="index">
             <Button
+              v-tooltip="field.description"
               class="button button-primary w-full h-full"
               @click="emits('payload', getPayload({ index }))"
-              v-tooltip="field.description"
             >
               <span class="inline-block my-auto">
                 {{ field.name }}
@@ -119,15 +126,17 @@ const getPayload = ({
     </Card>
     <Card v-if="staticFields.length">
       <template #title>
-        <h3 class="text-2xl mb-0">Static Fields</h3>
+        <h3 class="text-2xl mb-0">
+          Static Fields
+        </h3>
       </template>
       <template #content>
         <div class="flex flex-wrap gap-2">
           <div v-for="(field, index) in staticFields" :key="index">
             <Button
+              v-tooltip="field.description"
               class="button button-primary w-full h-full"
               @click="emits('payload', getPayload({ index, isStatic: true }))"
-              v-tooltip="field.description"
             >
               <span class="inline-block my-auto">
                 {{ field.name }}
@@ -144,7 +153,9 @@ const getPayload = ({
       :subtitle="modelName"
     >
       <template #title>
-        <h3 class="text-2xl mb-0">Predefined Fields</h3>
+        <h3 class="text-2xl mb-0">
+          Predefined Fields
+        </h3>
       </template>
       <template #content>
         <div class="grid gap-3">

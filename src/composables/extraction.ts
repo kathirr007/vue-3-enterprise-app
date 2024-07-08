@@ -2,10 +2,10 @@ import $api from '@/plugins/api';
 import type {
   CreateExtractionPayload,
   ExtractionDocument,
-  GetFolderDetailsPayload,
+  GetFolderDetailsPayload
 } from '@/types/extraction.type';
 
-export const useExtraction = () => {
+export function useExtraction() {
   const getAll = async () => {
     const { data } = await $api.get<ExtractionDocument[]>('extraction');
     return data;
@@ -50,6 +50,6 @@ export const useExtraction = () => {
     createExtraction,
     remove,
     uploadFolderDetails,
-    downloadFiles,
+    downloadFiles
   };
-};
+}

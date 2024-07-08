@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { useRouteQuery } from '@vueuse/router';
 
-const router = useRouter();
-
 const props = defineProps<{
   disabledFilters?: string[];
   filters?: string;
   activeIndex?: number;
   isContractualTeams?: boolean;
 }>();
+
+const router = useRouter();
 
 const designationsListFn = () => useDesignationListV2({});
 const { data: filterData, applyFilter } = useFilterColumns();
@@ -19,8 +19,9 @@ const { data: filterData, applyFilter } = useFilterColumns();
 applyFilter('Type', ['ORG_USER']);
 
 const preparedFilters = useEncodeFilterData(filterData);
-const usersListFn = () =>
-  useUsersListV2({ isUserNameMe: true, filters: preparedFilters });
+function usersListFn() {
+  return useUsersListV2({ isUserNameMe: true, filters: preparedFilters });
+}
 const activeIndex = useRouteQuery<string>('activeIndex');
 const { allFilters } = useDataTableUtils();
 
@@ -31,7 +32,7 @@ const searchText = ref('');
 defineExpose({
   searchText,
   applyFilters,
-  resetFilters,
+  resetFilters
 });
 
 watchEffect(() => {
@@ -44,22 +45,22 @@ function hasFilter(filterName: string) {
 }
 
 function getSelectedItemsLabel(itemName: string) {
-  return '{0} ' + itemName + ' selected';
+  return `{0} ${itemName} selected`;
 }
 
 function applyFilters() {
   const shouldApplyFilters = [
     selectedDesignation.value,
     selectedReportingManager.value,
-    searchText.value,
-  ].some((filter) => filter?.length);
+    searchText.value
+  ].some(filter => filter?.length);
 
   if (!shouldApplyFilters) {
     if (props.filters) {
       router.push({
         query: {
-          activeIndex: activeIndex.value ? activeIndex.value : undefined,
-        },
+          activeIndex: activeIndex.value ? activeIndex.value : undefined
+        }
       });
     }
     return;
@@ -86,8 +87,8 @@ function applyFilters() {
     router.push({
       query: {
         activeIndex: activeIndex.value ? activeIndex.value : undefined,
-        filters: preparedFilters,
-      },
+        filters: preparedFilters
+      }
     });
   }
 }
@@ -105,29 +106,29 @@ function resetFilters() {
     <div v-if="hasFilter('Client')">
       <CommonMultiSelector
         v-model="selectedDesignation"
-        :maxSelectedLabels="1"
+        :max-selected-labels="1"
         placeholder="Designations"
-        :selectedItemsLabel="getSelectedItemsLabel('Designations')"
-        :queryFn="designationsListFn as unknown as () => any[]"
-        :queryKey="'designations-list'"
-      ></CommonMultiSelector>
+        :selected-items-label="getSelectedItemsLabel('Designations')"
+        :query-fn="designationsListFn as unknown as () => any[]"
+        query-key="designations-list"
+      />
     </div>
     <div v-if="hasFilter('Reporting Manager')">
       <CommonMultiSelector
         v-model="selectedReportingManager"
         placeholder="Reporting Manager"
-        :maxSelectedLabels="1"
-        :selectedItemsLabel="getSelectedItemsLabel('Reporting Managers')"
-        :queryFn="usersListFn as unknown as () => any[]"
-        :queryKey="'users-list'"
-      ></CommonMultiSelector>
+        :max-selected-labels="1"
+        :selected-items-label="getSelectedItemsLabel('Reporting Managers')"
+        :query-fn="usersListFn as unknown as () => any[]"
+        query-key="users-list"
+      />
     </div>
 
     <Button
       label="Apply"
       class="w-full sm:w-auto"
       @click="applyFilters"
-    ></Button>
+    />
   </div>
 </template>
 

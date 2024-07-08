@@ -2,16 +2,16 @@ import $api from '@/plugins/api';
 import type {
   CreateUpdateNote,
   Note,
-  NoteResourceType,
+  NoteResourceType
 } from '@/types/note.type';
 
-export const useNotes = () => {
+export function useNotes() {
   const getAll = async (id: string, type: NoteResourceType) => {
     const { data } = await $api.get<Note[]>(`notes/${type}?resourceId=${id}`);
-    return data.map((note) => ({
+    return data.map(note => ({
       ...note,
       content: JSON.parse(note.content as unknown as string),
-      isEditing: false,
+      isEditing: false
     }));
   };
 
@@ -38,6 +38,6 @@ export const useNotes = () => {
     getAll,
     create,
     update,
-    remove,
+    remove
   };
-};
+}

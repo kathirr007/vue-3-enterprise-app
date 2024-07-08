@@ -25,9 +25,10 @@ const { states } = toRefs(props);
 // const selectedState = ref<CommonClientState>();
 // const openClientStateModal = ref(false);
 
-const updateRowClass = (data: CommonClientState) =>
-  (!data.serviceCount ? 'bg-red-600' : 'bg-blue-600 text-white') +
-  ' text-white';
+function updateRowClass(data: CommonClientState) {
+  return `${!data.serviceCount ? 'bg-red-600' : 'bg-blue-600 text-white'
+  } text-white`;
+}
 </script>
 <!-- eslint-disable vue/no-unused-vars -->
 
@@ -51,18 +52,17 @@ const updateRowClass = (data: CommonClientState) =>
       </span>
       <span
         v-if="
-          canAccessAllMenu ||
-          clientDetails?.relationshipManager.id === currentUser.id
+          canAccessAllMenu
+            || clientDetails?.relationshipManager.id === currentUser.id
         "
         v-tooltip.top="`${!canDoActions ? disabledTooltip : ''}`"
       >
         <span
-          @click="emit('details', state, false)"
           class="cursor-pointer font-medium hover:text-blue-100 underline"
           :class="[{ 'opacity-50 pointer-events-none': !canDoActions }]"
+          @click="emit('details', state, false)"
         >
-          {{ state.serviceCount ? 'Review' : 'Automate' }}</span
-        >
+          {{ state.serviceCount ? 'Review' : 'Automate' }}</span>
       </span>
     </li>
   </ul>

@@ -1,4 +1,4 @@
-import { object, string, number } from 'yup';
+import { number, object, string } from 'yup';
 import type { InferType } from 'yup';
 import type { BillingType } from './project.type';
 
@@ -23,7 +23,7 @@ export const InvoiceEstimatePayloadSchema = object({
     })
     .label('Billing Amount'),
   finalAmount: number().required().nullable().label('Amount'),
-  totalTimeSpent: string().optional().nullable().label('Time Spent'),
+  totalTimeSpent: string().optional().nullable().label('Time Spent')
 });
 
 export type InvoiceEstimatePayload = InferType<

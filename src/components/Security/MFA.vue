@@ -22,45 +22,46 @@ const {
   isMFAEnabled,
   enableMFADialog,
   disableMFADialog,
-  isOtpInvalid,
+  isOtpInvalid
 } = useMFA();
 
 const isDisable = ref<boolean>(false);
 
-const hanldeToggleMFA = (val: Event) => {
+function hanldeToggleMFA(val: Event) {
   if (!isMFAEnabled.value) {
     disableMFADialog.value = false;
     enableMFADialog.value = true;
-  } else {
+  }
+  else {
     enableMFADialog.value = false;
     disableMFADialog.value = true;
   }
-};
+}
 
-const handleDisableMFA = async () => {
+async function handleDisableMFA() {
   await handleActivateMFA({
     payload: {},
-    actionType: 'Disable',
+    actionType: 'Disable'
   });
-};
+}
 
-const handleConfirmCancel = () => {
+function handleConfirmCancel() {
   isMFAEnabled.value = true;
   disableMFADialog.value = false;
-};
+}
 
-const handleMFADialogClose = () => {
+function handleMFADialogClose() {
   enableMFADialog.value = false;
   showOtpForm.value = false;
-};
+}
 
-const handleOtp = (otp: string) => {
+function handleOtp(otp: string) {
   submitTOTP(otp, props.userDetails.email);
-};
+}
 
-const handleDisableCloseIcon = (val: boolean) => {
+function handleDisableCloseIcon(val: boolean) {
   isDisable.value = val;
-};
+}
 
 watchEffect(() => {
   if (props.userDetails) {
@@ -68,9 +69,10 @@ watchEffect(() => {
   }
 });
 </script>
+
 <script lang="ts">
 export default defineComponent({
-  inheritAttrs: false,
+  inheritAttrs: false
 });
 </script>
 
@@ -90,7 +92,6 @@ export default defineComponent({
       }}
     </label>
     <span
-      class="inline-flex"
       v-tooltip="
         `${
           isMFAEnabled && userDetails.org?.isMfaEnabled
@@ -98,6 +99,7 @@ export default defineComponent({
             : ''
         }`
       "
+      class="inline-flex"
     >
       <span
         class="inline-flex cursor-pointer"
@@ -107,8 +109,8 @@ export default defineComponent({
         @click.prevent="hanldeToggleMFA"
       >
         <InputSwitch
-          inputId="toggleMFA"
           v-model="isMFAEnabled"
+          input-id="toggleMFA"
           class="pointer-events-none"
           :disabled="isMFAEnabled && userDetails.org?.isMfaEnabled"
         />
@@ -116,30 +118,30 @@ export default defineComponent({
     </span>
   </div>
   <Dialog
-    modal
-    appendTo="body"
-    :header="'Enable Multi Factor Authentication'"
     v-model:visible="enableMFADialog"
+    modal
+    append-to="body"
+    header="Enable Multi Factor Authentication"
     :breakpoints="defaultBreakpoints"
     :style="{ width: '45vw', maxWidth: '650px' }"
-    :contentClass="'border-round-bottom-md'"
-    :closeOnEscape="false"
+    content-class="border-round-bottom-md"
+    :close-on-escape="false"
     @hide="handleMFADialogClose"
   >
     <SecurityMFASelect
       v-if="!isMFAEnabled && !showOtpForm"
       :email="userDetails.email"
-      @generateMfaSecret="handleMfaSecret"
+      @generate-mfa-secret="handleMfaSecret"
     />
     <SecurityMFAOtp
       v-else
-      :otpDigits="6"
-      :qrcodeUrl="qrcodeUrl"
+      :otp-digits="6"
+      :qrcode-url="qrcodeUrl"
       :provider="mfaProvider"
-      :emailOtpMessage="emailOtpMessage"
-      :submittingOtp="submittingOtp"
-      :isOtpInvalid="isOtpInvalid"
-      @submitTOTP="handleOtp"
+      :email-otp-message="emailOtpMessage"
+      :submitting-otp="submittingOtp"
+      :is-otp-invalid="isOtpInvalid"
+      @submit-t-o-t-p="handleOtp"
       @back="handleBack"
     />
   </Dialog>
@@ -147,10 +149,10 @@ export default defineComponent({
     v-if="disableMFADialog"
     :visible="disableMFADialog"
     title="Disable Multi-factor Authentication"
+    :close-on-escape="false"
     @confirm="handleDisableMFA"
     @cancel="handleConfirmCancel"
     @hide="disableMFADialog = false"
-    :closeOnEscape="false"
   >
     <div>Are you sure you want to disable MFA feature?</div>
   </CommonConfirmRemoveDialog>

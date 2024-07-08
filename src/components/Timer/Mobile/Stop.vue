@@ -33,10 +33,10 @@ const { mutateAsync: updateTimer, isLoading: stopIsLoading } = useMutation(
         detail: `Timer for the task <strong>${metaFilter(
           props.timerData.entity.meta as MetaObj[],
           'title'
-        )}</strong> is stopped successfully`,
+        )}</strong> is stopped successfully`
       });
       emit('modalClose');
-    },
+    }
   }
 );
 
@@ -44,36 +44,45 @@ const onSubmit = handleSubmit(async (values) => {
   await updateTimer({
     id: props.timerData.id,
     entityId: props.timerData.entity.id,
-    timeSpent: values.timeSpent,
+    timeSpent: values.timeSpent
   });
   queryClient.invalidateQueries('timers-list');
 });
 </script>
+
 <template>
   <form @submit.stop="onSubmit">
     <div class="space-y-2.5">
       <div class="flex align-items-center w-full">
-        <p class="w-10rem text-left font-bold">Start Date & Time :</p>
+        <p class="w-10rem text-left font-bold">
+          Start Date & Time :
+        </p>
         <p class="w-7 mb-3 flex-1">
           {{ dateToDateTime(props.timerData.createdAt as string).date }}
           {{ dateToDateTime(props.timerData.createdAt as string).time }}
         </p>
       </div>
       <div class="flex align-items-center w-full">
-        <p class="w-10rem text-left font-bold">End Date & Time :</p>
+        <p class="w-10rem text-left font-bold">
+          End Date & Time :
+        </p>
         <p class="w-7 mb-3 flex-1">
           {{ dateToDateTime().date }}
           {{ dateToDateTime().time }}
         </p>
       </div>
       <div class="flex align-items-center w-full">
-        <p class="w-10rem text-left font-bold">Time Spent :</p>
+        <p class="w-10rem text-left font-bold">
+          Time Spent :
+        </p>
         <p class="w-7 mb-3 flex-1">
-          <CommonTimer :timerData="timerData" units hideControls />
+          <CommonTimer :timer-data="timerData" units hide-controls />
         </p>
       </div>
       <div class="flex align-items-center w-full">
-        <p class="w-10rem text-left font-bold">Enter Actual :</p>
+        <p class="w-10rem text-left font-bold">
+          Enter Actual :
+        </p>
 
         <div class="p-inputgroup w-7 lg:w-auto flex-1">
           <InputNumber id="timeSpent" v-model="timeSpent" class="w-full" />

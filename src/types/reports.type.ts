@@ -15,7 +15,7 @@ export const reportType = [
   'projectEfficiency',
   'clientRoi',
   'projectRoi',
-  'invoice',
+  'invoice'
 ];
 
 export type ReportType = (typeof reportType)[number];

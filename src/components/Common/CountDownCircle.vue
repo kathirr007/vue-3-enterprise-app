@@ -31,7 +31,7 @@ const props = withDefaults(
     value: 10,
     label: '',
     labelPosition: 'bottom',
-    showValue: true,
+    showValue: true
   }
 );
 
@@ -109,8 +109,8 @@ onMounted(() => {
     </div>
     <div
       v-if="label"
-      class="circle__label"
       ref="labelRef"
+      class="circle__label"
       :style="{ fontSize: `${labelFontSize}px` }"
     >
       {{ label }}

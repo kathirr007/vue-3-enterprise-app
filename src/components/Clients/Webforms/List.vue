@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { MenuItem } from 'primevue/menuitem';
-import type Menu from 'primevue/menu';
+import Menu from 'primevue/menu';
 import type { Webform, WebformType } from '@/types/webforms.type';
 import { WebformStatus } from '@/types/webforms.type';
-import type { APIActions, PaginatedResponse } from '@/types/common.type';
+import type { APIActions } from '@/types/common.type';
 import { useMutation, useQuery, useQueryClient } from 'vue-query';
 import type { Attachment } from '@/types/attachment.type';
 
@@ -43,7 +43,7 @@ const {
   queryKeys,
   querySortBy,
   tableRecords,
-  toggleFilters,
+  toggleFilters
 } = useDataTableUtils();
 const { defaultBreakpoints, styles } = useCommonBreakPoints();
 const { initToast } = useToasts();
@@ -67,77 +67,77 @@ const actionMenus = ref([
     label: 'Edit',
     action: 'edit',
     icon: 'pi pi-pencil',
-    iconClass: 'text-xl mr-1',
+    iconClass: 'text-xl mr-1'
   },
   {
     label: 'View Form',
     action: 'view',
     icon: 'pi pi-eye',
-    iconClass: 'text-xl mr-1',
+    iconClass: 'text-xl mr-1'
   },
   {
     label: 'Send Reminder',
     action: 'remind',
-    icon: 'pi pi-undo',
+    icon: 'pi pi-undo'
   },
   {
     label: 'Send To Client',
     action: 'sendToClient',
-    icon: 'pi pi-send',
+    icon: 'pi pi-send'
   },
   {
     label: 'Approve',
     action: 'approve',
     icon: 'pi pi-check',
-    iconClass: 'text-xl mr-1',
+    iconClass: 'text-xl mr-1'
   },
   {
     label: 'Reject',
     action: 'reject',
     icon: 'pi pi-ban',
-    iconClass: 'text-xl mr-1',
+    iconClass: 'text-xl mr-1'
   },
   {
     label: 'Request eSignature',
     action: 'requestESignature',
     icon: 'tabler:signature',
     iconify: true,
-    iconClass: 'text-xl mr-1',
+    iconClass: 'text-xl mr-1'
   },
   {
     label: 'Sign Now',
     action: 'signNow',
     icon: 'tabler:signature',
     iconify: true,
-    iconClass: 'text-xl mr-1',
+    iconClass: 'text-xl mr-1'
   },
   {
     label: 'View & Download',
     action: 'viewDownload',
     icon: 'tabler:signature',
     iconify: true,
-    iconClass: 'text-xl mr-1',
+    iconClass: 'text-xl mr-1'
   },
   {
     label: 'Request Update',
     action: 'requestUpdate',
     iconify: true,
     icon: 'fluent-mdl2:message-friend-request',
-    iconClass: 'text-lg mr-2',
+    iconClass: 'text-lg mr-2'
   },
   {
     label: 'Cancel',
     action: 'cancel',
-    icon: 'pi pi-times',
+    icon: 'pi pi-times'
   },
   {
     label: 'Remove',
     action: 'remove',
-    icon: 'pi pi-trash',
-  },
+    icon: 'pi pi-trash'
+  }
 ]);
 
-const filterActionMenus = (item: Webform) => {
+function filterActionMenus(item: Webform) {
   const menusToFilter = [
     'requestUpdate',
     'approve',
@@ -145,7 +145,7 @@ const filterActionMenus = (item: Webform) => {
     'signNow',
     'reject',
     'sendToClient',
-    'viewDownload',
+    'viewDownload'
   ];
   const menusToInclude = ['view', 'remove'];
   const approvedMenus = ['remove'];
@@ -156,7 +156,7 @@ const filterActionMenus = (item: Webform) => {
     'requestESignature',
     'signNow',
     'sendToClient',
-    'viewDownload',
+    'viewDownload'
   ];
 
   if (props.webformType === 'CONTRACT') {
@@ -209,34 +209,36 @@ const filterActionMenus = (item: Webform) => {
     default:
       return filteredActions.value;
   }
-};
-const handleOperation = (actionType: APIActions) => {
+}
+function handleOperation(actionType: APIActions) {
   updateWebformDialog.value = false;
   initToast({
     actionType,
     title: 'Webform',
-    actionObj: { ...selectedWebform.value },
+    actionObj: { ...selectedWebform.value }
   });
   if (actionType === 'Update') {
     router.push({
       query: {
         ...route.query,
         isUpdateWebform: 'true',
-        webformId: selectedWebform.value?.id,
-      },
+        webformId: selectedWebform.value?.id
+      }
     });
-  } else if (
-    actionType === 'Approve' &&
-    selectedWebform.value?.type === 'CONTRACT'
+  }
+  else if (
+    actionType === 'Approve'
+    && selectedWebform.value?.type === 'CONTRACT'
   ) {
     requestESignDialog.value = true;
-  } else {
+  }
+  else {
     selectedWebform.value = undefined;
     queryClient.invalidateQueries('webforms-list');
   }
-};
+}
 
-const toggleMenu = (event: Event, ref: string) => {
+function toggleMenu(event: Event, ref: string) {
   const foundMenu = Array.isArray(
     currentInstance?.refs[ref] as InstanceType<typeof Menu>
   )
@@ -244,19 +246,19 @@ const toggleMenu = (event: Event, ref: string) => {
     : (currentInstance?.refs[ref] as InstanceType<typeof Menu>);
 
   foundMenu && foundMenu.toggle(event);
-};
+}
 
-const prepareRequestUpdate = () => {
+function prepareRequestUpdate() {
   isRequestUpdate.value = true;
   updateWebformDialog.value = true;
-};
-const prepareUpdateClose = () => {
+}
+function prepareUpdateClose() {
   isRequestUpdate.value = false;
   updateWebformDialog.value = false;
   queryClient.invalidateQueries('webforms-list');
-};
+}
 
-const menuClick = (item: MenuItem, data: Webform) => {
+function menuClick(item: MenuItem, data: Webform) {
   selectedWebform.value = { ...data, isClientWebform: true };
   switch (item.action) {
     case 'edit':
@@ -294,7 +296,7 @@ const menuClick = (item: MenuItem, data: Webform) => {
       break;
   }
   // menuItem.command && menuItem.command(menuItem as MenuItemCommandEvent);
-};
+}
 
 const { data: filterData, applyFilter } = useFilterColumns();
 
@@ -309,7 +311,7 @@ const initialFilters = computed(() => {
 const {
   isLoading: loadingWebforms,
   isFetching: fetchingWebforms,
-  data: webformsList,
+  data: webformsList
 } = useQuery(
   ['webforms-list', initialFilters, ...queryKeys],
   () => {
@@ -317,13 +319,13 @@ const {
       page: currentPage.value,
       limit: currentLimit.value,
       filters: queryFilters.value ? queryFilters.value : initialFilters.value,
-      sortBy: querySortBy.value,
+      sortBy: querySortBy.value
     });
   },
   {
     onSuccess: (data) => {
       tableRecords.value = data;
-    },
+    }
   }
 );
 
@@ -332,19 +334,19 @@ const { mutateAsync: remindWebform, isLoading: remindingWebform } = useMutation(
   {
     onSuccess: () => {
       handleOperation('Remind');
-    },
+    }
   }
 );
 
-const { mutateAsync: requestUpdateWebform, isLoading: requestingUpdate } =
-  useMutation((id: string) => requestUpdate(id), {
+const { mutateAsync: requestUpdateWebform, isLoading: requestingUpdate }
+  = useMutation((id: string) => requestUpdate(id), {
     onSuccess: () => {
       initToast({
         actionType: 'Update',
         summary: 'Request Update',
-        detail: `A request for update sent successfully.`,
+        detail: `A request for update sent successfully.`
       });
-    },
+    }
   });
 
 const { mutateAsync: removeWebform, isLoading: removingWebform } = useMutation(
@@ -352,14 +354,14 @@ const { mutateAsync: removeWebform, isLoading: removingWebform } = useMutation(
   {
     onSuccess: () => {
       handleOperation('Remove');
-    },
+    }
   }
 );
 const { mutateAsync: updateWebform, isLoading: updatingWebform } = useMutation(
   ({
     id,
     payload,
-    actionType,
+    actionType
   }: {
     id: string;
     payload: Partial<Webform>;
@@ -369,23 +371,23 @@ const { mutateAsync: updateWebform, isLoading: updatingWebform } = useMutation(
     onSuccess: (data, variables) => {
       sendToClient.value = false;
       handleOperation(variables.actionType);
-    },
+    }
   }
 );
 
-const handleRemoveWebform = async () => {
+async function handleRemoveWebform() {
   await removeWebform(selectedWebform.value?.id as string);
-};
+}
 
-const handleRemindWebform = async () => {
+async function handleRemindWebform() {
   await remindWebform(selectedWebform.value?.id as string);
-};
+}
 
-const handleRequestUpdateWebform = async () => {
+async function handleRequestUpdateWebform() {
   await requestUpdateWebform(selectedWebform.value?.id as string);
-};
+}
 
-const handleUpdateWebform = async (isUpdateRequested?: boolean) => {
+async function handleUpdateWebform(isUpdateRequested?: boolean) {
   if (isUpdateRequested) {
     await handleRequestUpdateWebform();
     updateWebformDialog.value = false;
@@ -393,12 +395,10 @@ const handleUpdateWebform = async (isUpdateRequested?: boolean) => {
     return;
   }
   handleOperation('Update');
-};
+}
 
-const handleUpdateWebformStatus = async (
-  statusValue: string,
-  actionType: APIActions
-) => {
+async function handleUpdateWebformStatus(statusValue: string,
+  actionType: APIActions) {
   const attachments: Attachment[] = selectedWebform.value?.attachments
     ? (selectedWebform.value?.attachments as Attachment[])
     : [];
@@ -409,59 +409,64 @@ const handleUpdateWebformStatus = async (
       attachments: attachments?.length
         ? (getAttachmentIds(attachments as Attachment[]) as string[])
         : [],
-      status: statusValue as WebformStatus,
+      status: statusValue as WebformStatus
     },
-    actionType,
+    actionType
   });
-};
+}
 
 const enumKeyMap = Object.entries(WebformStatus).reduce((acc, [key, value]) => {
   (acc as any)[value] = key;
   return acc;
 }, {} as WebformStatus);
 
-const getStatus = (status: WebformStatus) => {
+function getStatus(status: WebformStatus) {
   return (enumKeyMap as any)[status];
-};
+}
 
-const selectOrViewWebform = (data: Webform) => {
-  if (!canDo('webform', 'single')) return;
+function selectOrViewWebform(data: Webform) {
+  if (!canDo('webform', 'single'))
+    return;
   data.status === 'APPROVED' && props.webformType === 'ORGANIZER'
     ? emit('view:webform', data)
     : emit('select:webform', data);
-};
+}
 </script>
+
 <script lang="ts">
 export default defineComponent({
-  inheritAttrs: false,
+  inheritAttrs: false
 });
 </script>
+
 <template>
   <CommonLoading v-if="loadingWebforms" />
   <DataTable
+    v-bind="tableAttrs"
+    v-model:filters="filters"
+    :value="webformsList?.results"
+    :total-records="webformsList?.total"
+    :loading="fetchingWebforms"
+    data-key="id"
+    responsive-layout="scroll"
+    breakpoint="768px"
+    :global-filter-fields="['name']"
     @page="handlePageOrLimitChange($event)"
     @sort="handleSortChange"
-    :value="webformsList?.results"
-    :totalRecords="webformsList?.total"
-    :loading="fetchingWebforms"
-    dataKey="id"
-    v-bind="tableAttrs"
-    responsiveLayout="scroll"
-    breakpoint="768px"
-    v-model:filters="filters"
-    :globalFilterFields="['name']"
   >
     <template #header>
       <div class="flex justify-content-between">
         <CommonListSearchInput
           :placeholder="`Search ${titleCase(
-            webformType === 'ORGANIZER' ? 'Request' : webformType
+            webformType === 'ORGANIZER' ? 'Request' : webformType,
           )}s`"
         />
       </div>
     </template>
     <template #empty>
-      <div class="text-center">No webforms found.</div>
+      <div class="text-center">
+        No webforms found.
+      </div>
     </template>
     <Column field="name" header="Name" class="w-3">
       <template #body="{ data }">
@@ -473,7 +478,7 @@ export default defineComponent({
           :class="{
             'cursor-pointer hover:text-gray-600 hover:underline': canDo(
               'webform',
-              'single'
+              'single',
             ),
           }"
           @click="selectOrViewWebform(data)"
@@ -512,7 +517,7 @@ export default defineComponent({
       class="w-3rem text-center"
     >
       <template #header>
-        <i class="pi pi-paperclip text-xl" v-tooltip.top="'Documents'"></i>
+        <i v-tooltip.top="'Documents'" class="pi pi-paperclip text-xl" />
       </template>
       <template #body="{ data }">
         <span
@@ -533,7 +538,9 @@ export default defineComponent({
       data-v-if="canDoSome('webforms', ['delete', 'edit'])"
     >
       <template #header>
-        <div class="w-full text-center">Actions</div>
+        <div class="w-full text-center">
+          Actions
+        </div>
       </template>
       <template #body="{ data }">
         <div class="flex justify-content-center gap-2">
@@ -545,31 +552,31 @@ export default defineComponent({
             @click.stop="toggleMenu($event, `menu-${data.id}` as string)"
           >
             <i
-              class="pi pi-spin pi-spinner"
               v-if="
-                data.id === selectedWebform?.id &&
-                (removingWebform ||
-                  updatingWebform ||
-                  remindingWebform ||
-                  requestingUpdate)
+                data.id === selectedWebform?.id
+                  && (removingWebform
+                    || updatingWebform
+                    || remindingWebform
+                    || requestingUpdate)
               "
-            ></i>
+              class="pi pi-spin pi-spinner"
+            />
           </Button>
           <Menu
-            :model="filterActionMenus(data as Webform)"
             :id="`overlay_menu_${data.id}`"
             :ref="`menu-${data.id}`"
+            :model="filterActionMenus(data as Webform)"
             :popup="true"
           >
             <template #item="{ item }">
               <span
                 class="p-menuitem-link"
-                @click="menuClick(item, data)"
                 role="menuitem"
+                @click="menuClick(item, data)"
               >
                 <Icon
-                  class="flex-none"
                   v-if="item.iconify"
+                  class="flex-none"
                   :icon="item.icon"
                   :class="item.iconClass"
                 />
@@ -577,7 +584,7 @@ export default defineComponent({
                   v-else
                   class="p-menuitem-icon pi"
                   :class="item.icon"
-                ></span>
+                />
                 <span class="p-menuitem-text">
                   {{ item.label }}
                 </span>
@@ -590,13 +597,13 @@ export default defineComponent({
   </DataTable>
 
   <Dialog
-    :modal="true"
-    appendTo="body"
-    :header="'Attachments'"
     v-model:visible="attachmentsListDialog"
+    :modal="true"
+    append-to="body"
+    header="Attachments"
     :breakpoints="defaultBreakpoints"
     :style="{ width: '45vw' }"
-    :contentClass="'border-round-bottom-md'"
+    content-class="border-round-bottom-md"
     @hide="selectedAttachments = []"
   >
     <ol
@@ -611,68 +618,70 @@ export default defineComponent({
         <div class="flex">
           <a
             target="_blank"
-            @click="downloadFileAs(getAttachmentUrl(item.path), item.name)"
             class="flex flex-1 align-items-center font-medium cursor-pointer text-gray-900 hover:text-gray-600"
+            @click="downloadFileAs(getAttachmentUrl(item.path), item.name)"
           >
             {{ item.name }}
           </a>
         </div>
       </li>
     </ol>
-    <template v-else> No attachments available </template>
+    <template v-else>
+      No attachments available
+    </template>
   </Dialog>
 
   <Dialog
+    v-model:visible="updateWebformDialog"
     :modal="true"
-    appendTo="body"
+    append-to="body"
     :header="
       isRequestUpdate ? `Request Update` : `Update ${selectedWebform?.name}`
     "
-    v-model:visible="updateWebformDialog"
     :breakpoints="defaultBreakpoints"
     :style="isRequestUpdate ? { width: '45vw' } : styles"
-    :contentClass="'border-round-bottom-md'"
+    content-class="border-round-bottom-md"
     @hide="prepareUpdateClose"
   >
     <WebformsCreateUpdateForm
       :webform-type="webformType"
+      :webform-details="selectedWebform"
+      hide-attachment
+      :is-request-update="isRequestUpdate"
       @update="handleUpdateWebform"
       @back="updateWebformDialog = false"
-      :webformDetails="selectedWebform"
-      hide-attachment
-      :isRequestUpdate="isRequestUpdate"
-    ></WebformsCreateUpdateForm>
+    />
   </Dialog>
 
   <CommonConfirmRemoveDialog
     v-if="selectedWebform && removeWebformDialog"
     :visible="removeWebformDialog"
-    :recordToRemove="selectedWebform as Record<string, any>"
+    :record-to-remove="selectedWebform as Record<string, any>"
     title="Remove Webform"
     class="remove-dialog"
-    :isRemove="true"
+    :is-remove="true"
     @confirm="handleRemoveWebform"
     @hide="removeWebformDialog = false"
   />
   <CommonConfirmRemoveDialog
     v-if="selectedWebform && updateStatusDialog"
     :visible="updateStatusDialog"
-    :recordToRemove="selectedWebform as Record<string, any>"
+    :record-to-remove="selectedWebform as Record<string, any>"
     :title="`${titleCase(updateType as string)} ${titleCase(
-      webformType === 'ORGANIZER' ? 'Request' : webformType
+      webformType === 'ORGANIZER' ? 'Request' : webformType,
     )}`"
     class="remove-dialog"
-    :isRemove="true"
+    :is-remove="true"
     @confirm="
       handleUpdateWebformStatus(
         `${
           updateType === 'approve'
             ? 'APPROVED'
             : updateType === 'cancel'
-            ? 'CANCELLED'
-            : 'REJECTED'
+              ? 'CANCELLED'
+              : 'REJECTED'
         }`,
-        `${titleCase(updateType as string)}` as APIActions
+        `${titleCase(updateType as string)}` as APIActions,
       )
     "
     @hide="updateStatusDialog = false"
@@ -684,18 +693,17 @@ export default defineComponent({
       </p>
       <div>
         Are you sure you want to {{ updateType }}
-        <strong>{{ selectedWebform.name }}</strong
-        >?
+        <strong>{{ selectedWebform.name }}</strong>?
       </div>
     </div>
   </CommonConfirmRemoveDialog>
   <CommonConfirmRemoveDialog
     v-if="selectedWebform && requestESignDialog"
     :visible="requestESignDialog"
-    :recordToRemove="selectedWebform as Record<string, any>"
-    :title="`eSignature Request`"
+    :record-to-remove="selectedWebform as Record<string, any>"
+    title="eSignature Request"
     class="remove-dialog"
-    :isRemove="true"
+    :is-remove="true"
     @confirm="emit('esign:webform', selectedWebform)"
     @hide="requestESignDialog = false"
   >
@@ -705,8 +713,7 @@ export default defineComponent({
       </p>
       <div>
         Would you like to raise eSignature request for
-        <strong>{{ selectedWebform.name }}</strong
-        >?
+        <strong>{{ selectedWebform.name }}</strong>?
       </div>
     </div>
   </CommonConfirmRemoveDialog>

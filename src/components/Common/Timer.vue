@@ -41,8 +41,9 @@ const isTimerActive = computed(() => !props.timerData?.isCompleted);
 
 const { defaultBreakpoints, styles } = useCommonBreakPoints();
 
-const start = () => {
-  if (status.value === 'running') return;
+function start() {
+  if (status.value === 'running')
+    return;
 
   if (startTime.value === undefined) {
     reset();
@@ -56,34 +57,35 @@ const start = () => {
 
   started.value = setInterval(clockRunning, 10);
   running.value = true;
-};
+}
 
-const stop = () => {
+function stop() {
   running.value = false;
   endTime.value = dayjs();
   clearInterval(started.value);
-};
+}
 
-const reset = () => {
+function reset() {
   status.value = 'stopped';
   clearInterval(started.value);
   stoppedDuration.value = 0;
   startTime.value = undefined;
   endTime.value = undefined;
   time.value = '00:00:00:00';
-};
+}
 
-const clockRunning = () => {
-  if (!running.value) return;
+function clockRunning() {
+  if (!running.value)
+    return;
 
   const timeElapsed = dayjs.duration(
     dayjs().diff(dayjs(startTime.value), 'ms') - stoppedDuration.value,
     'ms'
   );
-  let d: string | number = timeElapsed.get('d'),
-    h: string | number = timeElapsed.get('h'),
-    m: string | number = timeElapsed.get('m'),
-    s: string | number = timeElapsed.get('s');
+  let d: string | number = timeElapsed.get('d');
+  let h: string | number = timeElapsed.get('h');
+  let m: string | number = timeElapsed.get('m');
+  let s: string | number = timeElapsed.get('s');
   d = String(d).padStart(2, '0');
   h = String(h).padStart(2, '0');
   m = String(m).padStart(2, '0');
@@ -92,17 +94,18 @@ const clockRunning = () => {
   let readableTime: string;
   if (props.units) {
     readableTime = props.day ? `${d}d:${h}h:${m}m:${s}s` : `${h}h:${m}m:${s}s`;
-  } else {
+  }
+  else {
     readableTime = props.day ? `${d}:${h}:${m}:${s}` : `${h}:${m}:${s}`;
   }
 
   time.value = readableTime;
-};
+}
 
-const stopTimer = () => {
+function stopTimer() {
   // Stop the timer
   stopDialog.value = true;
-};
+}
 
 watchEffect(() => {
   if (props.timerData || props.checkInTimerData) {
@@ -117,21 +120,21 @@ watchEffect(() => {
 
 <template>
   <div class="timer flex align-items-center" v-bind="$attrs">
-    <div class="btn-container" v-if="!hideControls">
+    <div v-if="!hideControls" class="btn-container">
       <!-- play -->
       <i
-        class="pi pi-custom pi-stopwatch h-1.5rem w-1.5rem"
         v-if="!running"
-        @click="start"
         v-tooltip.bottom="'Start Timer'"
+        class="pi pi-custom pi-stopwatch h-1.5rem w-1.5rem"
+        @click="start"
       />
 
       <!-- stop -->
       <i
         v-else
-        @click="stopTimer"
         v-tooltip.bottom="'Stop Timer'"
         class="topbar-icon flex align-items-center"
+        @click="stopTimer"
       >
         <Icon
           class="transition-all text-xl cursor-pointer text-red-500 mr-1"
@@ -139,15 +142,15 @@ watchEffect(() => {
         />
       </i>
     </div>
-    <span class="time text-xl" v-if="!hideTime" v-html="time" />
+    <span v-if="!hideTime" class="time text-xl" v-html="time" />
   </div>
   <Dialog
-    :modal="true"
-    appendTo="body"
     v-model:visible="stopDialog"
+    :modal="true"
+    append-to="body"
     :breakpoints="{ ...defaultBreakpoints, '992px': '60vw' }"
     :style="{ width: '50vw' }"
-    :contentClass="'border-round-bottom-md'"
+    content-class="border-round-bottom-md"
     @hide="stopDialog = false"
   >
     <template #header>
@@ -158,14 +161,14 @@ watchEffect(() => {
     </template>
     <div class="hidden lg:block">
       <TimerStop
-        @modalClose="stopDialog = false"
-        :timerData="timerData as TimerObj"
+        :timer-data="timerData as TimerObj"
+        @modal-close="stopDialog = false"
       />
     </div>
     <div class="block lg:hidden">
       <TimerMobileStop
-        @modalClose="stopDialog = false"
-        :timerData="timerData as TimerObj"
+        :timer-data="timerData as TimerObj"
+        @modal-close="stopDialog = false"
       />
     </div>
   </Dialog>

@@ -6,8 +6,8 @@ import InputNumber from 'primevue/inputnumber';
 import { useMutation, useQueryClient } from 'vue-query';
 import dayjs from 'dayjs';
 import type {
-  HRLeaveBalanceCreateInput,
   HRLeaveBalance,
+  HRLeaveBalanceCreateInput
 } from '@/types/hrms.type';
 import { HRLeaveBalanceCreateInputSchema } from '@/types/hrms.type';
 
@@ -33,8 +33,8 @@ const { data: usersList, isLoading: loadingUsers } = getUsers(
 );
 const { data: leaveTypes, isLoading: loadingLeaveTypes } = getLeaveTypes();
 
-const { createOne: createLeaveBalance, update: updateLeaveBalance } =
-  useHrmsLeaveBalance();
+const { createOne: createLeaveBalance, update: updateLeaveBalance }
+  = useHrmsLeaveBalance();
 
 const lastThreeYears = computed(() => {
   const currentYear = dayjs().year();
@@ -44,13 +44,13 @@ const lastThreeYears = computed(() => {
   return lastThreeYears;
 });
 
-const showToast = (type: APIActions, data: HRLeaveBalance) => {
+function showToast(type: APIActions, data: HRLeaveBalance) {
   initToast({
     actionType: type,
     title: 'Leave Balance',
-    actionObj: data,
+    actionObj: data
   });
-};
+}
 
 const { mutateAsync: createUpdateLeaveBalance, isLoading } = useMutation(
   (payload: HRLeaveBalanceCreateInput) => {
@@ -64,12 +64,13 @@ const { mutateAsync: createUpdateLeaveBalance, isLoading } = useMutation(
       if (props.leaveBalance) {
         showToast('Update', data);
         // emit('update', data);
-      } else {
+      }
+      else {
         showToast('Create', data);
       }
       emit('success', data);
       queryClient.invalidateQueries('leavebalance-list');
-    },
+    }
   }
 );
 
@@ -85,7 +86,7 @@ const formData = computed<SchemaForm>(() => ({
       optionLabel: 'name',
       optionValue: 'id',
       placeholder: 'Select a user',
-      hide: !!props.leaveBalance,
+      hide: !!props.leaveBalance
     },
     {
       as: Dropdown,
@@ -97,7 +98,7 @@ const formData = computed<SchemaForm>(() => ({
       optionValue: 'id',
       options: leaveTypes.value,
       disabled: !!props.leaveBalance,
-      placeholder: 'Select a leave type',
+      placeholder: 'Select a leave type'
     },
     {
       as: Dropdown,
@@ -107,15 +108,15 @@ const formData = computed<SchemaForm>(() => ({
       required: true,
       disabled: !!props.leaveBalance,
       options: lastThreeYears.value as unknown as Record<string, any>[],
-      placeholder: 'Select a year',
+      placeholder: 'Select a year'
     },
     {
       as: InputNumber,
       type: 'input-number',
       name: 'days',
       label: 'Number of days',
-      required: true,
-    },
+      required: true
+    }
   ],
   validationSchema: HRLeaveBalanceCreateInputSchema,
   initialValues: props.leaveBalance
@@ -123,26 +124,26 @@ const formData = computed<SchemaForm>(() => ({
         userId: props.leaveBalance.user.id,
         typeId: props.leaveBalance.type.id,
         year: props.leaveBalance.year,
-        days: props.leaveBalance.days,
+        days: props.leaveBalance.days
       }
     : undefined,
-  btnText: props.leaveBalance ? 'Update' : 'Submit',
+  btnText: props.leaveBalance ? 'Update' : 'Submit'
 }));
 
-const onSubmit = async (values: Record<string, any>) => {
+async function onSubmit(values: Record<string, any>) {
   await createUpdateLeaveBalance({
     userId: values.userId,
     typeId: values.typeId,
     year: values.year,
-    days: values.days,
+    days: values.days
   });
-};
+}
 </script>
 
 <template>
   <CommonSchemaForm
     :data="formData"
-    @submit="onSubmit"
     :primary-btn-loading="isLoading"
-  ></CommonSchemaForm>
+    @submit="onSubmit"
+  />
 </template>

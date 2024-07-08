@@ -9,7 +9,7 @@ const props = withDefaults(
     isLoading?: boolean;
   }>(),
   {
-    projects: () => [],
+    projects: () => []
   }
 );
 
@@ -23,8 +23,8 @@ const successRecords = ref<{ id: string; error: string }[] | any[]>([]);
 const refetchKey = ref(0);
 const { initToast } = useToasts();
 
-const { mutateAsync: handleProjectRestore, isLoading: restoringProject } =
-  useMutation(
+const { mutateAsync: handleProjectRestore, isLoading: restoringProject }
+  = useMutation(
     ['restore-project'],
     (id: string) => {
       return useProjectRestore(id) as unknown as Promise<Project>;
@@ -38,13 +38,13 @@ const { mutateAsync: handleProjectRestore, isLoading: restoringProject } =
           id: variables,
           error: err.response?.data.message
             ? err.response?.data.message
-            : err.message,
+            : err.message
         });
-      },
+      }
     }
   );
 
-const makeParallelAPIReq = async (payloadArr: Project[]) => {
+async function makeParallelAPIReq(payloadArr: Project[]) {
   if (payloadArr.length === 0) {
     return;
   }
@@ -53,9 +53,9 @@ const makeParallelAPIReq = async (payloadArr: Project[]) => {
       await handleProjectRestore(project.id);
     })
   );
-};
+}
 
-const restoreBulkProjects = async () => {
+async function restoreBulkProjects() {
   await makeParallelAPIReq(props.projects);
   refetchKey.value++;
 
@@ -65,7 +65,7 @@ const restoreBulkProjects = async () => {
       summary: 'Bulk Restore Projects',
       detail: `Total of <strong>${successRecords.value.length}</strong> ${
         successRecords.value.length > 1 ? 'Projects are' : 'Project'
-      } successfully restored.`,
+      } successfully restored.`
     });
     successRecords.value = [];
   }
@@ -75,21 +75,21 @@ const restoreBulkProjects = async () => {
       summary: 'Create Team Member',
       detail: `Total of <strong>${failedRecords.value.length}</strong> ${
         failedRecords.value.length > 1 ? 'Projects are' : 'Project'
-      } failed to restore.`,
+      } failed to restore.`
     });
     failedRecords.value = [];
   }
   emit('bulk-update');
-};
+}
 </script>
 
 <template>
   <Button
     icon="pi pi-undo"
     class="p-button-sm p-button-rounded"
-    @click.prevent="restoreBulkProjects"
     :disabled="restoringProject"
+    @click.prevent="restoreBulkProjects"
   >
-    <i class="pi pi-spin pi-spinner" v-if="restoringProject"></i>
+    <i v-if="restoringProject" class="pi pi-spin pi-spinner" />
   </Button>
 </template>

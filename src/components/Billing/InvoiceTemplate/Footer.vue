@@ -15,6 +15,7 @@ const logoUrl = computed(() => {
     : '/images/logos/bright-return-2.svg';
 });
 </script>
+
 <template>
   <table
     cellpadding="0"
@@ -69,7 +70,7 @@ const logoUrl = computed(() => {
                   margin: 0 auto;
                 "
               >
-                <!-- Notes block start-->
+                <!-- Notes block start -->
                 <table
                   border="0"
                   cellspacing="0"
@@ -107,8 +108,7 @@ const logoUrl = computed(() => {
                           line-height: normal;
                           margin: 0;
                         "
-                        >Notes</span
-                      >
+                      >Notes</span>
                     </td>
                   </tr>
                   <tr style="box-sizing: border-box; line-height: normal">
@@ -137,7 +137,7 @@ const logoUrl = computed(() => {
                     </td>
                   </tr>
                 </table>
-                <!-- Notes block end-->
+                <!-- Notes block end -->
               </td>
               <td
                 class="coldrop"
@@ -163,7 +163,7 @@ const logoUrl = computed(() => {
                   margin: 0 auto;
                 "
               >
-                <!-- Terms and Conditions block start-->
+                <!-- Terms and Conditions block start -->
                 <table
                   border="0"
                   cellspacing="0"
@@ -201,8 +201,7 @@ const logoUrl = computed(() => {
                           line-height: normal;
                           margin: 0;
                         "
-                        >Terms and Conditions</span
-                      >
+                      >Terms and Conditions</span>
                     </td>
                   </tr>
                   <tr style="box-sizing: border-box; line-height: normal">
@@ -231,12 +230,12 @@ const logoUrl = computed(() => {
                     </td>
                   </tr>
                 </table>
-                <!-- Terms and Conditions block end-->
+                <!-- Terms and Conditions block end -->
               </td>
             </tr>
-            <!-- Spacer 40 start-->
+            <!-- Spacer 40 start -->
             <BillingInvoiceTemplateRowSpacer :height="40" />
-            <!-- Spacer 40 end-->
+            <!-- Spacer 40 end -->
           </table>
         </td>
       </tr>

@@ -2,7 +2,7 @@ import type { PaginatedResponse } from '@/types/common.type';
 import { useRouteQuery } from '@vueuse/router';
 import type {
   DataTablePageEvent,
-  DataTableSortEvent,
+  DataTableSortEvent
 } from 'primevue/datatable';
 import type { FilterItem } from '@/types/filter.type';
 
@@ -17,12 +17,12 @@ const {
   applyFilter,
   applySort,
   sortData,
-  data: filteredData,
+  data: filteredData
 } = useFilterColumns();
 
 export function useDataTableUtils(
   options: DatatableUtilOptions = {
-    keysToExclude: [],
+    keysToExclude: []
   }
 ) {
   const tableRecords = ref<PaginatedResponse<any>>();
@@ -40,7 +40,7 @@ export function useDataTableUtils(
   const isFiltersVisible = ref(false);
   const searchText = ref<string | null>();
   const searchValidationMessage = ref<{ searchText: string }>({
-    searchText: '',
+    searchText: ''
   });
   const keysToExclude = ref([...(options.keysToExclude as string[])]);
 
@@ -96,24 +96,24 @@ export function useDataTableUtils(
       paginatorTemplate:
         'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown',
       currentPageReportTemplate: `{first} to {last} of {totalRecords}`,
-      rowsPerPageOptions: [15, 30, 50],
+      rowsPerPageOptions: [15, 30, 50]
     };
   });
 
   const filtersApplied = computed(() => {
     return queryFilters.value
       ? filterObjByKeys(
-          useDecodeFilterData(queryFilters.value),
-          keysToExclude.value,
-          true
-        )
+        useDecodeFilterData(queryFilters.value),
+        keysToExclude.value,
+        true
+      )
       : {};
   });
 
   const doesFiltersHasValues = computed(() => {
     return !!Object.values(filtersApplied.value as any)
       .map((item: any) => item.value)
-      .filter((value) => !isFalsy(value)).length;
+      .filter(value => !isFalsy(value)).length;
   });
 
   function handlePageOrLimitChange(event: DataTablePageEvent) {
@@ -127,8 +127,8 @@ export function useDataTableUtils(
         activeIndex: activeIndex.value ? activeIndex.value : undefined,
         nestedActiveIndex: nestedActiveIndex.value
           ? nestedActiveIndex.value
-          : undefined,
-      },
+          : undefined
+      }
     });
   }
 
@@ -150,8 +150,8 @@ export function useDataTableUtils(
         activeIndex: activeIndex.value ? activeIndex.value : undefined,
         nestedActiveIndex: nestedActiveIndex.value
           ? nestedActiveIndex.value
-          : undefined,
-      },
+          : undefined
+      }
     });
   }
 
@@ -170,15 +170,16 @@ export function useDataTableUtils(
         activeIndex: activeIndex.value ? activeIndex.value : undefined,
         nestedActiveIndex: nestedActiveIndex.value
           ? nestedActiveIndex.value
-          : undefined,
-      },
+          : undefined
+      }
     });
   }
 
   function toggleFilters(reset: boolean) {
     if (reset && filtersRef.value) {
       filtersRef.value.resetFilters();
-    } else {
+    }
+    else {
       isFiltersVisible.value = !isFiltersVisible.value;
     }
   }
@@ -190,7 +191,7 @@ export function useDataTableUtils(
           message: 'Search text should be atleast 3 characters long',
         }); */
         searchValidationMessage.value = {
-          searchText: 'Search term should be atleast 3 characters long',
+          searchText: 'Search term should be atleast 3 characters long'
         };
         return;
       }
@@ -211,7 +212,8 @@ export function useDataTableUtils(
       if (props?.filterType === 'Tasks' && props?.statusId) {
         applyFilter('Type', props.entityType ? [props.entityType] : ['TASK']);
         applyFilter('Status', props.statusId ? [props.statusId] : []);
-      } else {
+      }
+      else {
         applyFilter('Type', undefined);
         applyFilter('Status', undefined);
       }
@@ -221,7 +223,8 @@ export function useDataTableUtils(
           'Broadcast To',
           props?.broadcastType === 'team' ? [true] : [false]
         );
-      } else {
+      }
+      else {
         applyFilter('Broadcast To', undefined);
       }
       if (props?.applyFilter) {
@@ -243,8 +246,8 @@ export function useDataTableUtils(
           nestedActiveIndex: nestedActiveIndex.value
             ? nestedActiveIndex.value
             : undefined,
-          ...(props?.query ? props.query : {}),
-        },
+          ...(props?.query ? props.query : {})
+        }
       });
     },
     1000,
@@ -265,7 +268,8 @@ export function useDataTableUtils(
   watchEffect(() => {
     if (doesFiltersHasValues.value) {
       isFiltersVisible.value = true;
-    } else if (queryFilters.value) {
+    }
+    else if (queryFilters.value) {
       const isValidValue = Object.entries(allFilters.value)
         .map((val: any) => val[1])
         .some((item: FilterItem) => !isFalsy(item.value));
@@ -274,7 +278,7 @@ export function useDataTableUtils(
     }
 
     if (allFilters.value) {
-      searchText.value = allFilters.value['SearchText'].value as string;
+      searchText.value = allFilters.value.SearchText.value as string;
     }
   });
 
@@ -304,6 +308,6 @@ export function useDataTableUtils(
     handleTermChange,
     toggleFilters,
     searchTerms,
-    exportToCSV,
+    exportToCSV
   };
 }

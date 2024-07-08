@@ -193,11 +193,11 @@ const { getInlCurrencyNumber } = useVueFilters();
                             <tr
                               v-for="(item, index) in invoiceTemplateData
                                 .templateData.lineItem"
+                              :key="index"
                               style="
                                 box-sizing: border-box;
                                 line-height: normal;
                               "
-                              :key="index"
                             >
                               <td
                                 valign="top"
@@ -320,12 +320,12 @@ const { getInlCurrencyNumber } = useVueFilters();
                                   </tr>
                                   <tr
                                     v-if="
-                                      index ===
-                                        invoiceTemplateData.templateData
-                                          .lineItem.length -
-                                          1 &&
-                                      invoiceTemplateData.templateData.discount
-                                        ?.amount !== 0
+                                      index
+                                        === invoiceTemplateData.templateData
+                                          .lineItem.length
+                                        - 1
+                                        && invoiceTemplateData.templateData.discount
+                                          ?.amount !== 0
                                     "
                                     style="
                                       box-sizing: border-box;
@@ -437,12 +437,12 @@ const { getInlCurrencyNumber } = useVueFilters();
                                   </tr>
                                   <tr
                                     v-if="
-                                      index ===
-                                        invoiceTemplateData.templateData
-                                          .lineItem.length -
-                                          1 &&
-                                      invoiceTemplateData.templateData.discount
-                                        ?.amount !== 0
+                                      index
+                                        === invoiceTemplateData.templateData
+                                          .lineItem.length
+                                        - 1
+                                        && invoiceTemplateData.templateData.discount
+                                          ?.amount !== 0
                                     "
                                     style="
                                       box-sizing: border-box;
@@ -474,7 +474,7 @@ const { getInlCurrencyNumber } = useVueFilters();
                                         {{
                                           getInlCurrencyNumber(
                                             invoiceTemplateData.templateData
-                                              .discount?.amount || 0
+                                              .discount?.amount || 0,
                                           )
                                         }}
                                       </span>

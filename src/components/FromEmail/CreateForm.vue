@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { APIActions } from '@/types/common.type';
 import {
-  FromEmailCreateInputSchema,
   type FromEmail,
   type FromEmailCreateInput,
+  FromEmailCreateInputSchema
 } from '@/types/fromemail.type';
 import type { SchemaForm } from '@/types/schemaform.type';
 import InputText from 'primevue/inputtext';
@@ -22,13 +22,13 @@ const queryClient = useQueryClient();
 const { initToast } = useToasts();
 const { createOne: createFromEmail, update: updateFromEmail } = useFromEmail();
 
-const showToast = (type: APIActions, data: FromEmail) => {
+function showToast(type: APIActions, data: FromEmail) {
   initToast({
     actionType: type,
     title: 'From Email',
-    actionObj: data,
+    actionObj: data
   });
-};
+}
 
 const { mutateAsync: createUpdateFromEmail, isLoading } = useMutation(
   (payload: FromEmailCreateInput) => {
@@ -41,21 +41,22 @@ const { mutateAsync: createUpdateFromEmail, isLoading } = useMutation(
     onSuccess: (data) => {
       if (props.fromEmail) {
         showToast('Update', data);
-      } else {
+      }
+      else {
         showToast('Create', data);
       }
       emit('success', data);
       queryClient.invalidateQueries('fromemail-list');
-    },
+    }
   }
 );
 
-const onSubmit = async (values: Record<string, any>) => {
+async function onSubmit(values: Record<string, any>) {
   await createUpdateFromEmail({
     name: values.name,
-    email: values.email,
+    email: values.email
   });
-};
+}
 
 const formData: SchemaForm = {
   fields: [
@@ -64,7 +65,7 @@ const formData: SchemaForm = {
       name: 'name',
       label: 'Name',
       required: true,
-      autocomplete: 'off',
+      autocomplete: 'off'
     },
     {
       as: InputText,
@@ -72,19 +73,19 @@ const formData: SchemaForm = {
       label: 'Email',
       required: true,
       autocomplete: 'off',
-      disabled: !!props.fromEmail,
-    },
+      disabled: !!props.fromEmail
+    }
   ],
   validationSchema: FromEmailCreateInputSchema,
   initialValues: props.fromEmail ? props.fromEmail : undefined,
-  btnText: props.fromEmail ? 'Update' : 'Submit',
+  btnText: props.fromEmail ? 'Update' : 'Submit'
 };
 </script>
 
 <template>
   <CommonSchemaForm
     :data="formData"
-    @submit="onSubmit"
     :primary-btn-loading="isLoading"
-  ></CommonSchemaForm>
+    @submit="onSubmit"
+  />
 </template>

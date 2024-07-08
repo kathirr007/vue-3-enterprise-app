@@ -17,8 +17,8 @@ const { getCountriesList, getStatesList } = useCommonListQueries();
 const queryClient = useQueryClient();
 const { handleTooltip } = useTooltip();
 
-const { data: countriesList, isFetching: fetchingCountries } =
-  getCountriesList();
+const { data: countriesList, isFetching: fetchingCountries }
+  = getCountriesList();
 const country = ref('USA');
 const enabled = computed(() => !!country.value);
 const { data: statesList, isFetching: fetchingStates } = getStatesList(
@@ -27,11 +27,11 @@ const { data: statesList, isFetching: fetchingStates } = getStatesList(
   'states-list'
 );
 
-const { mutateAsync: createBulkStates, isLoading: createIsLoading } =
-  useMutation(
+const { mutateAsync: createBulkStates, isLoading: createIsLoading }
+  = useMutation(
     ({
       clientId,
-      payload,
+      payload
     }: {
       clientId: string;
       payload: ClientStatesPayload;
@@ -44,9 +44,9 @@ const { mutateAsync: createBulkStates, isLoading: createIsLoading } =
         initToast({
           actionType: 'Add',
           summary: 'Client States',
-          detail: `Client States added successfully.`,
+          detail: `Client States added successfully.`
         });
-      },
+      }
     }
   );
 
@@ -54,39 +54,39 @@ const { handleSubmit, meta } = useForm({
   validationSchema: ClientStatesBulkPayloadSchema,
   initialValues: { country: 'USA' },
   initialTouched: { country: true },
-  validateOnMount: false,
+  validateOnMount: false
 });
 const onSubmit = handleSubmit((values: Record<string, unknown>) => {
   createBulkStates({
     clientId: clientDetails?.value.id,
-    payload: { stateIds: values.stateIds as string[] },
+    payload: { stateIds: values.stateIds as string[] }
   });
 });
 </script>
 
 <template>
-  <form @submit="onSubmit" class="grid formgrid md:w-8 xl:w-6 mx-auto">
+  <form class="grid formgrid md:w-8 xl:w-6 mx-auto" @submit="onSubmit">
     <div class="col-12 md:col-6 py-2">
       <div class="field mb-0">
         <label for="country" class="block font-medium text-900">
           Country <span class="text-red-600">*</span>
         </label>
-        <VField name="country" v-slot="{ handleChange, value, validate }">
+        <VField v-slot="{ handleChange, value, validate }" name="country">
           <Dropdown
+            id="state"
             :tabindex="0"
-            @update:model-value="handleChange"
-            @blur="validate()"
             class="w-full"
             name="state"
-            id="state"
             :model-value="value"
             :options="countriesList"
-            @change="(e: { value: string }) => (country = e.value)"
-            :optionLabel="'country'"
-            :optionValue="'country'"
+            option-label="country"
+            option-value="country"
             :filter="true"
             placeholder="Select Country"
             :loading="fetchingCountries"
+            @update:model-value="handleChange"
+            @blur="validate()"
+            @change="(e: { value: string }) => (country = e.value)"
           />
         </VField>
       </div>
@@ -96,31 +96,31 @@ const onSubmit = handleSubmit((values: Record<string, unknown>) => {
         <label for="stateIds" class="block font-medium text-900">
           States <span class="text-red-600">*</span>
         </label>
-        <VField name="stateIds" v-slot="{ handleChange, value, validate }">
+        <VField v-slot="{ handleChange, value, validate }" name="stateIds">
           <MultiSelect
+            id="state"
             :tabindex="0"
-            @update:model-value="handleChange"
-            @blur="validate()"
             class="w-full"
             name="state"
-            id="state"
             :model-value="value"
             :options="statesList"
-            :optionLabel="'name'"
-            :optionValue="'id'"
+            option-label="name"
+            option-value="id"
             :filter="true"
             placeholder="Select States"
             :loading="fetchingStates"
+            @update:model-value="handleChange"
+            @blur="validate()"
           />
         </VField>
       </div>
     </div>
     <div class="col-12 text-right">
       <span
-        class="inline-block ml-auto"
         v-tooltip.top="
           handleTooltip(!!canDoActions, '', disabledTooltip as string)
         "
+        class="inline-block ml-auto"
       >
         <Button
           class="font-medium ml-auto mt-1 block"

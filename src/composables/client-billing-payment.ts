@@ -1,18 +1,17 @@
 import $api from '@/plugins/api';
-import type { ClientBillingInvoice } from '@/types/client-billing-invoices.type';
 import type {
   CLientBillingPaymentTiles,
-  ClientBillingPayment,
+  ClientBillingPayment
 } from '@/types/client-billing-payment.type';
 import type { PaginatedResponse } from '@/types/common.type';
 
-export const useClientBillingPayments = () => {
+export function useClientBillingPayments() {
   const getAll = async ({
     page,
     limit,
     filters,
     billingProfileId,
-    clientId,
+    clientId
   }: {
     billingProfileId: string;
     page?: number;
@@ -27,8 +26,8 @@ export const useClientBillingPayments = () => {
           page,
           limit,
           filters,
-          clientId,
-        },
+          clientId
+        }
       }
     );
     return data;
@@ -36,7 +35,7 @@ export const useClientBillingPayments = () => {
 
   const getTilesData = async ({
     billingProfileId,
-    clientId,
+    clientId
   }: {
     billingProfileId: string;
     clientId?: string;
@@ -45,8 +44,8 @@ export const useClientBillingPayments = () => {
       `payments/${billingProfileId}/matrix`,
       {
         params: {
-          clientId,
-        },
+          clientId
+        }
       }
     );
     return data;
@@ -58,7 +57,7 @@ export const useClientBillingPayments = () => {
     CHEQUE: 'Cheque',
     PAYPAL: 'Paypal',
     STRIPE: 'Stripe',
-    OTHER: 'Other',
+    OTHER: 'Other'
   };
   return { getAll, getTilesData, paymentModes };
-};
+}

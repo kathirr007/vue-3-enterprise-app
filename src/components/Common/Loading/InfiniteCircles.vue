@@ -1,11 +1,11 @@
 <template>
   <div class="loadingio-spinner-ellipsis-y7e5h6cqxfr">
     <div class="ldio-0ofx3rw4s4i">
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
     </div>
   </div>
 </template>

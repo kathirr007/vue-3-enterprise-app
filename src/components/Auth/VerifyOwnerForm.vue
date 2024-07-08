@@ -4,13 +4,13 @@ import { VerifyPayloadSchemaIsOwner } from '@/types/verify.type';
 import { useRouteQuery } from '@vueuse/router';
 import { useMutation } from 'vue-query';
 
-const { initToast } = useToasts();
-
-const routers = useRouter();
 const props = defineProps<{
   email?: string;
 }>();
 
+const { initToast } = useToasts();
+
+const routers = useRouter();
 const { verifySignUp } = useAuthVerify();
 
 const { handleSubmit, errors, values, meta } = useForm({
@@ -19,8 +19,8 @@ const { handleSubmit, errors, values, meta } = useForm({
     email: props.email as string,
     firstName: null,
     lastName: null,
-    orgName: null,
-  },
+    orgName: null
+  }
 });
 
 const { value: email } = useField<string>('email');
@@ -38,11 +38,11 @@ const { isLoading, mutateAsync: verifyAccount } = useMutation(
         title: 'User Verification ',
         actionType: 'Update',
         actionObj: { ...data },
-        detail: `${data.email} is verified successfully`,
+        detail: `${data.email} is verified successfully`
       });
 
       routers.replace({ name: 'settings' });
-    },
+    }
   }
 );
 
@@ -55,14 +55,14 @@ const onSubmitData = handleSubmit(async (values) => {
     lastName,
     email,
     key,
-    orgName,
+    orgName
   };
   await verifyAccount(verifyPayloadData as unknown as VerifyPayload);
 });
 </script>
 
 <template>
-  <form @submit="onSubmitData" class="text-left">
+  <form class="text-left" @submit="onSubmitData">
     <div class="field">
       <label for="orgName" class="block font-medium text-900">
         Organization Name
@@ -73,14 +73,14 @@ const onSubmitData = handleSubmit(async (values) => {
         v-model="orgName"
         type="text"
         class="w-full"
-        :class="{ 'p-invalid': errors['orgName'] }"
+        :class="{ 'p-invalid': errors.orgName }"
       />
       <transition mode="out-in" name="field-slide-down">
         <FormFeedbackMessage
-          :success-class="'font-medium'"
+          success-class="font-medium"
           :errors="errors"
           :values="values"
-          :errorKey="'orgName'"
+          error-key="orgName"
         />
       </transition>
     </div>
@@ -94,14 +94,14 @@ const onSubmitData = handleSubmit(async (values) => {
         v-model="firstName"
         type="text"
         class="w-full"
-        :class="{ 'p-invalid': errors['firstName'] }"
+        :class="{ 'p-invalid': errors.firstName }"
       />
       <transition mode="out-in" name="field-slide-down">
         <FormFeedbackMessage
-          :success-class="'font-medium'"
+          success-class="font-medium"
           :errors="errors"
           :values="values"
-          :errorKey="'firstName'"
+          error-key="firstName"
         />
       </transition>
     </div>
@@ -115,14 +115,14 @@ const onSubmitData = handleSubmit(async (values) => {
         v-model="lastName"
         type="text"
         class="w-full"
-        :class="{ 'p-invalid': errors['lastName'] }"
+        :class="{ 'p-invalid': errors.lastName }"
       />
       <transition mode="out-in" name="field-slide-down">
         <FormFeedbackMessage
-          :success-class="'font-medium'"
+          success-class="font-medium"
           :errors="errors"
           :values="values"
-          :errorKey="'lastName'"
+          error-key="lastName"
         />
       </transition>
     </div>
@@ -137,14 +137,14 @@ const onSubmitData = handleSubmit(async (values) => {
         type="email"
         class="w-full"
         disabled
-        :class="{ 'p-invalid': errors['email'] }"
+        :class="{ 'p-invalid': errors.email }"
       />
       <transition mode="out-in" name="field-slide-down">
         <FormFeedbackMessage
-          :success-class="'font-medium'"
+          success-class="font-medium"
           :errors="errors"
           :values="values"
-          :errorKey="'email'"
+          error-key="email"
         />
       </transition>
     </div>
@@ -155,6 +155,6 @@ const onSubmitData = handleSubmit(async (values) => {
       :loading="isLoading"
       type="submit"
       class="block mx-auto mt-4"
-    ></Button>
+    />
   </form>
 </template>

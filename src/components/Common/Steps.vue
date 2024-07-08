@@ -12,7 +12,7 @@ const emit = defineEmits<{
 }>();
 const containerClass = computed(() => [
   'p-steps p-component',
-  { 'p-readonly': props.readonly },
+  { 'p-readonly': props.readonly }
 ]);
 </script>
 
@@ -31,19 +31,17 @@ const containerClass = computed(() => [
                 <span
                   class="p-steps-number"
                   :class="current === item.name ? 'bg-primary' : ''"
-                  >{{ index + 1 }}</span
-                >
+                >{{ index + 1 }}</span>
                 <span
                   class="p-steps-title"
                   :class="
                     current === item.name ? 'text-primary font-medium' : ''
                   "
-                  >{{ item.label }}</span
-                >
+                >{{ item.label }}</span>
               </span>
             </div>
           </template>
-          <component v-else :is="$slots.item" :item="item"></component>
+          <component :is="$slots.item" v-else :item="item" />
         </li>
       </template>
     </ol>

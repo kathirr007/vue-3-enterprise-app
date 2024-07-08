@@ -2,14 +2,15 @@ import $api from '@/plugins/api';
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 import type { APIActions } from '@/types/common.type';
-import {
+import type {
   Annotation,
-  type Instance,
-  type List,
-  type Rect,
-  type WidgetAnnotation,
-  type AnnotationsUnion,
+  AnnotationsUnion,
+  Instance,
+  List,
+  Rect,
+  WidgetAnnotation
 } from 'pspdfkit';
+
 import PSPDFKit from 'pspdfkit';
 import type { PSPDFKey } from '@/types/esignature.type';
 
@@ -22,10 +23,10 @@ export type PSPDFKitFormFieldKeys = Exclude<
   OmittedPSPDFKitFormFields
 >;
 
-type WidgetDimension = {
+interface WidgetDimension {
   width: number;
   height: number;
-};
+}
 
 const { isPortalUser } = useCurrentUserData();
 const { initToast } = useToasts();
@@ -41,7 +42,7 @@ export function usePSPDFKit(instance: Instance) {
     },
     set: (value: number) => {
       annotations.value = value;
-    },
+    }
   });
 
   const getPSPDFKitKey = async (isPortalUser?: boolean) => {
@@ -65,22 +66,22 @@ export function usePSPDFKit(instance: Instance) {
     const formFields = await instance.getFormFields();
     const signatureWidgetAnnotations = annotationsByPage.reduce(
       (acc, pageAnnotations) => {
-        const pageWidgetAnnotations = pageAnnotations.filter((annotation) =>
+        const pageWidgetAnnotations = pageAnnotations.filter(annotation =>
           isSignatureAnn
             ? annotation.formFieldName || annotation.isSignature
             : annotation.formFieldName
         );
         const pageSignatureWidgetAnnotations = pageWidgetAnnotations.filter(
-          (annotation) =>
+          annotation =>
             isSignatureAnn
               ? pageAnnotations.find(
-                  (ann: AnnotationsUnion) => ann.name === annotation.name
-                )
+                (ann: AnnotationsUnion) => ann.name === annotation.name
+              )
               : formFields.find(
-                  (formField) =>
-                    formField.name === annotation.formFieldName &&
-                    formField instanceof PSPDFKit.FormFields.SignatureFormField
-                )
+                formField =>
+                  formField.name === annotation.formFieldName
+                  && formField instanceof PSPDFKit.FormFields.SignatureFormField
+              )
         );
         return pageSignatureWidgetAnnotations.size > 0
           ? (acc.concat(
@@ -102,12 +103,12 @@ export function usePSPDFKit(instance: Instance) {
     const signatureWidgets = await getSignatureWidgets(instance);
 
     return (
-      signatureWidgets.length &&
-      signatureWidgets.find((annotation: AnnotationsUnion) => {
+      signatureWidgets.length
+      && signatureWidgets.find((annotation: AnnotationsUnion) => {
         if (annotationToCheck.isSignature) {
           return (
-            annotationToCheck.pageIndex === annotation.pageIndex &&
-            annotation.boundingBox.isRectOverlapping(
+            annotationToCheck.pageIndex === annotation.pageIndex
+            && annotation.boundingBox.isRectOverlapping(
               annotationToCheck.boundingBox
             )
           );
@@ -124,8 +125,8 @@ export function usePSPDFKit(instance: Instance) {
     const signatureWidgets = await getSignatureWidgets(instance, true);
 
     return (
-      signatureWidgets.length &&
-      signatureWidgets.find(
+      signatureWidgets.length
+      && signatureWidgets.find(
         (annotation: AnnotationsUnion) =>
           annotation.name === annotationToCheck.name && annotation.isSignature
       )
@@ -142,14 +143,14 @@ export function usePSPDFKit(instance: Instance) {
 
     return {
       width: width * ratio,
-      height: height * ratio,
+      height: height * ratio
     };
   };
 
   const showToast = (actionType: APIActions, title: string, data: any) => {
     initToast({
       actionType,
-      title,
+      title
     });
   };
 
@@ -173,7 +174,7 @@ export function usePSPDFKit(instance: Instance) {
     formField,
     value,
     isDateField,
-    customData,
+    customData
   }: {
     pageRect: Rect;
     pageIndex: number;
@@ -202,7 +203,7 @@ export function usePSPDFKit(instance: Instance) {
       creatorName: customData ? customData.creatorName : null,
       customCreatedDate: dayjs(),
       customData,
-      fontSize: 14,
+      fontSize: 14
     });
 
     createdFormField = new PSPDFKit.FormFields[formField]({
@@ -212,7 +213,7 @@ export function usePSPDFKit(instance: Instance) {
       value,
       creatorName: customData ? customData.creatorName : null,
       customCreatedDate: dayjs(),
-      customData,
+      customData
     });
 
     if (isDateField) {
@@ -231,9 +232,9 @@ export function usePSPDFKit(instance: Instance) {
         fontSize: 14,
         additionalActions: {
           onFormat: new PSPDFKit.Actions.JavaScriptAction({
-            script: 'AFDate_FormatEx("mm/dd/yyyy")',
-          }),
-        },
+            script: 'AFDate_FormatEx("mm/dd/yyyy")'
+          })
+        }
       });
 
       createdFormField = new PSPDFKit.FormFields[formField]({
@@ -243,7 +244,7 @@ export function usePSPDFKit(instance: Instance) {
         creatorName: customData ? customData.creatorName : null,
         customCreatedDate: dayjs(),
         customData,
-        value,
+        value
       });
     }
 
@@ -269,7 +270,7 @@ export function usePSPDFKit(instance: Instance) {
     textValue,
     customData,
     label,
-    fieldName,
+    fieldName
   }: {
     pageRect: Rect;
     pageIndex: number;
@@ -306,7 +307,7 @@ export function usePSPDFKit(instance: Instance) {
       width,
       left,
       top,
-      height: textContentHeight,
+      height: textContentHeight
     });
 
     let textAnnotation = new PSPDFKit.Annotations.TextAnnotation({
@@ -322,8 +323,8 @@ export function usePSPDFKit(instance: Instance) {
       fontSize: 10,
       text: {
         format: 'xhtml',
-        value: textContent,
-      },
+        value: textContent
+      }
     });
 
     textAnnotation = textAnnotation.set('lockedContents', true);
@@ -349,6 +350,6 @@ export function usePSPDFKit(instance: Instance) {
     createFormField,
     createTextAnnotation,
     prepareRemoveAnnotation,
-    removeAnnotation,
+    removeAnnotation
   };
 }

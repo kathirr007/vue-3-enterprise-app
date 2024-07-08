@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import type {
-  DocumentFolder,
-  DocumentCreatePayload,
   CreateFolderPayload,
+  DocumentCreatePayload,
+  DocumentFolder
 } from '@/types/documents.type';
 import { DocumentCreatePayloadSchema } from '@/types/documents.type';
 import type { SchemaForm, SchemaFormRef } from '@/types/schemaform.type';
-import { useRouteParams, useRouteQuery } from '@vueuse/router';
+import { useRouteQuery } from '@vueuse/router';
 import InputText from 'primevue/inputtext';
 import Checkbox from 'primevue/checkbox';
 import { useMutation } from 'vue-query';
@@ -15,6 +15,9 @@ const props = defineProps<{
   folderToUpdate?: DocumentFolder;
 }>();
 
+const emit = defineEmits<{
+  (e: 'success', data: DocumentFolder): void;
+}>();
 const folderId = useRouteQuery<string>('folderId');
 const route = useRoute();
 const clientId = ref(route.params.id as string);
@@ -22,29 +25,25 @@ const { isPortalUser } = useCurrentUserData();
 const formRef = ref<SchemaFormRef>();
 
 const { createFolder, updateFolder } = useDocuments();
-const emit = defineEmits<{
-  (e: 'success', data: DocumentFolder): void;
-}>();
-
-const { mutateAsync: updateDocumentFolder, isLoading: updateIsLoading } =
-  useMutation(
+const { mutateAsync: updateDocumentFolder, isLoading: updateIsLoading }
+  = useMutation(
     ['document-update-folder'],
     (payload: CreateFolderPayload) => {
       return updateFolder({
         id: clientId.value as string,
         folderId: props.folderToUpdate?.id as string,
         payload,
-        isPortal: isPortalUser.value,
+        isPortal: isPortalUser.value
       });
     },
     {
       onSuccess: (data) => {
         emit('success', data);
-      },
+      }
     }
   );
-const { mutateAsync: createDocumentFolder, isLoading: createIsLoading } =
-  useMutation(
+const { mutateAsync: createDocumentFolder, isLoading: createIsLoading }
+  = useMutation(
     ['document-create-folder'],
     (payload: CreateFolderPayload) => {
       return createFolder(
@@ -56,25 +55,26 @@ const { mutateAsync: createDocumentFolder, isLoading: createIsLoading } =
     {
       onSuccess: (data) => {
         emit('success', data);
-      },
+      }
     }
   );
 
-const onSubmit = async (values: Record<string, any>) => {
+async function onSubmit(values: Record<string, any>) {
   if (props.folderToUpdate) {
     await updateDocumentFolder({
       ...values,
       name: values.name,
-      parentId: folderId.value as string,
+      parentId: folderId.value as string
     } as unknown as CreateFolderPayload);
-  } else {
+  }
+  else {
     await createDocumentFolder({
       ...values,
       name: values.name,
-      parentId: folderId.value as string,
+      parentId: folderId.value as string
     } as unknown as CreateFolderPayload);
   }
-};
+}
 
 const formData: SchemaForm = {
   fields: [
@@ -85,7 +85,7 @@ const formData: SchemaForm = {
       required: true,
       formGridClass: 'col-12 md:col-12',
       autocomplete: 'off',
-      hide: !!props.folderToUpdate,
+      hide: !!props.folderToUpdate
     },
     {
       as: Checkbox,
@@ -94,7 +94,7 @@ const formData: SchemaForm = {
       label: 'Client Existing Writable',
       direction: 'horizontal',
       formGridClass: 'col-6 md:col-6',
-      hide: true,
+      hide: true
     },
     {
       as: Checkbox,
@@ -102,7 +102,7 @@ const formData: SchemaForm = {
       name: 'clientReadable',
       label: 'Client Readable',
       direction: 'horizontal',
-      formGridClass: 'col-6 md:col-6',
+      formGridClass: 'col-6 md:col-6'
       // hide: !props.folderToUpdate,
     },
     {
@@ -111,7 +111,7 @@ const formData: SchemaForm = {
       name: 'clientWritable',
       label: 'Client Writable',
       direction: 'horizontal',
-      formGridClass: 'col-6 md:col-6',
+      formGridClass: 'col-6 md:col-6'
       // hide: !props.folderToUpdate,
     },
     {
@@ -121,8 +121,8 @@ const formData: SchemaForm = {
       label: 'Secured Folder',
       direction: 'horizontal',
       formGridClass: 'col-6 md:col-6',
-      hide: true,
-    },
+      hide: true
+    }
   ],
   validationSchema: DocumentCreatePayloadSchema,
   initialValues: props.folderToUpdate
@@ -131,30 +131,31 @@ const formData: SchemaForm = {
         clientExistingWritable: false,
         clientReadable: isPortalUser.value,
         clientWritable: isPortalUser.value,
-        securedFolder: false,
+        securedFolder: false
       },
-  btnText: 'Submit',
+  btnText: 'Submit'
 };
 
 const { findFormIndex, updateFieldProp } = useSchemaForm(formData);
 
-const onDropdownChange = (formValues: Record<string, any>, name: string) => {
+function onDropdownChange(formValues: Record<string, any>, name: string) {
   if (name === 'clientExistingWritable' || name === 'clientWritable') {
     if (formValues.clientExistingWritable || formValues.clientWritable) {
       formRef.value?.setValues({
         ...formValues,
-        clientReadable: true,
+        clientReadable: true
       });
       updateFieldProp('disabled', findFormIndex('clientReadable'), true);
-    } else {
+    }
+    else {
       formRef.value?.setValues({
         ...formValues,
-        clientReadable: false,
+        clientReadable: false
       });
       updateFieldProp('disabled', findFormIndex('clientReadable'), false);
     }
   }
-};
+}
 
 onMounted(() => {
   if (props.folderToUpdate && props.folderToUpdate.clientWritable)
@@ -169,8 +170,8 @@ onMounted(() => {
   <CommonSchemaForm
     ref="formRef"
     :data="formData"
+    :primary-btn-loading="createIsLoading"
     @submit="onSubmit"
     @dropdown-change="onDropdownChange"
-    :primary-btn-loading="createIsLoading"
-  ></CommonSchemaForm>
+  />
 </template>

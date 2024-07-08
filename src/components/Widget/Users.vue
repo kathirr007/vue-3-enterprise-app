@@ -2,16 +2,16 @@
 import type { Attachment } from '@/types/attachment.type';
 import type { User } from '@/types/teams.type';
 
-const router = useRouter();
 const props = withDefaults(
   defineProps<{
     users: User[];
     loading?: boolean;
   }>(),
   {
-    users: () => [],
+    users: () => []
   }
 );
+const router = useRouter();
 const items = computed(() => props.users?.slice(0, 7) || []);
 const { fullName, initials } = useVueFilters();
 const { getAttachmentUrl } = useAttachments();
@@ -23,14 +23,16 @@ const { canDo } = usePermissions();
     <div class="card-header">
       <div class="card-title">
         <h6>My Team</h6>
-        <p class="subtitle mt-3">{{ users?.length }} active team members</p>
+        <p class="subtitle mt-3">
+          {{ users?.length }} active team members
+        </p>
       </div>
     </div>
     <div class="peoples">
-      <i class="pi pi-spinner pi-spin" v-if="props.loading" />
+      <i v-if="props.loading" class="pi pi-spinner pi-spin" />
       <div
-        v-else
         v-for="(user, index) in items"
+        v-else
         :key="index"
         v-tooltip.top="`${fullName(user)}`"
         class="cursor-pointer"
@@ -49,18 +51,17 @@ const { canDo } = usePermissions();
         <img
           v-else
           :src="`${getAttachmentUrl(
-            (user.picture as Attachment).path as string
+            (user.picture as Attachment).path as string,
           )}`"
           :alt="`${fullName(user)}`"
-        />
+        >
       </div>
       <div v-if="users?.length > 7" class="no-picture">
         <span>
           <router-link
             :to="{ name: 'admin-teams-hrms' }"
             class="font-normal text-900 hover:text-500 mb-5"
-            >+{{ users?.length - 7 }}</router-link
-          >
+          >+{{ users?.length - 7 }}</router-link>
         </span>
       </div>
     </div>

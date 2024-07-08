@@ -47,14 +47,15 @@ export const CreateServiceSchema = object({
     .when('isBrightAssist', (isBrightAssist, schema) => {
       if (isBrightAssist) {
         return schema.required().label('Description');
-      } else {
+      }
+      else {
         return schema.label('Description');
       }
     })
     .label('Description'),
   // description: string().optional().label('Description'),
   // estimatedTime: number().optional().label('Budget Time'),
-  isBrightAssist: boolean().optional().nullable().label('App Assist'),
+  isBrightAssist: boolean().optional().nullable().label('App Assist')
 });
 
 export interface CreatePipelineStage {
@@ -68,18 +69,18 @@ export type CreateServicePayload = InferType<typeof CreateServiceSchema> & {
 };
 
 export const TemplateSchema = object({
-  template: string().required().nullable().label('Template'),
+  template: string().required().nullable().label('Template')
 });
 
 export type TemplatePayload = InferType<typeof TemplateSchema>;
 
 export const AddDescriptionSchema = object({
-  description: string().required().nullable().label('Description'),
+  description: string().required().nullable().label('Description')
 });
 
 export const ProjectStageCreateUpdateSchema = object({
   name: string().required().nullable().label('Name'),
-  projectStatusId: string().required().nullable().label('Project Status'),
+  projectStatusId: string().required().nullable().label('Project Status')
 });
 
 export type ProjectStageCreateUpdatePayload = InferType<

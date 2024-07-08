@@ -125,8 +125,7 @@ const invoiceTemplateData = inject(
                                   line-height: normal;
                                   margin: 0;
                                 "
-                                >Bill To:</span
-                              >
+                              >Bill To:</span>
                             </td>
                           </tr>
                           <tr
@@ -152,8 +151,7 @@ const invoiceTemplateData = inject(
                                   margin: 0;
                                   font-weight: bold;
                                 "
-                                >Name</span
-                              >
+                              >Name</span>
                             </td>
                             <td
                               valign="top"
@@ -205,8 +203,7 @@ const invoiceTemplateData = inject(
                                   margin: 0;
                                   font-weight: bold;
                                 "
-                                >Address</span
-                              >
+                              >Address</span>
                             </td>
                             <td
                               valign="top"
@@ -234,7 +231,7 @@ const invoiceTemplateData = inject(
                                 ${invoiceTemplateData.templateData.billTo.city},
                                 ${invoiceTemplateData.templateData.billTo.state},`
                                 }}
-                                <br />
+                                <br>
                                 {{
                                   `${invoiceTemplateData.templateData.billTo.country}
                                 -
@@ -302,7 +299,7 @@ const invoiceTemplateData = inject(
                   </table>
                 </td>
               </tr>
-              <!-- Spacer 40 start-->
+              <!-- Spacer 40 start -->
               <tr style="box-sizing: border-box; line-height: normal">
                 <td
                   class="spacer"
@@ -319,7 +316,7 @@ const invoiceTemplateData = inject(
                   &nbsp;
                 </td>
               </tr>
-              <!-- Spacer 40 end-->
+              <!-- Spacer 40 end -->
             </tbody>
           </table>
         </td>

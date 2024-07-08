@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import type {
   Designation,
-  DesignationRemovePayload,
+  DesignationRemovePayload
 } from '@/types/designation.type';
-import type { PaginatedResponse } from '@/types/common.type';
 import { DesignationRemovePayloadSchema } from '@/types/designation.type';
-import { useQueryClient } from 'vue-query';
-import { useMutation, useQuery } from 'vue-query';
+import { useMutation, useQuery, useQueryClient } from 'vue-query';
+
 import type { Ref } from 'vue';
 
 const dialogHeader = ref('Create Desgination');
@@ -21,8 +20,8 @@ const { activeTabIndex, tabRef, handleTabChange } = useSteps(
 const { initToast } = useToasts();
 const { defaultBreakpoints, styles } = useCommonBreakPoints();
 const queryClient = useQueryClient();
-const { currentPage, currentLimit, queryKeys, queryFilters, querySortBy } =
-  useDataTableUtils();
+const { currentPage, currentLimit, queryKeys, queryFilters, querySortBy }
+  = useDataTableUtils();
 const { canDo } = usePermissions();
 
 const { isLoading: loadingDesignations, data: designations } = useQuery(
@@ -32,7 +31,7 @@ const { isLoading: loadingDesignations, data: designations } = useQuery(
       page: currentPage.value,
       limit: currentLimit.value,
       filters: queryFilters.value,
-      sortBy: querySortBy.value,
+      sortBy: querySortBy.value
     });
   }
 );
@@ -40,7 +39,7 @@ const { isLoading: loadingDesignations, data: designations } = useQuery(
 const { values, errors, meta, setValues, validate } = useForm({
   validationSchema: DesignationRemovePayloadSchema,
   initialErrors: undefined,
-  initialValues: undefined,
+  initialValues: undefined
 });
 
 const { value: designationId } = useField('designationId');
@@ -75,7 +74,7 @@ function showToast() {
   initToast({
     actionType: actionType.value,
     title: 'Designation',
-    actionObj: { ...selectedDesgination.value },
+    actionObj: { ...selectedDesgination.value }
   });
 }
 
@@ -111,7 +110,7 @@ const connectedUsers = computed(() => {
 const otherDesignations = computed(() => {
   if (selectedDesgination.value) {
     return designations.value?.results.filter(
-      (designation) => designation.id !== selectedDesgination.value?.id
+      designation => designation.id !== selectedDesgination.value?.id
     );
   }
   return [];
@@ -121,32 +120,33 @@ const { mutateAsync: removeDesignation } = useMutation(
   ({ id, payload }: { id: string; payload?: DesignationRemovePayload }) =>
     useDesignationRemove(id, payload),
   {
-    onSuccess: () => handleRemove(),
+    onSuccess: () => handleRemove()
   }
 );
 
-const deleteDesignation = () => {
+function deleteDesignation() {
   if (!connectedUsers.value && selectedDesgination.value) {
     removeDesignation({ id: selectedDesgination?.value?.id });
-  } else
+  }
+  else
     removeDesignation({
       id: `${selectedDesgination?.value?.id}`,
-      payload: { designationId: designationId.value as string },
+      payload: { designationId: designationId.value as string }
     });
   // TODO: API call to redesignate users
-};
+}
 </script>
 
 <template>
   <TabView
     ref="tabRef"
     v-model:activeIndex="activeTabIndex"
-    @tab-change="handleTabChange"
     lazy
+    @tab-change="handleTabChange"
   >
     <TabPanel header="Designations">
       <CommonPage title="Designations">
-        <template v-slot:actions>
+        <template #actions>
           <Button
             v-if="canDo('designations', 'create')"
             icon="pi pi-plus"
@@ -155,62 +155,58 @@ const deleteDesignation = () => {
           />
         </template>
         <Dialog
-          :modal="true"
-          appendTo="body"
-          :header="dialogHeader"
           v-model:visible="isDialogVisible"
+          :modal="true"
+          append-to="body"
+          :header="dialogHeader"
           :breakpoints="defaultBreakpoints"
           :style="styles"
-          :contentClass="'border-round-bottom-md'"
+          content-class="border-round-bottom-md"
         >
           <DesignationsCreateForm
+            :designation="selectedDesgination"
             @success="handleCreate"
             @update="handleUpdate"
-            :designation="selectedDesgination"
-          ></DesignationsCreateForm>
+          />
         </Dialog>
         <CommonConfirmRemoveDialog
           v-if="selectedDesgination && deleteDesignationDialog"
           :visible="deleteDesignationDialog"
-          :recordToRemove="selectedDesgination as Record<string, any>"
+          :record-to-remove="selectedDesgination as Record<string, any>"
           title="Delete Designation"
           class="remove-dialog"
+          :is-remove="!connectedUsers"
+          :hide-button-icons="!!connectedUsers"
+          :cancel-label="connectedUsers ? 'Cancel' : ''"
+          :okay-label="connectedUsers ? 'Submit' : ''"
+          :disable-okay="!!(connectedUsers && !meta.valid)"
+          :hide-cancel="!!connectedUsers"
           @confirm="deleteDesignation"
           @hide="closeConfirmRemoveDialog"
-          :isRemove="!connectedUsers"
-          :hideButtonIcons="!!connectedUsers"
-          :cancelLabel="connectedUsers ? 'Cancel' : ''"
-          :okayLabel="connectedUsers ? 'Submit' : ''"
-          :disableOkay="!!(connectedUsers && !meta.valid)"
-          :hideCancel="!!connectedUsers"
         >
           <div v-if="connectedUsers">
             There {{ connectedUsers > 1 ? 'are' : 'is' }}
             <strong>{{ connectedUsers }}</strong>
             {{ connectedUsers > 1 ? 'users' : 'user' }} connected to
-            <strong>{{ selectedDesgination.name }}</strong
-            >. To delete <strong>{{ selectedDesgination.name }}</strong
-            >, Please Redesignate the Team members to other Designation.
+            <strong>{{ selectedDesgination.name }}</strong>. To delete <strong>{{ selectedDesgination.name }}</strong>, Please Redesignate the Team members to other Designation.
             <form class="mt-3">
-              <label :for="`designation`" class="mb-2"
-                >Designation <span class="text-red-500">*</span></label
-              >
+              <label for="designation" class="mb-2">Designation <span class="text-red-500">*</span></label>
               <Dropdown
-                class="w-full"
-                @blur="validate()"
                 v-model="designationId"
+                class="w-full"
                 :options="otherDesignations"
-                optionLabel="name"
-                optionValue="id"
+                option-label="name"
+                option-value="id"
                 :filter="true"
                 placeholder="Select a Designation"
+                @blur="validate()"
               />
 
               <transition mode="out-in" name="field-slide-down">
                 <FormFeedbackMessage
                   :errors="errors"
                   :values="values"
-                  :errorKey="`designationId`"
+                  error-key="designationId"
                   :feedback="false"
                 />
               </transition>
@@ -221,10 +217,10 @@ const deleteDesignation = () => {
           <DesignationsList
             v-if="designations && canDo('designations', 'list')"
             :designations="designations"
-            :loadingDesignations="loadingDesignations"
+            :loading-designations="loadingDesignations"
             @update:designation="prepareForUpdate"
             @delete:designation="prepareForRemove"
-          ></DesignationsList>
+          />
           <p v-else class="text-center font-medium text-xl">
             You don't have access of the Desingations list.
           </p>
@@ -233,15 +229,15 @@ const deleteDesignation = () => {
     </TabPanel>
     <TabPanel header="Roles">
       <CommonPage title="Roles">
-        <template v-slot:actions>
+        <template #actions>
           <a
             href="https://brightreturn.com/kb/manage-project-team-in-cpa-firm"
             target="_blank"
           >
             <Button
+              v-tooltip.top="'Need Help'"
               type="button"
               icon="pi pi-question-circle text-lg"
-              v-tooltip.top="'Need Help'"
               class="p-button-icon-only p-button-rounded ml-2"
             />
           </a>

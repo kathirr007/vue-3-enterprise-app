@@ -4,15 +4,16 @@ import { useMutation, useQueryClient } from 'vue-query';
 import type { InferType } from 'yup';
 import type { Ref } from 'vue';
 import type {
-  CommonClientService,
   AccountingPeriod,
   ClientServices,
+  CommonClientService
 } from '@/types/client.type';
 import { UpdateClientServicesSchema } from '@/types/client.type';
 import Dropdown from 'primevue/dropdown';
 import InputNumber from 'primevue/inputnumber';
 
 import { useClientServiceDelete } from '@/composables/client';
+
 export type UpdateClientStates = InferType<typeof UpdateClientServicesSchema>;
 const props = defineProps<{
   services: Partial<CommonClientService>[];
@@ -23,22 +24,22 @@ const props = defineProps<{
   fetching: boolean;
   isWithoutState?: boolean;
 }>();
+const emit = defineEmits<{
+  (e: 'back', value: string[]): void;
+  (e: 'refresh'): void;
+  (e: 'automation'): void;
+}>();
 const {
   review,
   federal,
   loading,
   fetching,
   services,
-  isWithoutState: isWithoutStateProp,
+  isWithoutState: isWithoutStateProp
 } = toRefs(props);
 const queryClient = useQueryClient();
 const route = useRoute();
 const clientId = ref(route.params.id as string);
-const emit = defineEmits<{
-  (e: 'back', value: string[]): void;
-  (e: 'refresh'): void;
-  (e: 'automation'): void;
-}>();
 type EmptyRecord = CommonClientService & { error?: string };
 const serviceTbody = ref<HTMLElement | undefined>(undefined);
 const { initToast } = useToasts();
@@ -48,12 +49,12 @@ const {
   accountingPeriodOptions,
   accoutingPeriodLimits,
   getExampleDates,
-  defaultRemainderDays,
+  defaultRemainderDays
 } = useAccountingPeriod();
 const { getServices, getUsers } = useCommonListQueries();
 const { data: serviceList } = getServices();
-const { data: filterDataUser, applyFilter: applyFilterUser } =
-  useFilterColumns();
+const { data: filterDataUser, applyFilter: applyFilterUser }
+  = useFilterColumns();
 
 applyFilterUser('Is Active', 'true');
 const userFilters = useEncodeFilterData(filterDataUser);
@@ -64,9 +65,9 @@ const emptyRecord: EmptyRecord = {
   accountingPeriod: 'WEEKLY',
   serviceId: '',
   projectManagerId: '',
-  reminderDays: defaultRemainderDays['WEEKLY'],
-  dueInDays: accoutingPeriodLimits['WEEKLY'],
-  disableService: true,
+  reminderDays: defaultRemainderDays.WEEKLY,
+  dueInDays: accoutingPeriodLimits.WEEKLY,
+  disableService: true
 };
 const isActionDailogOpen = ref(false);
 const selectedService = ref<EmptyRecord>();
@@ -75,26 +76,26 @@ const {
   errors: serviceErrors,
   validateField,
   setValues,
-  validate,
+  validate
 } = useForm({
   validationSchema: UpdateClientServicesSchema,
   validateOnMount: false,
   initialValues: {
     services: props.services
       ? props.services.map((service: any) => ({
-          ...emptyRecord,
-          serviceId: service.serviceId,
-        }))
-      : [],
-  },
+        ...emptyRecord,
+        serviceId: service.serviceId
+      }))
+      : []
+  }
 });
 const { fields: servicesFields, push, remove } = useFieldArray('services');
 
-const { mutateAsync: createClientServices, isLoading: createBulkIsLoading } =
-  useMutation(
+const { mutateAsync: createClientServices, isLoading: createBulkIsLoading }
+  = useMutation(
     ({
       clientId,
-      payload,
+      payload
     }: {
       clientId: string;
       payload: { clientServices: ClientServices[] };
@@ -107,17 +108,17 @@ const { mutateAsync: createClientServices, isLoading: createBulkIsLoading } =
           actionType: 'Create',
           severity: 'success',
           summary: 'Success',
-          detail: 'Client Project Templates Created Successfully',
+          detail: 'Client Project Templates Created Successfully'
         });
         emit('automation');
-      },
+      }
     }
   );
-const { mutateAsync: createOneClientService, isLoading: createOneIsLoading } =
-  useMutation(
+const { mutateAsync: createOneClientService, isLoading: createOneIsLoading }
+  = useMutation(
     ({
       clientId,
-      payload,
+      payload
     }: {
       clientId: string;
       payload: CommonClientService;
@@ -130,18 +131,18 @@ const { mutateAsync: createOneClientService, isLoading: createOneIsLoading } =
           actionType: 'Create',
           severity: 'success',
           summary: 'Success',
-          detail: 'Client Project Template Created Successfully',
+          detail: 'Client Project Template Created Successfully'
         });
         queryClient.invalidateQueries('client-services-list');
         emit('refresh');
-      },
+      }
     }
   );
 const { mutateAsync: updateClientServices } = useMutation(
   ({
     clientId,
     id,
-    payload,
+    payload
   }: {
     clientId: string;
     id: string;
@@ -155,9 +156,9 @@ const { mutateAsync: updateClientServices } = useMutation(
         actionType: 'Update',
         severity: 'success',
         summary: 'Success',
-        detail: 'Client Project Templates Updated Successfully',
+        detail: 'Client Project Templates Updated Successfully'
       });
-    },
+    }
   }
 );
 const { mutateAsync: deleteService } = useMutation(
@@ -170,16 +171,17 @@ const { mutateAsync: deleteService } = useMutation(
         actionType: 'Delete',
         severity: 'error',
         summary: 'Delete Client Project Template',
-        detail: 'Client Project Template Deleted Successfully',
+        detail: 'Client Project Template Deleted Successfully'
       });
       queryClient.invalidateQueries('client-services-list');
-    },
+    }
   }
 );
-const removeFieldError = (field: Ref<EmptyRecord>): void => {
-  if (!field.value.error) return;
+function removeFieldError(field: Ref<EmptyRecord>): void {
+  if (!field.value.error)
+    return;
   field.value.error = '';
-};
+}
 
 watch(
   () => services,
@@ -190,41 +192,45 @@ watch(
           return {
             ...service,
             disableService: true,
-            disableAll: true,
+            disableAll: true
           };
-        }) as unknown as EmptyRecord[],
+        }) as unknown as EmptyRecord[]
       });
-    } else {
+    }
+    else {
       setValues({
         services: services.value.map((service: any) => ({
           ...emptyRecord,
-          serviceId: service.serviceId,
-        })) as unknown as EmptyRecord[],
+          serviceId: service.serviceId
+        })) as unknown as EmptyRecord[]
       });
       formKey.value += 1;
     }
   },
   {
     immediate: true,
-    deep: true,
+    deep: true
   }
 );
 
-const handleSubmit = async () => {
+async function handleSubmit() {
   const { valid } = await validate();
-  if (!valid) return;
+  if (!valid)
+    return;
   const payload: ClientServices[] = serviceValues.services.map(
     (service: any) => {
       let servicePayload;
       if (isWithoutStateProp.value) {
         servicePayload = { ...service, isFederal: false };
-      } else if (!federal.value) {
+      }
+      else if (!federal.value) {
         servicePayload = {
           ...service,
           stateId: props.stateId,
-          isFederal: false,
+          isFederal: false
         };
-      } else {
+      }
+      else {
         servicePayload = { ...service, isFederal: true };
       }
       delete servicePayload.disableService;
@@ -233,29 +239,27 @@ const handleSubmit = async () => {
   ) as unknown as ClientServices[];
   await createClientServices({
     clientId: clientId.value as string,
-    payload: { clientServices: payload },
+    payload: { clientServices: payload }
   });
-};
-const handleDayValidation = async (
-  field: Ref<EmptyRecord>,
+}
+async function handleDayValidation(field: Ref<EmptyRecord>,
   idx: number,
   isremoveFieldError = true,
-  onlyReminder = false
-) => {
+  onlyReminder = false) {
   if (isremoveFieldError) {
     removeFieldError(field);
   }
   const { accountingPeriod } = field.value;
-  field.value.dueInDays =
-    accoutingPeriodLimits[accountingPeriod as AccountingPeriod];
-  field.value.reminderDays =
-    defaultRemainderDays[accountingPeriod as AccountingPeriod];
+  field.value.dueInDays
+    = accoutingPeriodLimits[accountingPeriod as AccountingPeriod];
+  field.value.reminderDays
+    = defaultRemainderDays[accountingPeriod as AccountingPeriod];
   const tdIndex = review.value || isWithoutStateProp.value ? 6 * idx : 5 * idx;
   const dueInDaysEle: HTMLTableElement = serviceTbody.value?.querySelectorAll(
     'td'
   )[2 + tdIndex] as unknown as HTMLTableElement;
-  const reminderDaysEle: HTMLTableElement =
-    serviceTbody.value?.querySelectorAll('td')[
+  const reminderDaysEle: HTMLTableElement
+    = serviceTbody.value?.querySelectorAll('td')[
       3 + tdIndex
     ] as unknown as HTMLTableElement;
   const dueInDaysInput: HTMLInputElement = dueInDaysEle.querySelector(
@@ -279,15 +283,15 @@ const handleDayValidation = async (
       reminderDaysInput.blur();
     }, 50);
   }, 50);
-};
+}
 
-const handleCreateEdit = async (idx: string) => {
+async function handleCreateEdit(idx: string) {
   const fields = [
     'serviceId',
     'accountingPeriod',
     'dueInDays',
     'reminderDays',
-    'projectManagerId',
+    'projectManagerId'
   ];
   let validateCount = 0;
   for (let i = 0; i < fields.length; i++) {
@@ -297,7 +301,8 @@ const handleCreateEdit = async (idx: string) => {
       validateCount++;
     }
   }
-  if (validateCount !== fields.length) return;
+  if (validateCount !== fields.length)
+    return;
 
   // console.log('serviceValue.services', serviceValues.services);
   const payload = { ...serviceValues.services[+idx] };
@@ -310,57 +315,61 @@ const handleCreateEdit = async (idx: string) => {
     const createdService: CommonClientService = await updateClientServices({
       clientId: clientId.value as string,
       id: id as string,
-      payload: payload as CommonClientService,
+      payload: payload as CommonClientService
     });
     serviceValues.services[+idx] = {
       ...createdService,
       disableAll: true,
-      disableService: true,
+      disableService: true
     } as CommonClientService;
-  } else {
+  }
+  else {
     if (federal.value) {
       payload.isFederal = true;
-    } else {
+    }
+    else {
       payload.stateId = props.stateId;
     }
     const createdService: CommonClientService = await createOneClientService({
       clientId: clientId.value as string,
-      payload: payload as CommonClientService,
+      payload: payload as CommonClientService
     });
     serviceValues.services[+idx] = {
       ...createdService,
       disableAll: true,
-      disableService: true,
+      disableService: true
     } as CommonClientService;
   }
-};
-const handleAdd = () => {
+}
+function handleAdd() {
   push({ ...emptyRecord, disableService: false });
-};
+}
 
-const getAccountingPeriodName = (value: string) => {
+function getAccountingPeriodName(value: string) {
   const accountingPeriod = accountingPeriodOptions.find(
-    (accountingPeriod) => accountingPeriod.value === value
+    accountingPeriod => accountingPeriod.value === value
   );
   return accountingPeriod?.name;
-};
+}
 
-const handleDelete = (service: EmptyRecord, idx: number) => {
+function handleDelete(service: EmptyRecord, idx: number) {
   if (service.id) {
     selectedService.value = service;
     isActionDailogOpen.value = true;
-  } else remove(idx);
-};
+  }
+  else remove(idx);
+}
 </script>
+
 <script lang="ts">
 export default defineComponent({
-  inheritAttrs: false,
+  inheritAttrs: false
 });
 </script>
 
 <template>
   <div v-if="!loading && !fetching" class="grid formgrid p-fluid">
-    <form class="col-12" :key="formKey">
+    <form :key="formKey" class="col-12">
       <div class="col-12">
         <div class="p-datatable p-component p-datatable-responsive-scroll">
           <div class="p-datatable-wrapper overflow-x-auto">
@@ -385,10 +394,10 @@ export default defineComponent({
                     Project Schedule <span class="text-red-500">*</span>
 
                     <i
-                      class="pi pi pi-info-circle ml-1 cursor-pointer"
                       v-tooltip="
                         'Choose the date on which you would like to schedule the project.'
                       "
+                      class="pi pi pi-info-circle ml-1 cursor-pointer"
                     />
                   </th>
                   <th role="cell" :style="tableActionStyles">
@@ -404,11 +413,13 @@ export default defineComponent({
                 </tr>
               </thead>
               <tbody
+                ref="serviceTbody"
                 class="p-datatable-tbody relative"
                 role="rowgroup"
-                ref="serviceTbody"
               >
                 <tr
+                  v-for="(field, idx) in servicesFields"
+                  :key="field.key"
                   role="row"
                   class="relative"
                   :class="[
@@ -418,8 +429,6 @@ export default defineComponent({
                       ).error,
                     },
                   ]"
-                  v-for="(field, idx) in servicesFields"
-                  :key="field.key"
                 >
                   <td
                     role="cell"
@@ -428,8 +437,8 @@ export default defineComponent({
                     :class="[
                       {
                         'pb-4':
-                          (field.value as unknown as EmptyRecord).error &&
-                          isMedium,
+                          (field.value as unknown as EmptyRecord).error
+                          && isMedium,
                       },
                     ]"
                   >
@@ -437,28 +446,27 @@ export default defineComponent({
                       :for="`name_${idx}`"
                       class="mb-2"
                       :class="isMedium ? 'hidden' : 'block'"
-                      >Project Template</label
-                    >
+                    >Project Template</label>
                     <VField
                       :id="`service_${idx}`"
-                      :name="`services[${idx}].serviceId`"
                       v-slot="{ handleChange, value, validate }"
+                      :name="`services[${idx}].serviceId`"
                     >
                       <Dropdown
                         class="w-full"
+                        :model-value="value"
+                        :options="serviceList"
+                        option-label="name"
+                        option-value="id"
+                        placeholder="Select Project Template"
+                        :disabled="
+                          (field.value as unknown as EmptyRecord).disableAll
+                            || (field.value as unknown as EmptyRecord).disableService
+                        "
                         @update:model-value="handleChange"
                         @blur="validate()"
                         @change="
                           removeFieldError(field as unknown as Ref<EmptyRecord>)
-                        "
-                        :model-value="value"
-                        :options="serviceList"
-                        optionLabel="name"
-                        optionValue="id"
-                        placeholder="Select Project Template"
-                        :disabled="
-                          (field.value as unknown as EmptyRecord).disableAll ||
-                          (field.value as unknown as EmptyRecord).disableService
                         "
                       >
                         <template #header>
@@ -479,12 +487,12 @@ export default defineComponent({
                       <FormFeedbackMessage
                         :errors="serviceErrors"
                         :values="serviceValues"
-                        :errorKey="`services[${idx}].serviceId`"
+                        :error-key="`services[${idx}].serviceId`"
                       />
                     </transition>
                     <div
-                      class="p-error api-error"
                       v-if="(field.value as unknown as EmptyRecord).error"
+                      class="p-error api-error"
                     >
                       {{ (field.value as unknown as EmptyRecord).error }}
                     </div>
@@ -496,8 +504,8 @@ export default defineComponent({
                     :class="[
                       {
                         'pb-4':
-                          (field.value as unknown as EmptyRecord).error &&
-                          isMedium,
+                          (field.value as unknown as EmptyRecord).error
+                          && isMedium,
                       },
                     ]"
                   >
@@ -505,30 +513,29 @@ export default defineComponent({
                       :for="`accoutingPeriod_${idx}`"
                       class="mb-2"
                       :class="isMedium ? 'hidden' : 'block'"
-                      >Accounting Period</label
-                    >
+                    >Accounting Period</label>
                     <VField
                       :id="`accoutingPeriod_${idx}`"
-                      :name="`services[${idx}].accountingPeriod`"
                       v-slot="{ handleChange, value, validate }"
+                      :name="`services[${idx}].accountingPeriod`"
                     >
                       <Dropdown
                         class="w-full"
+                        :model-value="value"
+                        option-label="label"
+                        option-value="value"
+                        :options="accountingPeriodOptions"
+                        placeholder="Select a Frequency"
+                        :disabled="
+                          (field.value as unknown as EmptyRecord).disableAll
+                        "
                         @update:model-value="handleChange"
                         @blur="validate()"
                         @change="
                           handleDayValidation(
                             field as unknown as Ref<EmptyRecord>,
-                            idx
+                            idx,
                           )
-                        "
-                        :model-value="value"
-                        optionLabel="label"
-                        optionValue="value"
-                        :options="accountingPeriodOptions"
-                        placeholder="Select a Frequency"
-                        :disabled="
-                          (field.value as unknown as EmptyRecord).disableAll
                         "
                       />
                     </VField>
@@ -536,12 +543,12 @@ export default defineComponent({
                       <FormFeedbackMessage
                         :errors="serviceErrors"
                         :values="serviceValues"
-                        :errorKey="`services[${idx}].accountingPeriod`"
+                        :error-key="`services[${idx}].accountingPeriod`"
                       />
                     </transition>
                     <div
-                      class="p-error api-error"
                       v-if="(field.value as unknown as EmptyRecord).error"
+                      class="p-error api-error"
                     >
                       {{ (field.value as unknown as EmptyRecord).error }}
                     </div>
@@ -553,8 +560,8 @@ export default defineComponent({
                     :class="[
                       {
                         'pb-4':
-                          (field.value as unknown as EmptyRecord).error &&
-                          isMedium,
+                          (field.value as unknown as EmptyRecord).error
+                          && isMedium,
                       },
                     ]"
                   >
@@ -562,26 +569,15 @@ export default defineComponent({
                       :for="`dueInDays_${idx}`"
                       class="mb-2"
                       :class="isMedium ? 'hidden' : 'block'"
-                      >Due in Days</label
-                    >
+                    >Due in Days</label>
                     <div class="w-full flex align-items-center space-x-1.5">
                       <VField
                         :id="`dueInDays_${idx}`"
-                        :name="`services[${idx}].dueInDays`"
                         v-slot="{ handleChange, value, validate }"
+                        :name="`services[${idx}].dueInDays`"
                       >
                         <InputNumber
                           class="w-4rem"
-                          @update:model-value="handleChange"
-                          @blur="
-                            validate();
-                            handleDayValidation(
-                              field as unknown as Ref<EmptyRecord>,
-                              idx,
-                              true,
-                              true
-                            );
-                          "
                           :model-value="value as number"
                           placeholder="Due In Days"
                           mode="decimal"
@@ -600,6 +596,16 @@ export default defineComponent({
                                 .accountingPeriod as AccountingPeriod
                             ]
                           "
+                          @update:model-value="handleChange"
+                          @blur="
+                            validate();
+                            handleDayValidation(
+                              field as unknown as Ref<EmptyRecord>,
+                              idx,
+                              true,
+                              true,
+                            );
+                          "
                         />
                       </VField>
                       <span>
@@ -607,7 +613,7 @@ export default defineComponent({
                         {{
                           getAccountingPeriodName(
                             (field.value as unknown as EmptyRecord)
-                              .accountingPeriod
+                              .accountingPeriod,
                           )
                         }}
                       </span>
@@ -627,12 +633,12 @@ export default defineComponent({
                       <FormFeedbackMessage
                         :errors="serviceErrors"
                         :values="serviceValues"
-                        :errorKey="`services[${idx}].dueInDays`"
+                        :error-key="`services[${idx}].dueInDays`"
                       />
                     </transition>
                     <div
-                      class="p-error api-error"
                       v-if="(field.value as unknown as EmptyRecord).error"
+                      class="p-error api-error"
                     >
                       {{ (field.value as unknown as EmptyRecord).error }}
                     </div>
@@ -644,8 +650,8 @@ export default defineComponent({
                     :class="[
                       {
                         'pb-4':
-                          (field.value as unknown as EmptyRecord).error &&
-                          isMedium,
+                          (field.value as unknown as EmptyRecord).error
+                          && isMedium,
                       },
                     ]"
                   >
@@ -653,28 +659,20 @@ export default defineComponent({
                       :for="`reminderDays_${idx}`"
                       class="mb-2"
                       :class="isMedium ? 'hidden' : 'block'"
-                      >Reminder For Planning</label
-                    >
+                    >Reminder For Planning</label>
                     <div class="w-full flex align-items-center space-x-1.5">
                       <VField
                         :id="`reminderDays_${idx}`"
-                        :name="`services[${idx}].reminderDays`"
                         v-slot="{ handleChange, value, validate }"
+                        :name="`services[${idx}].reminderDays`"
                       >
                         <InputNumber
                           class="w-4rem"
-                          @update:model-value="handleChange"
-                          @blur="validate()"
                           :disabled="
                             (field.value as unknown as EmptyRecord)
-                              .disableAll ||
-                            (field.value as unknown as EmptyRecord)
-                              .dueInDays === null
-                          "
-                          @input="
-                            removeFieldError(
-                              field as unknown as Ref<EmptyRecord>
-                            )
+                              .disableAll
+                              || (field.value as unknown as EmptyRecord)
+                                .dueInDays === null
                           "
                           :model-value="value as number"
                           placeholder="Reminder For Planning"
@@ -687,6 +685,13 @@ export default defineComponent({
                           "
                           :max="
                             (field.value as unknown as EmptyRecord).dueInDays
+                          "
+                          @update:model-value="handleChange"
+                          @blur="validate()"
+                          @input="
+                            removeFieldError(
+                              field as unknown as Ref<EmptyRecord>,
+                            )
                           "
                         />
                       </VField>
@@ -709,12 +714,12 @@ export default defineComponent({
                       <FormFeedbackMessage
                         :errors="serviceErrors"
                         :values="serviceValues"
-                        :errorKey="`services[${idx}].reminderDays`"
+                        :error-key="`services[${idx}].reminderDays`"
                       />
                     </transition>
                     <div
-                      class="p-error api-error"
                       v-if="(field.value as unknown as EmptyRecord).error"
+                      class="p-error api-error"
                     >
                       {{ (field.value as unknown as EmptyRecord).error }}
                     </div>
@@ -726,8 +731,8 @@ export default defineComponent({
                     :class="[
                       {
                         'pb-4':
-                          (field.value as unknown as EmptyRecord).error &&
-                          isMedium,
+                          (field.value as unknown as EmptyRecord).error
+                          && isMedium,
                       },
                     ]"
                   >
@@ -735,27 +740,26 @@ export default defineComponent({
                       :for="`projectManager_${idx}`"
                       class="mb-2"
                       :class="isMedium ? 'hidden' : 'block'"
-                      >projectManager</label
-                    >
+                    >projectManager</label>
                     <VField
                       :id="`projectManager_${idx}`"
-                      :name="`services[${idx}].projectManagerId`"
                       v-slot="{ handleChange, value, validate }"
+                      :name="`services[${idx}].projectManagerId`"
                     >
                       <Dropdown
                         class="w-full"
-                        @update:model-value="handleChange"
-                        @blur="validate()"
-                        @change="
-                          removeFieldError(field as unknown as Ref<EmptyRecord>)
-                        "
                         :model-value="value"
-                        optionLabel="name"
-                        optionValue="id"
+                        option-label="name"
+                        option-value="id"
                         :options="usersListOptions"
                         placeholder="Select a Project Manager"
                         :disabled="
                           (field.value as unknown as EmptyRecord).disableAll
+                        "
+                        @update:model-value="handleChange"
+                        @blur="validate()"
+                        @change="
+                          removeFieldError(field as unknown as Ref<EmptyRecord>)
                         "
                       />
                     </VField>
@@ -763,52 +767,52 @@ export default defineComponent({
                       <FormFeedbackMessage
                         :errors="serviceErrors"
                         :values="serviceValues"
-                        :errorKey="`services[${idx}].projectManagerId`"
+                        :error-key="`services[${idx}].projectManagerId`"
                       />
                     </transition>
                     <div
-                      class="p-error api-error"
                       v-if="(field.value as unknown as EmptyRecord).error"
+                      class="p-error api-error"
                     >
                       {{ (field.value as unknown as EmptyRecord).error }}
                     </div>
                   </td>
                   <td
+                    v-if="review || isWithoutState"
                     role="cell"
                     valign="top"
                     :style="tableActionStyles"
                     class="text-right md:text-left"
-                    v-if="review || isWithoutState"
                   >
                     <Button
                       v-if="review"
                       type="button"
                       :icon="
-                        (field.value as unknown as EmptyRecord).id &&
-                        (field.value as unknown as EmptyRecord).disableAll
+                        (field.value as unknown as EmptyRecord).id
+                          && (field.value as unknown as EmptyRecord).disableAll
                           ? 'pi pi-pencil'
                           : 'pi pi-check'
                       "
                       aria-label="delete-record"
                       class="p-button-sm p-button-rounded mr-2"
-                      @click="
-                        !(field.value as unknown as EmptyRecord).disableAll
-                          ? handleCreateEdit(idx.toString())
-                          : ((
-                              field.value as unknown as EmptyRecord
-                            ).disableAll = false)
-                      "
                       :loading="
                         !(field.value as unknown as EmptyRecord).id
                           ? createOneIsLoading
                           : false
                       "
+                      @click="
+                        !(field.value as unknown as EmptyRecord).disableAll
+                          ? handleCreateEdit(idx.toString())
+                          : ((
+                            field.value as unknown as EmptyRecord
+                          ).disableAll = false)
+                      "
                     />
                     <Button
                       v-if="
-                        ((field.value as unknown as EmptyRecord).id &&
-                          idx === servicesFields.length - 1) ||
-                        (!review && idx === servicesFields.length - 1)
+                        ((field.value as unknown as EmptyRecord).id
+                          && idx === servicesFields.length - 1)
+                          || (!review && idx === servicesFields.length - 1)
                       "
                       icon="pi pi-plus"
                       aria-label="add-record"
@@ -842,21 +846,21 @@ export default defineComponent({
     <Button
       label="Back"
       icon="pi pi-chevron-left"
-      @click="emit('back', services.map((e) => e.serviceId) as string[])"
       class="max-w-max p-button-text"
-    ></Button>
+      @click="emit('back', services.map((e) => e.serviceId) as string[])"
+    />
     <Button
       label="Submit"
       class="max-w-max"
-      @click="handleSubmit"
       :loading="createBulkIsLoading"
-    ></Button>
+      @click="handleSubmit"
+    />
   </div>
 
   <CommonConfirmRemoveDialog
     v-if="isActionDailogOpen"
     :visible="isActionDailogOpen"
-    :title="'Confirm Delete Project Template'"
+    title="Confirm Delete Project Template"
     @confirm="
       deleteService({
         clientId: clientId as string,

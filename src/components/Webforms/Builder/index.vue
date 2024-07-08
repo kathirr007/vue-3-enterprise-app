@@ -28,7 +28,6 @@ import type {
   WebformType
 } from '@/types/webforms.type';
 import type { Attachment } from '@/types/attachment.type';
-import type { VueformComponent } from '@vueform/vueform';
 import type { InstantJSON } from '@/types/esignature.type';
 
 const props = defineProps<{

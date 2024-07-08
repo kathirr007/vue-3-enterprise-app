@@ -7,8 +7,8 @@ useHead({
   link: [
     {
       href: 'https://meetings.brevo.com/assets/styles/popup.css',
-      rel: 'stylesheet',
-    },
+      rel: 'stylesheet'
+    }
   ],
   script: [
     {
@@ -17,19 +17,17 @@ useHead({
       hid: 'brevo',
       key: 'brevo',
       async: true,
-      defer: true,
-    },
-  ],
+      defer: true
+    }
+  ]
 });
 
-const openScheduleDialog = () => {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  BrevoBookingPage.initStaticButton({
-    url: props.scheduleUrl,
+function openScheduleDialog() {
+  BrevoBookingPage?.initStaticButton({
+    url: props.scheduleUrl
   });
   return false;
-};
+}
 </script>
 
 <template>

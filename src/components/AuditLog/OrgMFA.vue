@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { OrgCreatePayload, Org } from '@/types/myaccount.type';
+import type { Org, OrgCreatePayload } from '@/types/myaccount.type';
 import { useMutation, useQuery, useQueryClient } from 'vue-query';
 
 const props = withDefaults(
@@ -25,32 +25,33 @@ const { mutateAsync: createUpdateOrg } = useMutation(
           summary: isMFAEnabled.value ? 'Enable MFA' : 'Disable MFA',
           detail: isMFAEnabled.value
             ? 'Enabled MFA successfully'
-            : 'Disabled MFA Successfully',
+            : 'Disabled MFA Successfully'
         });
       }
       queryClient.invalidateQueries('org-data');
-    },
+    }
   }
 );
 const { data: orgData } = useQuery('org-data', () => {
   return useOrgDetails();
 });
 
-const hanldeToggleMFA = async (val: Event) => {
+async function hanldeToggleMFA(val: Event) {
   if (!isMFAEnabled.value) {
     isMFAEnabled.value = true;
     await createUpdateOrg({
       name: orgData.value?.name,
-      isMfaEnabled: true,
+      isMfaEnabled: true
     } as Partial<OrgCreatePayload>);
-  } else {
+  }
+  else {
     isMFAEnabled.value = false;
     await createUpdateOrg({
       name: orgData.value?.name,
-      isMfaEnabled: false,
+      isMfaEnabled: false
     } as Partial<OrgCreatePayload>);
   }
-};
+}
 
 watchEffect(() => {
   if (props.orgDetails) {
@@ -58,9 +59,10 @@ watchEffect(() => {
   }
 });
 </script>
+
 <script lang="ts">
 export default defineComponent({
-  inheritAttrs: false,
+  inheritAttrs: false
 });
 </script>
 
@@ -82,9 +84,9 @@ export default defineComponent({
     <span class="inline-flex cursor-pointer">
       <span class="inline-flex cursor-pointer" @click="hanldeToggleMFA">
         <InputSwitch
-          class="pointer-events-none"
-          inputId="toggleMFA"
           v-model="isMFAEnabled"
+          class="pointer-events-none"
+          input-id="toggleMFA"
         />
       </span>
     </span>

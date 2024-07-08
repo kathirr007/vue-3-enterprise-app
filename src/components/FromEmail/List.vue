@@ -22,12 +22,14 @@ const { dateToDateTime } = useVueFilters();
     :loading="props.isLoading"
     v-bind="tableAttrs"
   >
-    <Column header="Name" field="name"></Column>
-    <Column header="Email" field="email"></Column>
+    <Column header="Name" field="name" />
+    <Column header="Email" field="email" />
     <Column header="Status">
-      <template #body="{ data }">{{
-        data.isVerified ? 'Verified' : 'Pending'
-      }}</template>
+      <template #body="{ data }">
+        {{
+          data.isVerified ? 'Verified' : 'Pending'
+        }}
+      </template>
     </Column>
     <Column header="Created At">
       <template #body="{ data }: { data: FromEmail }">
@@ -45,11 +47,13 @@ const { dateToDateTime } = useVueFilters();
             dateToDateTime(data.updatedAt).time
           }`
         }}
-      </template></Column
-    >
+      </template>
+    </Column>
     <Column class="w-2 text-center">
       <template #header>
-        <div class="w-full text-center">Actions</div>
+        <div class="w-full text-center">
+          Actions
+        </div>
       </template>
       <template #body="slotProps">
         <Button
@@ -71,10 +75,13 @@ const { dateToDateTime } = useVueFilters();
               action: 'Remove',
             })
           "
-        /> </template
-    ></Column>
+        />
+      </template>
+    </Column>
     <template #empty>
-      <div class="text-center">No Email found</div>
+      <div class="text-center">
+        No Email found
+      </div>
     </template>
   </DataTable>
 </template>

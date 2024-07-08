@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type {
   BusinessEntity,
-  BusinessEntityCreatePayload,
+  BusinessEntityCreatePayload
 } from '@/types/business-entity.type';
 import { BusinessEntityCreatePayloadSchema } from '@/types/business-entity.type';
 import type { SchemaForm } from '@/types/schemaform.type';
@@ -18,8 +18,8 @@ const emit = defineEmits<{
   (e: 'success', data: BusinessEntity): void;
 }>();
 
-const { mutateAsync: createUpdateBusinessEntity, isLoading: createIsLoading } =
-  useMutation(
+const { mutateAsync: createUpdateBusinessEntity, isLoading: createIsLoading }
+  = useMutation(
     (payload: BusinessEntityCreatePayload) => {
       if (props.businessEntity) {
         return useBusinessEntityUpdate(
@@ -32,16 +32,16 @@ const { mutateAsync: createUpdateBusinessEntity, isLoading: createIsLoading } =
     {
       onSuccess: (data) => {
         emit('success', data);
-      },
+      }
     }
   );
-const onSubmit = async (values: Record<string, any>) => {
+async function onSubmit(values: Record<string, any>) {
   await createUpdateBusinessEntity({
     name: values.name,
     description: values.description,
-    businessType: values.businessType,
+    businessType: values.businessType
   } as unknown as BusinessEntityCreatePayload);
-};
+}
 
 const formData: SchemaForm = {
   fields: [
@@ -50,7 +50,7 @@ const formData: SchemaForm = {
       name: 'name',
       label: 'Name',
       required: true,
-      autocomplete: 'off',
+      autocomplete: 'off'
     },
     {
       as: Dropdown,
@@ -61,30 +61,30 @@ const formData: SchemaForm = {
       autocomplete: 'off',
       options: [
         { name: 'Personal', value: 'INDIVIDUAL' },
-        { name: 'Business', value: 'NON_INDIVIDUAL' },
+        { name: 'Business', value: 'NON_INDIVIDUAL' }
       ],
       optionLabel: 'name',
       optionValue: 'value',
       disabled: !!props.businessEntity,
-      filter: false,
+      filter: false
     },
     {
       as: Textarea,
       name: 'description',
       label: 'Description',
-      rows: 4,
-    },
+      rows: 4
+    }
   ],
   validationSchema: BusinessEntityCreatePayloadSchema,
   initialValues: props.businessEntity ? props.businessEntity : undefined,
-  btnText: 'Submit',
+  btnText: 'Submit'
 };
 </script>
 
 <template>
   <CommonSchemaForm
     :data="formData"
-    @submit="onSubmit"
     :primary-btn-loading="createIsLoading"
-  ></CommonSchemaForm>
+    @submit="onSubmit"
+  />
 </template>

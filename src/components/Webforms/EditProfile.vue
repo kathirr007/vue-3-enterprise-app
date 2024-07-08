@@ -1,7 +1,3 @@
-<template>
-  <Vueform v-bind="vueform" />
-</template>
-
 <script setup>
 import { ref } from 'vue';
 
@@ -23,9 +19,9 @@ const vueform = ref({
       columns: {
         container: 4,
         label: 12,
-        wrapper: 12,
+        wrapper: 12
       },
-      default: 'John',
+      default: 'John'
     },
     last_name: {
       type: 'text',
@@ -34,9 +30,9 @@ const vueform = ref({
       columns: {
         container: 4,
         label: 12,
-        wrapper: 12,
+        wrapper: 12
       },
-      default: 'Doe',
+      default: 'Doe'
     },
     email_1: {
       type: 'text',
@@ -44,8 +40,8 @@ const vueform = ref({
       rules: ['nullable', 'email'],
       label: 'Email',
       columns: {
-        container: 4,
-      },
+        container: 4
+      }
     },
     display_name: {
       type: 'text',
@@ -53,11 +49,11 @@ const vueform = ref({
       rules: ['required', 'max:255', 'alpha_num'],
       default: 'johndoe',
       addons: {
-        before: 'mydomain.com/',
+        before: 'mydomain.com/'
       },
       columns: {
-        container: 6,
-      },
+        container: 6
+      }
     },
     birthday: {
       type: 'date',
@@ -66,28 +62,28 @@ const vueform = ref({
       default: '1989-07-07',
       displayFormat: 'MMMM Do, YYYY',
       columns: {
-        container: 6,
-      },
+        container: 6
+      }
     },
     textarea: {
       type: 'textarea',
-      label: 'Address',
+      label: 'Address'
     },
     gender: {
       type: 'radiogroup',
       items: ['Male', 'Female', 'Other', 'I prefer not to say'],
       label: 'Gender',
-      rules: ['required'],
+      rules: ['required']
     },
     contact_title: {
       type: 'static',
       content: 'Contact details',
       tag: 'h2',
-      top: '2',
+      top: '2'
     },
     divider_1: {
       type: 'static',
-      tag: 'hr',
+      tag: 'hr'
     },
     email: {
       type: 'text',
@@ -95,9 +91,9 @@ const vueform = ref({
       rules: ['required', 'max:255', 'email'],
       label: 'Email',
       columns: {
-        container: 6,
+        container: 6
       },
-      default: 'john@doe.com',
+      default: 'john@doe.com'
     },
     phone: {
       type: 'text',
@@ -105,10 +101,10 @@ const vueform = ref({
       fieldName: 'Phone',
       label: 'Phone',
       columns: {
-        container: 6,
+        container: 6
       },
       placeholder: 'optional',
-      floating: false,
+      floating: false
     },
     address: {
       type: 'object',
@@ -118,17 +114,17 @@ const vueform = ref({
           placeholder: 'Street',
           rules: ['required', 'max:255'],
           label: 'Address',
-          default: '123 Maple Street',
+          default: '123 Maple Street'
         },
         city: {
           type: 'text',
           columns: {
             label: 12,
-            wrapper: 12,
+            wrapper: 12
           },
           rules: ['required', 'max:255'],
           placeholder: 'City',
-          default: 'Anytown',
+          default: 'Anytown'
         },
         country: {
           type: 'select',
@@ -147,13 +143,13 @@ const vueform = ref({
             AO: 'Angola',
             AI: 'Anguilla',
             AQ: 'Antarctica',
-            AG: 'Antigua And Barbuda',
+            AG: 'Antigua And Barbuda'
           },
           columns: {
-            container: 6,
+            container: 6
           },
           rules: ['required'],
-          default: 'US',
+          default: 'US'
         },
         state: {
           type: 'select',
@@ -172,37 +168,37 @@ const vueform = ref({
             CT: 'Connecticut',
             DE: 'Delaware',
             DC: 'District Of Columbia',
-            FL: 'Florida',
+            FL: 'Florida'
           },
           conditions: [['address.country', 'in', ['US']]],
           columns: {
-            container: 6,
+            container: 6
           },
           rules: ['required'],
-          default: 'PA',
+          default: 'PA'
         },
         zip: {
           type: 'text',
           columns: {
             container: 6,
             label: 12,
-            wrapper: 12,
+            wrapper: 12
           },
           rules: ['required', 'max:255', 'alpha_num'],
           placeholder: 'Zip',
-          default: '17101',
-        },
-      },
+          default: '17101'
+        }
+      }
     },
     preferences_title: {
       type: 'static',
       content: 'Preferences',
       tag: 'h2',
-      top: '2',
+      top: '2'
     },
     divider_2: {
       type: 'static',
-      tag: 'hr',
+      tag: 'hr'
     },
     language: {
       type: 'select',
@@ -219,13 +215,13 @@ const vueform = ref({
         'Afrikaans',
         'Akan',
         'Albanian',
-        'Alemannic',
+        'Alemannic'
       ],
       rules: ['required'],
       columns: {
-        container: 6,
+        container: 6
       },
-      default: 'English',
+      default: 'English'
     },
     currency: {
       type: 'select',
@@ -242,7 +238,7 @@ const vueform = ref({
           decimal_digits: 2,
           rounding: 0,
           code: 'USD',
-          name_plural: 'US dollars',
+          name_plural: 'US dollars'
         },
         {
           symbol: 'CA$',
@@ -251,7 +247,7 @@ const vueform = ref({
           decimal_digits: 2,
           rounding: 0,
           code: 'CAD',
-          name_plural: 'Canadian dollars',
+          name_plural: 'Canadian dollars'
         },
         {
           symbol: '€',
@@ -260,7 +256,7 @@ const vueform = ref({
           decimal_digits: 2,
           rounding: 0,
           code: 'EUR',
-          name_plural: 'euros',
+          name_plural: 'euros'
         },
         {
           symbol: 'AED',
@@ -269,30 +265,30 @@ const vueform = ref({
           decimal_digits: 2,
           rounding: 0,
           code: 'AED',
-          name_plural: 'UAE dirhams',
-        },
+          name_plural: 'UAE dirhams'
+        }
       ],
       rules: ['required'],
       columns: {
-        container: 6,
+        container: 6
       },
       labelProp: 'code',
       valueProp: 'code',
-      default: 'USD',
+      default: 'USD'
     },
     accessible_only: {
       type: 'checkbox',
-      text: 'Show accessible accommodations only',
+      text: 'Show accessible accommodations only'
     },
     security_title: {
       type: 'static',
       content: 'Security',
       tag: 'h2',
-      top: '2',
+      top: '2'
     },
     divider_3: {
       type: 'static',
-      tag: 'hr',
+      tag: 'hr'
     },
     reset_password: {
       type: 'button',
@@ -300,7 +296,7 @@ const vueform = ref({
       buttonType: 'anchor',
       label: 'Password',
       description:
-        'To change your password, we need to send a reset link to your email address.',
+        'To change your password, we need to send a reset link to your email address.'
     },
     close_sessions: {
       type: 'button',
@@ -308,24 +304,24 @@ const vueform = ref({
       buttonType: 'anchor',
       label: 'Active sessions',
       description:
-        'Selecting "Sign out" will sign you out from all devices except this one. This can take up to 10 minutes.',
+        'Selecting "Sign out" will sign you out from all devices except this one. This can take up to 10 minutes.'
     },
     delete_account: {
       type: 'button',
       buttonLabel: 'Sign out',
       buttonType: 'anchor',
       description: 'Permanently delete your mydomain.com account.',
-      label: 'Delete account',
+      label: 'Delete account'
     },
     fellow_title: {
       type: 'static',
       content: 'Fellow traveller',
       tag: 'h2',
-      top: '2',
+      top: '2'
     },
     divider_4: {
       type: 'static',
-      tag: 'hr',
+      tag: 'hr'
     },
     fellow_travellers: {
       type: 'group',
@@ -337,26 +333,26 @@ const vueform = ref({
               type: 'static',
               content: 'Date of birth',
               columns: {
-                container: 4,
-              },
+                container: 4
+              }
             },
             first_name: {
               type: 'static',
               content: 'First name',
               columns: {
-                container: 4,
-              },
+                container: 4
+              }
             },
 
             last_name: {
               type: 'static',
               content: 'Last name',
               columns: {
-                container: 4,
-              },
-            },
+                container: 4
+              }
+            }
           },
-          conditions: [['fellow_travellers.fellows', 'not_empty']],
+          conditions: [['fellow_travellers.fellows', 'not_empty']]
         },
         fellows: {
           type: 'list',
@@ -369,18 +365,18 @@ const vueform = ref({
                 columns: {
                   container: 4,
                   label: 12,
-                  wrapper: 12,
+                  wrapper: 12
                 },
-                displayFormat: 'MMMM Do, YYYY',
+                displayFormat: 'MMMM Do, YYYY'
               },
               first_name: {
                 type: 'text',
                 columns: {
                   container: 4,
                   label: 12,
-                  wrapper: 12,
+                  wrapper: 12
                 },
-                rules: ['required'],
+                rules: ['required']
               },
               last_name: {
                 type: 'text',
@@ -388,18 +384,22 @@ const vueform = ref({
                 columns: {
                   container: 4,
                   label: 12,
-                  wrapper: 12,
-                },
-              },
-            },
+                  wrapper: 12
+                }
+              }
+            }
           },
           addText: '+ Add another traveler',
-          initial: 0,
-        },
+          initial: 0
+        }
       },
       before:
-        "Enter the person's name exactly as it's written on their passport or other official travel document.\n<br><br>\nIt's important to enter a correct date of birth because these details can be used for booking or ticketing purposes.\n<br><br>",
-    },
-  },
+        'Enter the person\'s name exactly as it\'s written on their passport or other official travel document.\n<br><br>\nIt\'s important to enter a correct date of birth because these details can be used for booking or ticketing purposes.\n<br><br>'
+    }
+  }
 });
 </script>
+
+<template>
+  <Vueform v-bind="vueform" />
+</template>

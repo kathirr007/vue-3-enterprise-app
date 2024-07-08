@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Webform, WebformType } from '@/types/webforms.type';
-import { useQueryClient } from 'vue-query';
-import { useMutation } from 'vue-query';
+import { useMutation, useQueryClient } from 'vue-query';
+
 import type { Ref } from 'vue';
 
 const createUpdateDialogHeader = ref('Create webform');
@@ -30,16 +30,16 @@ const hideWebformsList = computed(
   () => isWebformCreate.value || isWebformTemplate.value
 );
 
-const handleFromTemplate = () => {
+function handleFromTemplate() {
   isWebformCreateDialog.value = false;
   isWebformTemplate.value = true;
-};
-const handleCreateManual = () => {
+}
+function handleCreateManual() {
   isWebformCreateDialog.value = false;
   isWebformCreate.value = true;
-};
+}
 
-const closeCreateWebform = () => {
+function closeCreateWebform() {
   isWebformCreate.value = false;
   isWebformTemplate.value = false;
   /* const {
@@ -52,7 +52,7 @@ const closeCreateWebform = () => {
   router.push({
     query: { ...restQueries },
   }); */
-};
+}
 
 function prepareForCreate(type: WebformType) {
   webformType.value = type;
@@ -85,9 +85,10 @@ function handleOperation(dialog: Ref<boolean>, toastFn: () => void) {
     router.push({
       name: 'admin-webform-templates-id',
       params: { id: selectedWebform.value?.id },
-      query: { ...route.query, webformType: selectedWebform.value?.type },
+      query: { ...route.query, webformType: selectedWebform.value?.type }
     });
-  } else {
+  }
+  else {
     selectedWebform.value = undefined;
     queryClient.invalidateQueries('webforms-templates-list');
   }
@@ -97,7 +98,7 @@ function showToast() {
   initToast({
     actionType: actionType.value,
     title: 'Webform',
-    actionObj: { ...selectedWebform.value },
+    actionObj: { ...selectedWebform.value }
   });
 }
 
@@ -105,7 +106,7 @@ function handleCreate(data: Webform) {
   router.push({
     name: 'admin-webform-templates-id',
     params: { id: data.id },
-    query: { ...route.query, create: 'true', webformType: data.type },
+    query: { ...route.query, create: 'true', webformType: data.type }
   });
 }
 function handleUpdate() {
@@ -128,24 +129,24 @@ const connectedUsers = computed(() => {
 const { mutateAsync: removeWebform } = useMutation(
   ({ id }: { id: string }) => remove(id),
   {
-    onSuccess: () => handleRemove(),
+    onSuccess: () => handleRemove()
   }
 );
 
-const handleRemoveWebform = () => {
+function handleRemoveWebform() {
   removeWebform({
-    id: selectedWebform.value?.id as string,
+    id: selectedWebform.value?.id as string
   });
-};
+}
 </script>
 
 <template>
   <TabView
     ref="tabRef"
     v-model:activeIndex="activeTabIndex"
+    lazy
     @tab-change="handleTabChange"
     @tab-click="handleTabChange"
-    lazy
   >
     <TabPanel header="Request">
       <CommonPage
@@ -153,20 +154,20 @@ const handleRemoveWebform = () => {
           hideWebformsList ? 'Create Request Template' : 'Request Templates'
         "
       >
-        <template v-slot:actions v-if="!hideWebformsList">
+        <template v-if="!hideWebformsList" #actions>
           <Button
+            v-tooltip.left="'Create new request template'"
             data-v-if="canDo('webforms', 'create')"
             icon="pi pi-plus"
             class="p-button-rounded"
             @click="prepareForCreate('ORGANIZER')"
-            v-tooltip.left="'Create new request template'"
           />
         </template>
         <template v-if="!hideWebformsList && true">
           <WebformsList
-            data-v-if="canDo('webforms', 'list')"
             v-if="!hideWebformsList && true"
-            :webform-type="'ORGANIZER'"
+            data-v-if="canDo('webforms', 'list')"
+            webform-type="ORGANIZER"
             @update:webform="prepareForUpdate"
             @delete:webform="prepareForRemove"
           />
@@ -178,11 +179,11 @@ const handleRemoveWebform = () => {
         </template>
         <template v-else>
           <ClientsWebformsCreate
+            v-if="isWebformCreate || isWebformTemplate"
             :webform-type="webformType"
             is-create-template
-            v-if="isWebformCreate || isWebformTemplate"
             :is-template="isWebformTemplate"
-            @modalClose="closeCreateWebform"
+            @modal-close="closeCreateWebform"
           />
         </template>
       </CommonPage>
@@ -193,20 +194,20 @@ const handleRemoveWebform = () => {
           hideWebformsList ? 'Create Contract Template' : 'Contract Templates'
         "
       >
-        <template v-slot:actions v-if="!hideWebformsList">
+        <template v-if="!hideWebformsList" #actions>
           <Button
+            v-tooltip.left="'Create new contract template'"
             data-v-if="canDo('webforms', 'create')"
             icon="pi pi-plus"
             class="p-button-rounded"
             @click="prepareForCreate('CONTRACT')"
-            v-tooltip.left="'Create new contract template'"
           />
         </template>
         <template v-if="!hideWebformsList && true">
           <WebformsList
-            data-v-if="canDo('webforms', 'list')"
             v-if="true"
-            :webform-type="'CONTRACT'"
+            data-v-if="canDo('webforms', 'list')"
+            webform-type="CONTRACT"
             @update:webform="prepareForUpdate"
             @delete:webform="prepareForRemove"
           />
@@ -218,11 +219,11 @@ const handleRemoveWebform = () => {
         </template>
         <template v-else>
           <ClientsWebformsCreate
+            v-if="isWebformCreate || isWebformTemplate"
             is-create-template
             :webform-type="webformType"
-            v-if="isWebformCreate || isWebformTemplate"
             :is-template="isWebformTemplate"
-            @modalClose="closeCreateWebform"
+            @modal-close="closeCreateWebform"
           />
         </template>
       </CommonPage>
@@ -230,30 +231,30 @@ const handleRemoveWebform = () => {
   </TabView>
 
   <Dialog
-    :modal="true"
-    appendTo="body"
-    :header="createUpdateDialogHeader"
     v-model:visible="isDialogVisible"
+    :modal="true"
+    append-to="body"
+    :header="createUpdateDialogHeader"
     :breakpoints="defaultBreakpoints"
     :style="webformType === 'CONTRACT' ? { width: '45vw' } : styles"
-    :contentClass="'border-round-bottom-md'"
+    content-class="border-round-bottom-md"
   >
     <WebformsCreateUpdateForm
       :webform-type="webformType"
+      :webform-details="selectedWebform"
       @success="handleCreate"
       @update="handleUpdate"
-      :webformDetails="selectedWebform"
       @back="isDialogVisible = false"
-    ></WebformsCreateUpdateForm>
+    />
   </Dialog>
   <Dialog
-    :modal="true"
-    appendTo="body"
-    :header="createUpdateDialogHeader"
     v-model:visible="isWebformCreateDialog"
+    :modal="true"
+    append-to="body"
+    :header="createUpdateDialogHeader"
     :breakpoints="defaultBreakpoints"
     :style="{ width: '60vw' }"
-    :contentClass="'border-round-bottom-md'"
+    content-class="border-round-bottom-md"
     @hide="isWebformCreateDialog = false"
   >
     <div class="px-3">
@@ -310,12 +311,12 @@ const handleRemoveWebform = () => {
   <CommonConfirmRemoveDialog
     v-if="selectedWebform && removeWebformDialog"
     :visible="removeWebformDialog"
-    :recordToRemove="selectedWebform as Record<string, any>"
+    :record-to-remove="selectedWebform as Record<string, any>"
     :title="`Delete ${titleCase(
-      webformType === 'ORGANIZER' ? 'Request' : webformType
+      webformType === 'ORGANIZER' ? 'Request' : webformType,
     )}`"
     class="remove-dialog"
-    :isRemove="true"
+    :is-remove="true"
     @confirm="handleRemoveWebform"
     @hide="removeWebformDialog = false"
   >
@@ -323,9 +324,7 @@ const handleRemoveWebform = () => {
       There {{ connectedUsers > 1 ? 'are' : 'is' }}
       <strong>{{ connectedUsers }}</strong>
       {{ connectedUsers > 1 ? 'webforms' : 'webform' }} in
-      <strong>{{ selectedWebform.name }}</strong
-      >. Would you like to delete <strong>{{ selectedWebform.name }}</strong
-      >?
+      <strong>{{ selectedWebform.name }}</strong>. Would you like to delete <strong>{{ selectedWebform.name }}</strong>?
     </div>
   </CommonConfirmRemoveDialog>
 </template>

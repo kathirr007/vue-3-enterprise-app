@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Field as VField } from 'vee-validate';
 import type { PaypalPayload } from '@/types/integrations.type';
 import { paypalSchema } from '@/types/integrations.type';
 import type { SchemaForm, SchemaFormRef } from '@/types/schemaform.type';
@@ -20,55 +19,55 @@ const { data: paypalData } = useQuery(
   {
     onSuccess: (data: { id: string; credentials: any }) => {
       formRef.value?.setValues({ ...data.credentials });
-    },
+    }
   }
 );
 
-const { mutateAsync: setPaypalCreds, isLoading: integratingPaypal } =
-  useMutation(
+const { mutateAsync: setPaypalCreds, isLoading: integratingPaypal }
+  = useMutation(
     (payload: PaypalPayload) => {
       return storePaypalCreds(payload);
     },
     {
       onSuccess: () => {
         emit('success');
-      },
+      }
     }
   );
-const onSubmit = async (values: Record<string, any>) => {
+async function onSubmit(values: Record<string, any>) {
   await setPaypalCreds(values as PaypalPayload);
-};
+}
 
 const formData = computed<SchemaForm>(() => ({
   fields: [
     {
-      as: InputText,
-      name: 'clientId',
-      label: 'Client Id',
-      required: true,
-      autocomplete: 'off',
+      'as': InputText,
+      'name': 'clientId',
+      'label': 'Client Id',
+      'required': true,
+      'autocomplete': 'off',
       'aria-autocomplete': 'none',
-      helpText: 'Please provide your Paypal Client Id',
-      disabled: !!paypalData.value,
+      'helpText': 'Please provide your Paypal Client Id',
+      'disabled': !!paypalData.value
     },
     {
-      as: Password,
-      type: 'input-password',
-      name: 'clientSecret',
-      label: 'Client Secret',
-      autocomplete: 'off',
+      'as': Password,
+      'type': 'input-password',
+      'name': 'clientSecret',
+      'label': 'Client Secret',
+      'autocomplete': 'off',
       'aria-autocomplete': 'none',
-      required: true,
-      toggleMask: true,
-      feedback: false,
-      helpText: 'Please provide your Paypal Client Secret',
-      disabled: !!paypalData.value?.credentials,
-    },
+      'required': true,
+      'toggleMask': true,
+      'feedback': false,
+      'helpText': 'Please provide your Paypal Client Secret',
+      'disabled': !!paypalData.value?.credentials
+    }
   ],
   validationSchema: paypalSchema,
   initialValues: paypalData.value ? paypalData.value.credentials : undefined,
   btnText: 'Submit',
-  hidePrimaryBtn: !!paypalData.value?.credentials,
+  hidePrimaryBtn: !!paypalData.value?.credentials
 }));
 </script>
 
@@ -80,17 +79,14 @@ const formData = computed<SchemaForm>(() => ({
     class="m-0 p-custom-message"
   >
     To change the credentials please contact support at
-    <a class="font-semibold" href="mailto:help@brightreturn.com"
-      >help@brightreturn.com</a
-    >.
+    <a class="font-semibold" href="mailto:help@brightreturn.com">help@brightreturn.com</a>.
   </Message>
   <CommonSchemaForm
     ref="formRef"
     :data="formData"
-    @submit="onSubmit"
     :primary-btn-loading="integratingPaypal"
-    :auto-complete="'off'"
-    :disableSubmit="!!paypalData?.credentials"
-  >
-  </CommonSchemaForm>
+    auto-complete="off"
+    :disable-submit="!!paypalData?.credentials"
+    @submit="onSubmit"
+  />
 </template>

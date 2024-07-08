@@ -1,5 +1,5 @@
 import type { InferType } from 'yup';
-import { object, string, boolean } from 'yup';
+import { boolean, object, string } from 'yup';
 
 export type TagType =
   | 'TASK'
@@ -31,7 +31,7 @@ export const TagCreatePayloadSchema = object({
       }
       return schema.required();
     }),
-  isDocument: boolean().optional().label('Is Document'),
+  isDocument: boolean().optional().label('Is Document')
 });
 
 export type TagCreatePayload = InferType<typeof TagCreatePayloadSchema>;

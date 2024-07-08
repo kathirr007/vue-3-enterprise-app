@@ -3,13 +3,13 @@ import { useRouteQuery } from '@vueuse/router';
 import dayjs from 'dayjs';
 import type { Ref } from 'vue';
 
-const router = useRouter();
-
 const props = defineProps<{
   disabledFilters?: string[];
   filters?: string;
   activeIndex?: number;
 }>();
+
+const router = useRouter();
 
 const activeIndex = useRouteQuery<string>('activeIndex');
 const { allFilters } = useDataTableUtils();
@@ -21,7 +21,7 @@ const searchText = ref('');
 defineExpose({
   searchText,
   applyFilters,
-  resetFilters,
+  resetFilters
 });
 
 watchEffect(() => {
@@ -36,15 +36,15 @@ function hasFilter(filterName: string) {
 
 function applyFilters() {
   const shouldApplyFilters = [selectedDateRange.value, searchText.value].some(
-    (filter) => filter?.length
+    filter => filter?.length
   );
 
   if (!shouldApplyFilters) {
     if (props.filters) {
       router.push({
         query: {
-          activeIndex: activeIndex.value ? activeIndex.value : undefined,
-        },
+          activeIndex: activeIndex.value ? activeIndex.value : undefined
+        }
       });
     }
     return;
@@ -56,7 +56,8 @@ function applyFilters() {
   if (selectedDateRange.value && selectedDateRange.value[1] === null) {
     updateDateValue(selectedDateRange as Ref<string[]>);
     applyFilter('Date Range', selectedDateRange.value);
-  } else {
+  }
+  else {
     applyFilter('Date Range', selectedDateRange.value);
   }
 
@@ -66,8 +67,8 @@ function applyFilters() {
     router.push({
       query: {
         activeIndex: activeIndex.value ? activeIndex.value : undefined,
-        filters: preparedFilters,
-      },
+        filters: preparedFilters
+      }
     });
   }
 }
@@ -83,20 +84,20 @@ function resetFilters() {
   <div class="flex gap-2 flex-wrap">
     <div v-if="hasFilter('Date Range')">
       <Calendar
-        class="w-full"
         v-model="selectedDateRange"
+        class="w-full"
         placeholder="Date Range"
-        selectionMode="range"
-        dateFormat="dd M yy"
-        hideOnRangeSelection
-        showButtonBar
+        selection-mode="range"
+        date-format="dd M yy"
+        hide-on-range-selection
+        show-button-bar
       />
     </div>
     <Button
       label="Apply"
       class="w-full sm:w-auto"
       @click="applyFilters"
-    ></Button>
+    />
   </div>
 </template>
 

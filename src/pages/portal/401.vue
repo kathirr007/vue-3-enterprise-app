@@ -1,5 +1,5 @@
 <template>
-  <Common401 :feature="'Client Portal'" />
+  <Common401 feature="Client Portal" />
 </template>
 
 <style lang="scss" scoped></style>

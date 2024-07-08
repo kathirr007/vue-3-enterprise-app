@@ -22,26 +22,26 @@ const orgDirectoryId = computed(() => {
 const orgLogo = computed(() => {
   return orgDetails.value?.logo || undefined;
 });
-const handleLeads = () => {
+function handleLeads() {
   isLeadListVisible.value = true;
-};
-const handleListingData = (data: BrightDirectory) => {
+}
+function handleListingData(data: BrightDirectory) {
   if (data) {
     listingId.value = data.id;
   }
-};
-const handlecreateOrUpdateDirectory = (data: BrightDirectory) => {
+}
+function handlecreateOrUpdateDirectory(data: BrightDirectory) {
   queryClient.invalidateQueries('org-data');
-};
+}
 </script>
 
 <template>
   <CommonPage title="App Directory">
-    <template v-slot:actions>
+    <template #actions>
       <Button
+        v-tooltip="'Leads'"
         class="p-button-rounded p-button-icon-only"
         @click="handleLeads"
-        v-tooltip="'Leads'"
       >
         <Icon icon="mdi:leads" class="text-xl" />
       </Button>
@@ -50,22 +50,22 @@ const handlecreateOrUpdateDirectory = (data: BrightDirectory) => {
       <CommonLoading v-if="isLoading" />
       <BrightDirectoryUpdateForm
         v-else
-        @listingData="handleListingData"
-        @createOrUpdateDirectory="handlecreateOrUpdateDirectory"
-        :directoryId="orgDirectoryId as string"
-        :orgDetails="orgDetails"
+        :directory-id="orgDirectoryId as string"
+        :org-details="orgDetails"
+        @listing-data="handleListingData"
+        @create-or-update-directory="handlecreateOrUpdateDirectory"
       />
     </div>
   </CommonPage>
   <Dialog
-    :modal="true"
-    appendTo="body"
-    :header="`Leads`"
     v-model:visible="isLeadListVisible"
+    :modal="true"
+    append-to="body"
+    header="Leads"
     :breakpoints="defaultBreakpoints"
     :style="{ width: '60vw' }"
-    :contentClass="'border-round-bottom-md'"
+    content-class="border-round-bottom-md"
   >
-    <BrightDirectoryLeadList :listingId="listingId" />
+    <BrightDirectoryLeadList :listing-id="listingId" />
   </Dialog>
 </template>

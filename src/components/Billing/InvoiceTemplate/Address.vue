@@ -88,7 +88,7 @@ const { dateToHumanShort } = useVueFilters();
                           margin: 0 auto;
                         "
                       >
-                        <!-- CPA Address block start-->
+                        <!-- CPA Address block start -->
                         <table
                           border="0"
                           cellspacing="0"
@@ -224,11 +224,11 @@ const { dateToHumanShort } = useVueFilters();
                               </span>
                             </td>
                           </tr>
-                          <!-- Spacer 10 start-->
+                          <!-- Spacer 10 start -->
                           <BillingInvoiceTemplateRowSpacer :height="10" />
-                          <!-- Spacer 10 end-->
+                          <!-- Spacer 10 end -->
                         </table>
-                        <!-- CPA address block end-->
+                        <!-- CPA address block end -->
                       </td>
                       <td
                         class="coldrop"
@@ -254,7 +254,7 @@ const { dateToHumanShort } = useVueFilters();
                           margin: 0 auto;
                         "
                       >
-                        <!-- Invoice details block start-->
+                        <!-- Invoice details block start -->
                         <table
                           border="0"
                           cellspacing="0"
@@ -290,8 +290,7 @@ const { dateToHumanShort } = useVueFilters();
                                   line-height: normal;
                                   margin: 0;
                                 "
-                                >Invoice Number:</span
-                              >
+                              >Invoice Number:</span>
                             </td>
                             <td
                               valign="top"
@@ -342,8 +341,7 @@ const { dateToHumanShort } = useVueFilters();
                                   line-height: normal;
                                   margin: 0;
                                 "
-                                >Invoice Date:</span
-                              >
+                              >Invoice Date:</span>
                             </td>
                             <td
                               valign="top"
@@ -370,7 +368,7 @@ const { dateToHumanShort } = useVueFilters();
                                   dateToHumanShort(
                                     invoiceTemplateData.templateData
                                       .invoiceDate,
-                                    'YYYY-MM-DD'
+                                    'YYYY-MM-DD',
                                   )
                                 }}
                               </span>
@@ -398,8 +396,7 @@ const { dateToHumanShort } = useVueFilters();
                                   line-height: normal;
                                   margin: 0;
                                 "
-                                >Payment Terms:</span
-                              >
+                              >Payment Terms:</span>
                             </td>
                             <td
                               valign="top"
@@ -421,8 +418,7 @@ const { dateToHumanShort } = useVueFilters();
                                   line-height: normal;
                                   margin: 0;
                                 "
-                                >Due on Receipt</span
-                              >
+                              >Due on Receipt</span>
                             </td>
                           </tr>
                           <tr
@@ -447,8 +443,7 @@ const { dateToHumanShort } = useVueFilters();
                                   line-height: normal;
                                   margin: 0;
                                 "
-                                >Due Date:</span
-                              >
+                              >Due Date:</span>
                             </td>
                             <td
                               valign="top"
@@ -474,22 +469,22 @@ const { dateToHumanShort } = useVueFilters();
                                 {{
                                   dateToHumanShort(
                                     invoiceTemplateData.templateData.dueDate,
-                                    'YYYY-MM-DD'
+                                    'YYYY-MM-DD',
                                   )
                                 }}
                               </span>
                             </td>
                           </tr>
                         </table>
-                        <!-- Invoice details block end-->
+                        <!-- Invoice details block end -->
                       </td>
                     </tr>
                   </table>
                 </td>
               </tr>
-              <!-- Spacer 15 start-->
+              <!-- Spacer 15 start -->
               <BillingInvoiceTemplateRowSpacer />
-              <!-- Spacer 15 end-->
+              <!-- Spacer 15 end -->
             </tbody>
           </table>
         </td>

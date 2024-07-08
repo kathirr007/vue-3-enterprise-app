@@ -2,13 +2,13 @@ import $api from '@/plugins/api';
 import type { PaginatedResponse } from '@/types/common.type';
 import type { AuditLog } from '@/types/audit-log.type';
 
-export const useAuditLog = () => {
+export function useAuditLog() {
   const getAll = async ({
     page,
     limit,
     filters,
     sortBy,
-    format,
+    format
   }: {
     page?: number;
     limit?: number;
@@ -22,8 +22,8 @@ export const useAuditLog = () => {
         limit,
         filters,
         sortBy,
-        format,
-      },
+        format
+      }
     });
     return data;
   };
@@ -33,6 +33,6 @@ export const useAuditLog = () => {
   };
   return {
     getAll,
-    getOne,
+    getOne
   };
-};
+}

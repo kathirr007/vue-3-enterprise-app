@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { DocumentFile } from '@/types/documents.type';
 import prettybytes from 'pretty-bytes';
+
 defineProps<{
   fileDetails?: DocumentFile;
 }>();

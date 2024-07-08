@@ -13,7 +13,7 @@ const props = defineProps<{
     <div
       class="font-medium"
       :class="
-        (fontSize || 'text-xl') + ' ' + (removeUnderline ? '' : 'underline')
+        `${fontSize || 'text-xl'} ${removeUnderline ? '' : 'underline'}`
       "
     >
       {{ title }}

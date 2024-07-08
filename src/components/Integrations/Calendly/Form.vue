@@ -21,7 +21,7 @@ const { data: calendlyData, isFetching } = useQuery(
   {
     onSuccess: (data: { url: string }) => {
       formRef.value?.setValues(data);
-    },
+    }
   }
 );
 
@@ -32,12 +32,12 @@ const { mutateAsync: setCalendlyUrl, isLoading: createIsLoading } = useMutation(
   {
     onSuccess: () => {
       emit('success');
-    },
+    }
   }
 );
-const onSubmit = async (values: Record<string, any>) => {
+async function onSubmit(values: Record<string, any>) {
   await setCalendlyUrl(values as CalendlyPayload);
-};
+}
 
 const formData = computed<SchemaForm>(() => ({
   fields: [
@@ -48,12 +48,12 @@ const formData = computed<SchemaForm>(() => ({
       required: true,
       autocomplete: 'off',
       type: 'url',
-      helpText: 'Please provide your Calendly URL',
-    },
+      helpText: 'Please provide your Calendly URL'
+    }
   ],
   validationSchema: calendlySchema,
   initialValues: calendlyData.value ? calendlyData.value : undefined,
-  btnText: calendlyData.value?.url ? 'Update' : 'Submit',
+  btnText: calendlyData.value?.url ? 'Update' : 'Submit'
 }));
 </script>
 
@@ -61,7 +61,7 @@ const formData = computed<SchemaForm>(() => ({
   <CommonSchemaForm
     ref="formRef"
     :data="formData"
-    @submit="onSubmit"
     :primary-btn-loading="createIsLoading"
-  ></CommonSchemaForm>
+    @submit="onSubmit"
+  />
 </template>

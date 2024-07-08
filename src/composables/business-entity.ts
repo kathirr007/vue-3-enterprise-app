@@ -1,8 +1,9 @@
 import $api from '@/plugins/api';
+
 // import type { PaginatedResponse } from '@/types/common.type';
 import type {
   BusinessEntity,
-  BusinessEntityCreatePayload,
+  BusinessEntityCreatePayload
 } from '@/types/business-entity.type';
 import type { Client } from '@/types/client.type';
 import type { PaginatedResponse } from '@/types/common.type';
@@ -15,7 +16,7 @@ export async function useBusinessEntityListV2({
   page,
   limit,
   filters,
-  sortBy,
+  sortBy
 }: {
   page?: number;
   limit?: number;
@@ -29,8 +30,8 @@ export async function useBusinessEntityListV2({
         page,
         limit,
         filters,
-        sortBy,
-      },
+        sortBy
+      }
     }
   );
   return data;

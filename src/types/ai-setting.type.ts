@@ -6,7 +6,7 @@ export const OrgAISettingSchema = object().shape({
     .optional()
     .nullable()
     .label('Enable Auto Extraction'),
-  enableClassification: string().optional().nullable().label('Enable Auto Tag'),
+  enableClassification: string().optional().nullable().label('Enable Auto Tag')
 });
 
 export type OrgAISettingPayload = InferType<typeof OrgAISettingSchema>;

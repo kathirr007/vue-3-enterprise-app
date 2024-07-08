@@ -8,7 +8,7 @@ const emit = defineEmits<{
 }>();
 
 const { handleSubmit, errors, values, meta } = useForm({
-  validationSchema: PreLoginPayloadSchema,
+  validationSchema: PreLoginPayloadSchema
 });
 
 const { value: email } = useField<string>('email');
@@ -20,7 +20,7 @@ const { isLoading, mutateAsync: preLogin } = useMutation(
   {
     onSuccess: (data) => {
       emit('success', data);
-    },
+    }
   }
 );
 
@@ -30,7 +30,7 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-  <form @submit="onSubmit" class="text-left">
+  <form class="text-left" @submit="onSubmit">
     <div class="field">
       <label for="email" class="block font-medium text-900">
         Email
@@ -41,14 +41,14 @@ const onSubmit = handleSubmit(async (values) => {
         v-model="email"
         type="email"
         class="w-full"
-        :class="{ 'p-invalid': errors['email'] }"
+        :class="{ 'p-invalid': errors.email }"
       />
       <transition mode="out-in" name="field-slide-down">
         <FormFeedbackMessage
-          :success-class="'font-medium'"
+          success-class="font-medium"
           :errors="errors"
           :values="values"
-          :errorKey="'email'"
+          error-key="email"
         />
       </transition>
     </div>
@@ -58,6 +58,6 @@ const onSubmit = handleSubmit(async (values) => {
       :loading="isLoading"
       type="submit"
       class="block mx-auto"
-    ></Button>
+    />
   </form>
 </template>

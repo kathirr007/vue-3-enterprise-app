@@ -14,12 +14,13 @@ import 'nprogress/nprogress.css';
 import '@novu/notification-center-vue/dist/style.css';
 import './App.scss';
 import ConfirmationService from 'primevue/confirmationservice';
-import { registerScrollSpy, Easing } from 'vue3-scroll-spy';
+import { Easing, registerScrollSpy } from 'vue3-scroll-spy';
 import NotificationCenterPlugin from '@novu/notification-center-vue';
 import { Icon } from '@iconify/vue';
 import { createHead } from '@vueuse/head';
 import Vueform from '@vueform/vueform';
 import vueformConfig from '../vueform.config';
+import Vue3Datatable from '@bhplugin/vue3-datatable';
 
 const { $eventBus } = useMittEventBus();
 const head = createHead();
@@ -29,10 +30,10 @@ const vueQueryConfig: VueQueryPluginOptions = {
     defaultOptions: {
       queries: {
         retry: 0,
-        refetchOnWindowFocus: false,
-      },
-    },
-  },
+        refetchOnWindowFocus: false
+      }
+    }
+  }
 };
 
 function getTarget(el: HTMLElement) {
@@ -46,16 +47,16 @@ app.use(PrimeVue);
 app.directive('ripple', Ripple);
 app.directive('badge', BadgeDirective);
 registerScrollSpy(app, {
-  easing: Easing.Cubic.In,
+  easing: Easing.Cubic.In
 });
 
 app.directive('tooltip', {
   ...Tooltip,
   mounted(el) {
     const target = getTarget(el);
-    target.$_ptooltipZIndex ??=
-      app.config.globalProperties.$primevue.config.zIndex?.tooltip;
-  },
+    target.$_ptooltipZIndex
+      ??= app.config.globalProperties.$primevue.config.zIndex?.tooltip;
+  }
 });
 
 app.config.globalProperties.$eventBus = $eventBus;
@@ -67,4 +68,5 @@ app.use(ConfirmationService);
 app.use(NotificationCenterPlugin);
 app.use(Vueform, vueformConfig);
 app.component('Icon', Icon);
+app.component('Vue3Datatable', Vue3Datatable);
 app.mount('#app');

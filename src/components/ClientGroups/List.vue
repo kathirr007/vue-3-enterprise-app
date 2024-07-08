@@ -8,7 +8,7 @@ const props = withDefaults(
     loadingClientGroups: boolean;
   }>(),
   {
-    clientGroups: () => ({ results: [], total: 0 }),
+    clientGroups: () => ({ results: [], total: 0 })
   }
 );
 
@@ -19,8 +19,8 @@ const emit = defineEmits<{
 
 const { filters } = useDatatableFilters();
 const { canDo, canDoSome } = usePermissions();
-const { handlePageOrLimitChange, handleSortChange, tableAttrs, tableRecords } =
-  useDataTableUtils();
+const { handlePageOrLimitChange, handleSortChange, tableAttrs, tableRecords }
+  = useDataTableUtils();
 
 watchEffect(() => {
   if (props.clientGroups) {
@@ -31,17 +31,17 @@ watchEffect(() => {
 
 <template>
   <DataTable
+    v-bind="tableAttrs"
+    v-model:filters="filters"
+    :value="clientGroups.results"
+    :total-records="clientGroups.total"
+    :loading="loadingClientGroups"
+    data-key="id"
+    responsive-layout="scroll"
+    breakpoint="768px"
+    :global-filter-fields="['name']"
     @page="handlePageOrLimitChange($event)"
     @sort="handleSortChange"
-    :value="clientGroups.results"
-    :totalRecords="clientGroups.total"
-    :loading="loadingClientGroups"
-    dataKey="id"
-    v-bind="tableAttrs"
-    responsiveLayout="scroll"
-    breakpoint="768px"
-    v-model:filters="filters"
-    :globalFilterFields="['name']"
   >
     <template #header>
       <div class="flex justify-content-between">
@@ -49,7 +49,9 @@ watchEffect(() => {
       </div>
     </template>
     <template #empty>
-      <div class="text-center">No client groups record found.</div>
+      <div class="text-center">
+        No client groups record found.
+      </div>
     </template>
     <Column field="name" header="Name" class="w-3">
       <template #body="{ data }">
@@ -82,11 +84,13 @@ watchEffect(() => {
         class="text-center w-2"
       > -->
     <Column
-      class="text-center w-2"
       v-if="canDoSome('client_groups', ['delete', 'edit'])"
+      class="text-center w-2"
     >
       <template #header>
-        <div class="w-full text-center">Actions</div>
+        <div class="w-full text-center">
+          Actions
+        </div>
       </template>
       <template #body="slotProps">
         <div class="md:w-full w-6rem">

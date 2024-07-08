@@ -10,7 +10,8 @@ const serviceId = ref(route.params.id as string);
 const { data: serviceDetails, isLoading } = useQuery(
   'service-details-revisit',
   () => {
-    if (!serviceId.value) return;
+    if (!serviceId.value)
+      return;
     return useServiceDetails(serviceId.value as string);
   },
   {
@@ -20,12 +21,12 @@ const { data: serviceDetails, isLoading } = useQuery(
           { label: 'Setup Project Template', to: { name: 'admin-services' } },
           {
             label: data.name,
-            to: { name: 'admin-services-id', params: { id: data.id } },
+            to: { name: 'admin-services-id', params: { id: data.id } }
           },
-          { label: 'Revisit' },
-        ],
+          { label: 'Revisit' }
+        ]
       });
-    },
+    }
   }
 );
 
@@ -33,9 +34,10 @@ const isRevisit = computed(() => {
   return route.name?.toString().includes('revisit');
 });
 </script>
+
 <script lang="ts">
 export default defineComponent({
-  inheritAttrs: false,
+  inheritAttrs: false
 });
 </script>
 
@@ -45,7 +47,7 @@ export default defineComponent({
   >
     <div class="border-bottom-2 p-3 default-border-color">
       <h3 class="card-title m-0">
-        {{ 'Revisit ' + (serviceDetails?.name || '') }}
+        {{ `Revisit ${serviceDetails?.name || ''}` }}
       </h3>
     </div>
     <div class="bg-blue-50 py-6">
@@ -54,10 +56,10 @@ export default defineComponent({
       </div>
       <ServiceCreate
         v-else
-        @back="router.push({ name: 'admin-services' })"
-        @success="router.push({ name: 'admin-services' })"
         :revisit="isRevisit"
         :service="serviceDetails"
+        @back="router.push({ name: 'admin-services' })"
+        @success="router.push({ name: 'admin-services' })"
       />
     </div>
     <!-- <Button

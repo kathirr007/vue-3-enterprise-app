@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {
-  ClientPortalSettingSchema,
   type ClientPortalSettingPayload,
+  ClientPortalSettingSchema
 } from '@/types/portal-setting.type';
 import type { Org } from '@/types/myaccount.type';
 import { useMutation, useQueryClient } from 'vue-query';
@@ -21,34 +21,25 @@ const { handleSubmit, errors, meta, validateField } = useForm({
   validationSchema: ClientPortalSettingSchema,
   initialValues: {
     enablePortal: orgData?.value?.meta
-      ? metaFilter(orgData.value.meta, 'enablePortal') == 'true'
-        ? true
-        : false
+      ? metaFilter(orgData.value.meta, 'enablePortal') === 'true'
       : null,
     enablePortalProjectTracking: orgData?.value?.meta
-      ? metaFilter(orgData?.value.meta, 'enablePortalProjectTracking') == 'true'
-        ? true
-        : false
+      ? metaFilter(orgData?.value.meta, 'enablePortalProjectTracking') === 'true'
       : null,
     enablePortalTaskTracking: orgData?.value?.meta
-      ? metaFilter(orgData?.value.meta, 'enablePortalTaskTracking') == 'true'
-        ? true
-        : false
+      ? metaFilter(orgData?.value.meta, 'enablePortalTaskTracking') === 'true'
       : null,
     enablePortalBrightDesk: orgData?.value?.meta
-      ? metaFilter(orgData.value.meta, 'enablePortalBrightDesk') == 'true'
-        ? true
-        : false
+      ? metaFilter(orgData.value.meta, 'enablePortalBrightDesk') === 'true'
       : null,
     enablePortalDocuments: orgData?.value?.meta
-      ? metaFilter(orgData?.value.meta, 'enablePortalDocuments') == 'true'
-        ? true
-        : false
-      : null,
-  },
+      ? metaFilter(orgData?.value.meta, 'enablePortalDocuments') === 'true'
+      : null
+  }
 });
 const hideOther = computed(() => {
-  if (enablePortal.value) return true;
+  if (enablePortal.value)
+    return true;
   return false;
 });
 const { isLoading, mutateAsync: createUpdateOrg } = useMutation(
@@ -60,10 +51,10 @@ const { isLoading, mutateAsync: createUpdateOrg } = useMutation(
       initToast({
         actionType: 'Update',
         summary: 'Organization Portal Details Update',
-        detail: 'Organization Portal Details updated successfully',
+        detail: 'Organization Portal Details updated successfully'
       });
       queryClient.invalidateQueries('org-data');
-    },
+    }
   }
 );
 
@@ -86,25 +77,25 @@ const onSubmit = handleSubmit(async (values: Record<string, any>) => {
     enablePortalProjectTracking,
     enablePortalTaskTracking,
     enablePortalBrightDesk,
-    enablePortalDocuments,
+    enablePortalDocuments
   } = values;
   const payload = {
     name: orgData?.value?.name,
     enablePortalProjectTracking: enablePortalProjectTracking ? 'true' : 'false',
     enablePortalTaskTracking: enablePortalTaskTracking ? 'true' : 'false',
     enablePortalBrightDesk: enablePortalBrightDesk ? 'true' : 'false',
-    enablePortalDocuments: enablePortalDocuments ? 'true' : 'false',
+    enablePortalDocuments: enablePortalDocuments ? 'true' : 'false'
   };
   await createUpdateOrg(payload as unknown as ClientPortalSettingPayload);
 });
 
-const handlePortal = async (values: boolean) => {
+async function handlePortal(values: boolean) {
   const payload = {
     name: orgData?.value?.name,
-    enablePortal: values ? 'true' : 'false',
+    enablePortal: values ? 'true' : 'false'
   };
   await createUpdateOrg(payload as unknown as ClientPortalSettingPayload);
-};
+}
 </script>
 
 <template>
@@ -115,13 +106,13 @@ const handlePortal = async (values: boolean) => {
       </label>
       <span class="inline-flex cursor-pointer">
         <InputSwitch
-          inputId="enablePortal"
           v-model="enablePortal"
+          input-id="enablePortal"
+          :class="{ 'p-invalid': errors.enablePortal }"
           @input="handlePortal"
-          :class="{ 'p-invalid': errors['enablePortal'] }"
         />
       </span>
-      <p class="p-error" v-if="errors.enablePortal">
+      <p v-if="errors.enablePortal" class="p-error">
         {{ errors.enablePortal }}
       </p>
     </div>
@@ -130,14 +121,14 @@ const handlePortal = async (values: boolean) => {
       target="_blank"
     >
       <Button
+        v-tooltip.top="'Need Help'"
         type="button"
         icon="pi pi-question-circle text-lg"
-        v-tooltip.top="'Need Help'"
         class="p-button-icon-only p-button-rounded mr-2"
       />
     </a>
   </div>
-  <form @submit="onSubmit" class="md:w-6 lg:w-7 xl:w-7 p-3">
+  <form class="md:w-6 lg:w-7 xl:w-7 p-3" @submit="onSubmit">
     <div
       v-if="hideOther"
       class="mx-auto p-3 border-1 border-gray-100 border-round-md"
@@ -159,12 +150,12 @@ const handlePortal = async (values: boolean) => {
         </div>
         <span class="inline-flex cursor-pointer">
           <InputSwitch
-            inputId="name"
             v-model="enablePortalProjectTracking"
-            :class="{ 'p-invalid': errors['enablePortalProjectTracking'] }"
+            input-id="name"
+            :class="{ 'p-invalid': errors.enablePortalProjectTracking }"
           />
         </span>
-        <p class="p-error" v-if="errors.enablePortalProjectTracking">
+        <p v-if="errors.enablePortalProjectTracking" class="p-error">
           {{ errors.enablePortalProjectTracking }}
         </p>
       </div>
@@ -185,12 +176,12 @@ const handlePortal = async (values: boolean) => {
         </div>
         <span class="inline-flex cursor-pointer">
           <InputSwitch
-            inputId="enablePortalTaskTracking"
             v-model="enablePortalTaskTracking"
-            :class="{ 'p-invalid': errors['enablePortalTaskTracking'] }"
+            input-id="enablePortalTaskTracking"
+            :class="{ 'p-invalid': errors.enablePortalTaskTracking }"
           />
         </span>
-        <p class="p-error" v-if="errors.enablePortalTaskTracking">
+        <p v-if="errors.enablePortalTaskTracking" class="p-error">
           {{ errors.enablePortalTaskTracking }}
         </p>
       </div>
@@ -212,12 +203,12 @@ const handlePortal = async (values: boolean) => {
         </div>
         <span class="inline-flex cursor-pointer">
           <InputSwitch
-            inputId="enablePortalBrightDesk"
             v-model="enablePortalBrightDesk"
-            :class="{ 'p-invalid': errors['enablePortalBrightDesk'] }"
+            input-id="enablePortalBrightDesk"
+            :class="{ 'p-invalid': errors.enablePortalBrightDesk }"
           />
         </span>
-        <p class="p-error" v-if="errors.enablePortalBrightDesk">
+        <p v-if="errors.enablePortalBrightDesk" class="p-error">
           {{ errors.enablePortalBrightDesk }}
         </p>
       </div>
@@ -238,12 +229,12 @@ const handlePortal = async (values: boolean) => {
         </div>
         <span class="inline-flex cursor-pointer">
           <InputSwitch
-            inputId="enablePortalDocuments"
             v-model="enablePortalDocuments"
-            :class="{ 'p-invalid': errors['enablePortalDocuments'] }"
+            input-id="enablePortalDocuments"
+            :class="{ 'p-invalid': errors.enablePortalDocuments }"
           />
         </span>
-        <p class="p-error" v-if="errors.enablePortalDocuments">
+        <p v-if="errors.enablePortalDocuments" class="p-error">
           {{ errors.enablePortalDocuments }}
         </p>
       </div>
@@ -253,7 +244,7 @@ const handlePortal = async (values: boolean) => {
           :loading="isLoading"
           :disabled="!meta.valid"
           type="submit"
-        ></Button>
+        />
       </div>
     </div>
   </form>

@@ -7,7 +7,7 @@ const isProdBuild = window.location.host.includes('app.');
 
 useHead({
   titleTemplate: (title?: string) =>
-    !title ? 'App Return' : `App Return | ${title}`,
+    !title ? 'App Return' : `App Return | ${title}`
 });
 
 if (isProdBuild) {
@@ -30,9 +30,9 @@ if (isProdBuild) {
           y = l.getElementsByTagName(r)[0];
           y.parentNode.insertBefore(t, y);
         })(window, document, 'clarity', 'script', 'gnd8zcipot');
-        `,
-      },
-    ],
+        `
+      }
+    ]
   });
 }
 
@@ -45,9 +45,10 @@ watch(currentRoute, async (val, oldVal) => {
   transitionName.value = toDepth < fromDepth ? 'slide-up' : 'slide-down';
 });
 </script>
+
 <template>
-  <ConfirmDialog></ConfirmDialog>
-  <Toast position="top-right"></Toast>
+  <ConfirmDialog />
+  <Toast position="top-right" />
   <CommonToast />
   <!-- <router-view v-slot="{ Component, route }">
     <transition :name="transitionName" :appear="true" mode="out-in">
@@ -56,4 +57,5 @@ watch(currentRoute, async (val, oldVal) => {
   </router-view> -->
   <router-view />
 </template>
+
 <style lang="scss"></style>

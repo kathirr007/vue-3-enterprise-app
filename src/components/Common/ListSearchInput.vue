@@ -6,13 +6,13 @@ const props = withDefaults(
     autoRightMargin?: boolean;
   }>(),
   {
-    autoRightMargin: true,
+    autoRightMargin: true
   }
 );
 
 const { isLarge } = useCommonBreakPoints();
-const { searchTerms, searchText, searchValidationMessage } =
-  useDataTableUtils();
+const { searchTerms, searchText, searchValidationMessage }
+  = useDataTableUtils();
 </script>
 
 <template>
@@ -20,23 +20,23 @@ const { searchTerms, searchText, searchValidationMessage } =
     <div class="p-input-icon-left">
       <i class="pi pi-search" />
       <InputText
-        aria-label="Search List"
         v-model="searchText"
-        @input="searchTerms(listProps)"
+        aria-label="Search List"
         :placeholder="placeholder || 'Search List'"
-        inputClass="w-full"
+        input-class="w-full"
         type="search"
         name="searchText"
         class="w-full"
         :class="{
-          'p-invalid': searchValidationMessage['searchText'],
+          'p-invalid': searchValidationMessage.searchText,
         }"
+        @input="searchTerms(listProps)"
       />
     </div>
     <transition mode="out-in" name="field-slide-down">
       <FormFeedbackMessage
         :errors="searchValidationMessage"
-        :errorKey="'searchText'"
+        error-key="searchText"
         :feedback="false"
       />
     </transition>

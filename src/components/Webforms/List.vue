@@ -31,7 +31,7 @@ const {
   queryKeys,
   querySortBy,
   currentLimit,
-  currentPage,
+  currentPage
 } = useDataTableUtils();
 const { getAll } = useWebformTemplates();
 
@@ -47,13 +47,13 @@ const initialFilters = computed(() => {
 const {
   isLoading: loadingWebforms,
   isFetching: fetchingWebforms,
-  data: webformsList,
+  data: webformsList
 } = useQuery(['webforms-templates-list', ...queryKeys, webformTypeProp], () => {
   return getAll({
     page: currentPage.value,
     limit: currentLimit.value,
     filters: queryFilters.value ? queryFilters.value : initialFilters.value,
-    sortBy: querySortBy.value,
+    sortBy: querySortBy.value
   });
 });
 
@@ -66,17 +66,17 @@ const {
 
 <template>
   <DataTable
+    v-bind="tableAttrs"
+    v-model:filters="filters"
+    :value="webformsList?.results"
+    :total-records="webformsList?.total"
+    :loading="loadingWebforms || fetchingWebforms"
+    data-key="id"
+    responsive-layout="scroll"
+    breakpoint="768px"
+    :global-filter-fields="['name']"
     @page="handlePageOrLimitChange($event)"
     @sort="handleSortChange"
-    :value="webformsList?.results"
-    :totalRecords="webformsList?.total"
-    :loading="loadingWebforms || fetchingWebforms"
-    dataKey="id"
-    v-bind="tableAttrs"
-    responsiveLayout="scroll"
-    breakpoint="768px"
-    v-model:filters="filters"
-    :globalFilterFields="['name']"
   >
     <template #header>
       <div class="flex justify-content-between">
@@ -84,7 +84,9 @@ const {
       </div>
     </template>
     <template #empty>
-      <div class="text-center">No template found.</div>
+      <div class="text-center">
+        No template found.
+      </div>
     </template>
     <Column field="name" header="Name" class="w-3">
       <template #body="{ data }">
@@ -108,7 +110,9 @@ const {
       data-v-if="canDoSome('webforms', ['delete', 'edit'])"
     >
       <template #header>
-        <div class="w-full text-center">Actions</div>
+        <div class="w-full text-center">
+          Actions
+        </div>
       </template>
       <template #body="slotProps">
         <div class="md:w-full w-6rem">

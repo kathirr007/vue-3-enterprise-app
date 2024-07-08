@@ -1,10 +1,10 @@
 <template>
   <div class="loadingio-spinner-double-ring-8s7hd0kbzhj">
     <div class="ldio-07puk4kmug9y">
-      <div></div>
-      <div></div>
-      <div><div></div></div>
-      <div><div></div></div>
+      <div />
+      <div />
+      <div><div /></div>
+      <div><div /></div>
     </div>
   </div>
 </template>

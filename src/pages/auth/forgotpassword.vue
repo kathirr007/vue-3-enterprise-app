@@ -10,7 +10,7 @@ function handleSubmit() {
     actionType: 'Update',
     severity: 'success',
     summary: 'Reset Password',
-    detail: `A link to reset your password has been sent to your registered email successfully.`,
+    detail: `A link to reset your password has been sent to your registered email successfully.`
   });
   router.replace({ name: 'auth-forgotpassword', query: { success: 'yes' } });
 }
@@ -31,19 +31,21 @@ function handleSubmit() {
           alt="appData.logoAltText"
           height="70"
           class="mb-3"
-        />
+        >
       </a>
 
-      <div class="w-full" v-if="!isProcessComplete">
+      <div v-if="!isProcessComplete" class="w-full">
         <h1 class="text-xl font-medium text-900 mb-5">
           Request to reset your password
         </h1>
         <AuthForgotPasswordForm
           @success="handleSubmit"
-        ></AuthForgotPasswordForm>
+        />
       </div>
-      <div class="w-full" v-else>
-        <h1 class="text-xl font-medium text-900 mb-5">Reset password</h1>
+      <div v-else class="w-full">
+        <h1 class="text-xl font-medium text-900 mb-5">
+          Reset password
+        </h1>
         <div class="text-left">
           <p class="font-medium text-lg">
             A password reset link was sent. Click the link in the email to
@@ -61,19 +63,17 @@ function handleSubmit() {
         </div>
       </div>
       <div v-if="false" class="w-full max-w-26rem mx-auto">
-        <a href="#" class="font-medium mt-3 flex align-items-center"
-          ><i
-            class="pi pi-youtube p-button-icon p-button-icon-left text-3xl text-primary mr-1 mt-1"
-          />
-          <span>Help</span></a
-        >
+        <a href="#" class="font-medium mt-3 flex align-items-center"><i
+                                                                       class="pi pi-youtube p-button-icon p-button-icon-left text-3xl text-primary mr-1 mt-1"
+                                                                     />
+          <span>Help</span></a>
       </div>
       <AuthMobileAppDownload />
     </div>
   </div>
   <div
     class="hidden md:block w-6 bg-no-repeat info-graphics login-signup"
-  ></div>
+  />
 </template>
 
 <route lang="yaml">

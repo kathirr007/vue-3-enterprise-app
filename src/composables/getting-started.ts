@@ -1,6 +1,7 @@
 import $api from '@/plugins/api';
 import type { GettingStarted } from '@/types/getting-started.type';
 import type { TimelineSteps } from '@/types/common.type';
+
 const { sortCompare } = useUtilityFns();
 
 export async function useGettingStartedList(resourceId: string) {
@@ -10,7 +11,7 @@ export async function useGettingStartedList(resourceId: string) {
   let steps = data.map((step: GettingStarted) => ({
     ...step.step,
     status: step.status,
-    data: step.data,
+    data: step.data
   }));
   steps = steps.sort(sortCompare({ compareProp: 'sortOrder', order: 'asc' }));
 
@@ -21,11 +22,11 @@ export async function useGettingStartedList(resourceId: string) {
       icon: step?.status !== 0 ? 'pi pi-check-circle' : 'pi pi-circle',
       color: step?.status !== 0 ? '#05A34F' : '#607D8B',
       content: step.data,
-      hideCta: step.title === 'Basic Info' ? true : false,
+      hideCta: step.title === 'Basic Info',
       route: step.route,
       status: step?.status,
       isRequired: step?.isRequired,
-      hidden: step?.hidden,
+      hidden: step?.hidden
     };
   }) as unknown as TimelineSteps[];
 

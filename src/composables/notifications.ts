@@ -1,12 +1,12 @@
 import axios from 'axios';
 
-type NotificationInitPayload = {
+interface NotificationInitPayload {
   applicationIdentifier: string;
   subscriberId: string;
   hmacHash?: string;
-};
+}
 
-export const useNotifications = () => {
+export function useNotifications() {
   const notificationBaseUrl = 'https://api.novu.co/v1/widgets';
   const initialize = async (payload: NotificationInitPayload) => {
     const { data } = await axios.post(
@@ -29,6 +29,6 @@ export const useNotifications = () => {
   return {
     initialize,
     organization,
-    unseen,
+    unseen
   };
-};
+}

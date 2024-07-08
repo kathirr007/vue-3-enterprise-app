@@ -1,13 +1,12 @@
 import $api from '@/plugins/api';
 import type {
   ContentJSON,
-  CustomAxiosRequestConfig,
+  CustomAxiosRequestConfig
 } from '@/types/common.type';
 import type {
-  TaskTemplate,
-  CreateTaskTemplatePayload,
-  TaskTemplatePayload,
   TaskAttachment,
+  TaskTemplate,
+  TaskTemplatePayload
 } from '@/types/task-template.type';
 
 const { isJsonStringValid } = useUtilityFns();
@@ -23,14 +22,14 @@ export async function useTaskTemplateList(serviceId: string) {
       : (item.description as unknown as ContentJSON)?.content,
     attachmentIds: item.attachments.map(
       (attachment: TaskAttachment) => attachment.id
-    ),
+    )
   }));
   return data;
 }
 
 export async function useTaskTemplateDetails({
   serviceId,
-  id,
+  id
 }: {
   serviceId: string;
   id: string;
@@ -43,7 +42,7 @@ export async function useTaskTemplateDetails({
 
 export async function useTaskTemplateCreate({
   serviceId,
-  payload,
+  payload
 }: {
   serviceId: string;
   payload: TaskTemplatePayload;
@@ -52,7 +51,7 @@ export async function useTaskTemplateCreate({
     `services/${serviceId}/entity-templates`,
     payload,
     {
-      catchErrors: false,
+      catchErrors: false
     } as CustomAxiosRequestConfig
   );
   return data;
@@ -61,7 +60,7 @@ export async function useTaskTemplateCreate({
 export async function useTaskTemplateUpdate({
   serviceId,
   id,
-  payload,
+  payload
 }: {
   serviceId: string;
   id: string;
@@ -71,7 +70,7 @@ export async function useTaskTemplateUpdate({
     `services/${serviceId}/entity-templates/${id}`,
     payload,
     {
-      catchErrors: false,
+      catchErrors: false
     } as CustomAxiosRequestConfig
   );
   return data;
@@ -80,7 +79,7 @@ export async function useTaskTemplateUpdate({
 export async function useTaskTemplateAddAttachment({
   serviceId,
   id,
-  payload,
+  payload
 }: {
   serviceId: string;
   id: string;
@@ -96,7 +95,7 @@ export async function useTaskTemplateAddAttachment({
 export async function useTaskTemplateRemoveAttachment({
   serviceId,
   id,
-  attachmentId,
+  attachmentId
 }: {
   serviceId: string;
   id: string;

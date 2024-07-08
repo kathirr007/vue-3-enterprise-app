@@ -24,5 +24,5 @@ export interface CreateEntityTimer {
 export const CreateEntityTimerPayloadSchema = object({
   clientId: string().optional().nullable().label('Client'),
   projectId: string().optional().nullable().label('Project'),
-  taskId: string().required().nullable().label('Task'),
+  taskId: string().required().nullable().label('Task')
 });

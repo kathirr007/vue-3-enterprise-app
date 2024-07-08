@@ -11,7 +11,7 @@ withDefaults(
   {
     level: 1,
     label: null,
-    align: 'left',
+    align: 'left'
   }
 );
 
@@ -21,11 +21,13 @@ onClickOutside(inputScope, () => {
   show.value = false;
 });
 </script>
+
 <script lang="ts">
 export default defineComponent({
-  inheritAttrs: false,
+  inheritAttrs: false
 });
 </script>
+
 <template>
   <div class="flex flex-column gap-1 w-full field mb-0">
     <label

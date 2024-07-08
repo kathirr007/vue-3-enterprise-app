@@ -1,9 +1,9 @@
 import type { InferType } from 'yup';
-import { object, string, boolean } from 'yup';
+import { object, string } from 'yup';
 import {
   PasswordSchema,
-  emailSchema,
   confirmPasswordSchema,
+  emailSchema
 } from './common.validation.type';
 import type { CommonUserType, EntityObj, MetaObj } from '@/types/common.type';
 
@@ -63,13 +63,13 @@ export const VerifyPayloadSchema = object({
   password: PasswordSchema,
   confirmPassword: confirmPasswordSchema('password'),
   firstName: string().required().nullable().label('First Name'),
-  lastName: string().required().nullable().label('Last Name'),
+  lastName: string().required().nullable().label('Last Name')
 });
 
 export const VerifyPayloadSchemaIsOwner = object({
   email: emailSchema,
   firstName: string().nullable().required().nullable().label('First Name'),
   lastName: string().required().nullable().label('Last Name'),
-  orgName: string().required().label('Organization Name'),
+  orgName: string().required().label('Organization Name')
 });
 export type VerifyPayload = InferType<typeof VerifyPayloadSchema>;

@@ -23,21 +23,21 @@ const { data: filterData, applyFilter } = useFilterColumns();
 applyFilter('Is Active', 'true');
 const initialFilters = useEncodeFilterData(filterData);
 const { usersListOptions } = useUserListOptions(
-  !isPortalUser.value &&
-    (props.updateField === 'projectManagerId' ||
-      props.updateField === 'reviewerId'),
+  !isPortalUser.value
+  && (props.updateField === 'projectManagerId'
+  || props.updateField === 'reviewerId'),
   initialFilters
 );
 
 const statusOptions = ref<string[] | any>([
   {
     label: 'Archived',
-    value: 'Archived',
+    value: 'Archived'
   },
   {
     label: 'Scheduled',
-    value: 'Scheduled',
-  },
+    value: 'Scheduled'
+  }
 ]);
 
 const filteredStatusOptions = computed(() => {
@@ -67,24 +67,24 @@ const filteredStatusOptions = computed(() => {
 
 const validationSchemas: Record<string, unknown> = {
   projectManagerId: object({
-    projectManagerId: string().required().label('Project Manager'),
+    projectManagerId: string().required().label('Project Manager')
   }),
   status: object({
-    status: string().required().label('Status'),
+    status: string().required().label('Status')
   }),
   reviewerId: object({
-    reviewerId: string().required().label('Reviewer'),
+    reviewerId: string().required().label('Reviewer')
   }),
   startDate: object({
-    startDate: string().required().label('Start Date'),
+    startDate: string().required().label('Start Date')
   }),
   dueDate: object({
-    dueDate: string().required().label('Due Date'),
-  }),
+    dueDate: string().required().label('Due Date')
+  })
 };
 
 const { handleSubmit, errors, validate } = useForm({
-  validationSchema: validationSchemas[props.updateField],
+  validationSchema: validationSchemas[props.updateField]
 });
 
 const { value: projectManagerId } = useField<string>('projectManagerId');
@@ -107,20 +107,20 @@ const { mutateAsync: updateProject, isLoading } = useMutation(
   {
     onSuccess: () => {
       emits('success');
-    },
+    }
   }
 );
 
 const onSubmit = handleSubmit(async (values) => {
   await updateProject({
-    [props.updateField]: values[props.updateField],
+    [props.updateField]: values[props.updateField]
   } as any);
 });
 </script>
 
 <template>
   <div class="p-4">
-    <form @submit="onSubmit" class="grid p-fluid formgrid">
+    <form class="grid p-fluid formgrid" @submit="onSubmit">
       <div
         v-if="updateField === 'projectManagerId'"
         class="field col-12 md:col-12 sm:col-12"
@@ -130,15 +130,15 @@ const onSubmit = handleSubmit(async (values) => {
           <span class="text-red-600">*</span>
         </label>
         <Dropdown
-          class="flex-1"
           v-model="projectManagerId"
+          class="flex-1"
           :options="usersListOptions"
-          optionLabel="name"
-          optionValue="id"
-          autoFocus
+          option-label="name"
+          option-value="id"
+          auto-focus
           @blur="validate()"
         />
-        <p class="p-error" v-if="errors.projectManagerId">
+        <p v-if="errors.projectManagerId" class="p-error">
           {{ errors.projectManagerId }}
         </p>
       </div>
@@ -151,15 +151,15 @@ const onSubmit = handleSubmit(async (values) => {
           <span class="text-red-600">*</span>
         </label>
         <Dropdown
-          class="flex-1"
           v-model="status"
+          class="flex-1"
           :options="filteredStatusOptions"
-          optionLabel="label"
-          optionValue="value"
-          autoFocus
+          option-label="label"
+          option-value="value"
+          auto-focus
           @blur="validate()"
         />
-        <p class="p-error" v-if="errors.status">
+        <p v-if="errors.status" class="p-error">
           {{ errors.status }}
         </p>
       </div>
@@ -172,15 +172,15 @@ const onSubmit = handleSubmit(async (values) => {
           <span class="text-red-600">*</span>
         </label>
         <Dropdown
-          class="flex-1"
           v-model="reviewerId"
+          class="flex-1"
           :options="usersListOptions"
-          optionLabel="name"
-          optionValue="id"
-          autoFocus
+          option-label="name"
+          option-value="id"
+          auto-focus
           @blur="validate()"
         />
-        <p class="p-error" v-if="errors.reviewerId">
+        <p v-if="errors.reviewerId" class="p-error">
           {{ errors.reviewerId }}
         </p>
       </div>
@@ -193,17 +193,17 @@ const onSubmit = handleSubmit(async (values) => {
           <span class="text-red-600">*</span>
         </label>
         <Calendar
+          id="dueDate"
+          v-model="dueDate"
           :tabindex="0"
-          @blur="validate()"
           class="w-full"
           name="dueDate"
-          id="dueDate"
           placeholder="Select Due Date"
-          v-model="dueDate"
           :disabled="isPortalUser"
-          :minDate="maxStartDate"
+          :min-date="maxStartDate"
+          @blur="validate()"
         />
-        <p class="p-error" v-if="errors.dueDate">
+        <p v-if="errors.dueDate" class="p-error">
           {{ errors.dueDate }}
         </p>
       </div>
@@ -216,18 +216,18 @@ const onSubmit = handleSubmit(async (values) => {
           <span class="text-red-600">*</span>
         </label>
         <Calendar
+          id="startDate"
+          v-model="startDate"
           :tabindex="0"
-          @blur="validate()"
           class="w-full"
           name="startDate"
-          id="startDate"
           placeholder="Select Start Date"
-          v-model="startDate"
           :disabled="isPortalUser"
-          :minDate="dayjs().toDate()"
+          :min-date="dayjs().toDate()"
           :max-date="minDueDate"
+          @blur="validate()"
         />
-        <p class="p-error" v-if="errors.startDate">
+        <p v-if="errors.startDate" class="p-error">
           {{ errors.startDate }}
         </p>
       </div>
@@ -237,7 +237,7 @@ const onSubmit = handleSubmit(async (values) => {
           type="submit"
           label="Submit"
           :loading="isLoading"
-        ></Button>
+        />
       </div>
     </form>
   </div>

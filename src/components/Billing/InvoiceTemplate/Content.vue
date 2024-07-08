@@ -37,30 +37,30 @@ const invoiceTemplateData = inject<InvoiceTemplate>('invoiceTemplateData');
           margin: 0 auto;
         "
       >
-        <!-- Header block start-->
+        <!-- Header block start -->
         <BillingInvoiceTemplateHeader />
-        <!-- Header block end-->
-        <!-- Header address block start-->
+        <!-- Header block end -->
+        <!-- Header address block start -->
         <BillingInvoiceTemplateAddress />
-        <!-- Header address block end-->
-        <!-- Invoice amount block start-->
+        <!-- Header address block end -->
+        <!-- Invoice amount block start -->
         <BillingInvoiceTemplateAmountDue />
-        <!-- Invoice amount block end-->
-        <!-- Divider block start-->
+        <!-- Invoice amount block end -->
+        <!-- Divider block start -->
         <BillingInvoiceTemplateDivider />
-        <!-- Divider block end-->
-        <!-- Bill to block start-->
+        <!-- Divider block end -->
+        <!-- Bill to block start -->
         <BillingInvoiceTemplateBillTo />
-        <!-- Bill to block end-->
-        <!-- Invoice Items block start-->
+        <!-- Bill to block end -->
+        <!-- Invoice Items block start -->
         <BillingInvoiceTemplateInvoiceItems />
-        <!-- Invoice Items block end-->
-        <!-- Divider block start-->
-        <BillingInvoiceTemplateDivider :topSpace="false" />
-        <!-- Divider block end-->
-        <!-- Footer start-->
+        <!-- Invoice Items block end -->
+        <!-- Divider block start -->
+        <BillingInvoiceTemplateDivider :top-space="false" />
+        <!-- Divider block end -->
+        <!-- Footer start -->
         <BillingInvoiceTemplateFooter />
-        <!-- Footer end-->
+        <!-- Footer end -->
       </td>
     </tr>
   </table>

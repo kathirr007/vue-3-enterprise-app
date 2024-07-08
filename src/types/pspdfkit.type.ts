@@ -1,21 +1,21 @@
 import type { AnnotationsUnion } from 'pspdfkit';
 
-export type AnnotationsPressEvent = {
+export interface AnnotationsPressEvent {
   annotation: AnnotationsUnion;
   nativeEvent: Event;
   preventDefault?: () => void;
   selected: boolean;
-};
+}
 
-export type AnnotationsFocusEvent = {
+export interface AnnotationsFocusEvent {
   annotation: AnnotationsUnion;
   nativeEvent: FocusEvent;
-};
-export type AnnotationsBlurEvent = {
+}
+export interface AnnotationsBlurEvent {
   annotation: AnnotationsUnion;
   nativeEvent: FocusEvent;
-};
+}
 
-export type SaveStateChangeEvent = {
+export interface SaveStateChangeEvent {
   hasUnsavedChanges: boolean;
-};
+}

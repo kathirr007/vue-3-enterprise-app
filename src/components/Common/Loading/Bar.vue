@@ -1,9 +1,9 @@
 <template>
   <div class="loadingio-spinner-pulse-5t84e7qjhwv">
     <div class="ldio-r43p2otpij">
-      <div></div>
-      <div></div>
-      <div></div>
+      <div />
+      <div />
+      <div />
     </div>
   </div>
 </template>

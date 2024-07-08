@@ -1,28 +1,27 @@
 import $api from '@/plugins/api';
 import type { PaginatedResponse } from '@/types/common.type';
 import type {
-  HRHolidayCreateInput,
-  HRHoliday,
-  HRLeaveBalance,
-  HRLeaveType,
-  HRLeaveBalanceCreateInput,
-  HRLeave,
   HRAttendance,
   HRAttendanceCheckInInput,
   HRAttendanceCheckOutInput,
   HRAttendanceCreateInput,
-  UserCheckInStatus,
-  HRLeaveCreateInput,
+  HRHoliday,
+  HRHolidayCreateInput,
+  HRLeave,
   HRLeaveActionsInput,
-  HRLeaveBalanceBulkCreateInput,
+  HRLeaveBalance,
+  HRLeaveBalanceCreateInput,
+  HRLeaveCreateInput,
+  HRLeaveType,
+  UserCheckInStatus
 } from '@/types/hrms.type';
 
-export const useHrmsHolidays = () => {
+export function useHrmsHolidays() {
   const getAll = async ({
     page,
     limit,
     filters,
-    sortBy,
+    sortBy
   }: {
     page?: number;
     limit?: number;
@@ -36,8 +35,8 @@ export const useHrmsHolidays = () => {
           page,
           limit,
           filters,
-          sortBy,
-        },
+          sortBy
+        }
       }
     );
     return data;
@@ -83,11 +82,11 @@ export const useHrmsHolidays = () => {
     createOne,
     bulkCreate,
     remove,
-    update,
+    update
   };
-};
+}
 
-export const useHrmsLeaveBalance = () => {
+export function useHrmsLeaveBalance() {
   const getAllLeaveTypes = async () => {
     const { data } = await $api.get<HRLeaveType[]>('hrms/leaves/types');
     return data;
@@ -96,7 +95,7 @@ export const useHrmsLeaveBalance = () => {
     page,
     limit,
     filters,
-    sortBy,
+    sortBy
   }: {
     page?: number;
     limit?: number;
@@ -110,8 +109,8 @@ export const useHrmsLeaveBalance = () => {
           page,
           limit,
           filters,
-          sortBy,
-        },
+          sortBy
+        }
       }
     );
     return data;
@@ -146,11 +145,11 @@ export const useHrmsLeaveBalance = () => {
     getAllLeaveTypes,
     createOne,
     update,
-    createBulk,
+    createBulk
   };
-};
+}
 
-export const useHrmsAttendance = () => {
+export function useHrmsAttendance() {
   /* const getAllLeaveTypes = async () => {
     const { data } = await $api.get<HRLeaveType[]>('hrms/leaves/types');
     return data;
@@ -159,7 +158,7 @@ export const useHrmsAttendance = () => {
     page,
     limit,
     filters,
-    sortBy,
+    sortBy
   }: {
     page?: number;
     limit?: number;
@@ -173,8 +172,8 @@ export const useHrmsAttendance = () => {
           page,
           limit,
           filters,
-          sortBy,
-        },
+          sortBy
+        }
       }
     );
     return data;
@@ -259,16 +258,16 @@ export const useHrmsAttendance = () => {
     checkInUpdate,
     checkOut,
     checkOutUpdate,
-    remove,
+    remove
   };
-};
+}
 
-export const useHrmsLeaves = () => {
+export function useHrmsLeaves() {
   const getAll = async ({
     page,
     limit,
     filters,
-    sortBy,
+    sortBy
   }: {
     page?: number;
     limit?: number;
@@ -280,8 +279,8 @@ export const useHrmsLeaves = () => {
         page,
         limit,
         filters,
-        sortBy,
-      },
+        sortBy
+      }
     });
     return data;
   };
@@ -312,6 +311,6 @@ export const useHrmsLeaves = () => {
     createOne,
     getAllType,
     createLeaveBalance,
-    updateStatus,
+    updateStatus
   };
-};
+}

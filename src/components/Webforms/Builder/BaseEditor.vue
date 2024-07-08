@@ -7,7 +7,7 @@ withDefaults(
     description?: string;
   }>(),
   {
-    label: null,
+    label: null
   }
 );
 
@@ -17,28 +17,29 @@ onClickOutside(inputScope, () => {
   show.value = false;
 });
 </script>
+
 <script lang="ts">
 export default defineComponent({
-  inheritAttrs: false,
+  inheritAttrs: false
 });
 </script>
+
 <template>
   <div class="flex flex-column gap-1 w-full field mb-0">
     <label
       v-if="label && !$slots.edit"
       class="block text-sm font-medium text-gray-700"
-      >{{ label }}</label
-    >
+    >{{ label }}</label>
     <div v-else>
       <slot name="edit" />
     </div>
-    <small class="-mt-1 block" v-if="before">
+    <small v-if="before" class="-mt-1 block">
       {{ before }}
     </small>
     <div ref="inputScope">
-      <Editor editorStyle="height: 130px" v-bind="$attrs" />
+      <Editor editor-style="height: 130px" v-bind="$attrs" />
     </div>
-    <small class="block" v-if="description">
+    <small v-if="description" class="block">
       {{ description }}
     </small>
   </div>

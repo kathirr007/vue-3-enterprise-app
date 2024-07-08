@@ -2,12 +2,12 @@
 import type { CommonUserType } from '@/types/common.type';
 import type { VerifyPayload, VerifyUserDetails } from '@/types/verify.type';
 import {
-  VerifyPayloadSchemaIsOwner,
   VerifyPayloadSchema,
+  VerifyPayloadSchemaIsOwner
 } from '@/types/verify.type';
 
 import { useRouteQuery } from '@vueuse/router';
-import { useMutation, useQuery } from 'vue-query';
+import { useMutation } from 'vue-query';
 
 const props = defineProps<{
   verifyUserData: VerifyUserDetails;
@@ -19,25 +19,25 @@ const router = useRouter();
 
 const { checkPasswordRule, strongRegEx } = usePasswordValidator();
 
-const handleExpiredVerificaiton = () => {
+function handleExpiredVerificaiton() {
   initToast({
     severity: 'info',
     actionType: 'Update',
     summary: 'User Verification',
     detail:
-      'Verification link got expired. Please try signin with registered email.',
+      'Verification link got expired. Please try signin with registered email.'
   });
   router.push({ name: 'auth-signin' });
-};
+}
 
 const { verifySignUp } = useAuthVerify();
 
 const isOwner = computed(
   () =>
-    ((props.verifyUserData?.type as CommonUserType) === 'ORG_USER' ||
-      (props.verifyUserData?.type as CommonUserType) ===
-        'OUTSOURCED_ORG_USER') &&
-    props.verifyUserData?.isOwner
+    ((props.verifyUserData?.type as CommonUserType) === 'ORG_USER'
+    || (props.verifyUserData?.type as CommonUserType)
+    === 'OUTSOURCED_ORG_USER')
+    && props.verifyUserData?.isOwner
 );
 
 const isClientUser = computed(
@@ -50,7 +50,7 @@ const verificationSchema = computed(() => {
 });
 
 const { handleSubmit, errors, values, meta } = useForm({
-  validationSchema: verificationSchema,
+  validationSchema: verificationSchema
 });
 
 const { value: email } = useField<string>('email');
@@ -70,14 +70,14 @@ watchEffect(() => {
   }
 });
 
-const showToast = () => {
+function showToast() {
   return initToast({
     title: 'User Verification ',
     actionType: 'Update',
     actionObj: { email: props.verifyUserData?.email },
-    detail: `<strong>${props.verifyUserData?.email}</strong> is verified successfully`,
+    detail: `<strong>${props.verifyUserData?.email}</strong> is verified successfully`
   });
-};
+}
 
 const { isLoading, mutateAsync: verifyAccount } = useMutation(
   (payload: VerifyPayload) => {
@@ -92,7 +92,7 @@ const { isLoading, mutateAsync: verifyAccount } = useMutation(
     },
     onError: () => {
       handleExpiredVerificaiton();
-    },
+    }
   }
 );
 
@@ -102,9 +102,10 @@ const onSubmit = handleSubmit(async (values) => {
   await verifyAccount(payload as unknown as VerifyPayload);
 });
 </script>
+
 <script lang="ts">
 export default defineComponent({
-  inheritAttrs: false,
+  inheritAttrs: false
 });
 </script>
 
@@ -112,13 +113,13 @@ export default defineComponent({
   <Card v-if="!isOwner" class="mb-4 cpa-details-wrapper">
     <template #content>
       <AuthVerifyHeader
-        :verifyUserData="verifyUserData"
-        :isClientUser="isClientUser"
+        :verify-user-data="verifyUserData"
+        :is-client-user="isClientUser"
       />
     </template>
   </Card>
-  <form @submit="onSubmit" class="text-left">
-    <div class="field" v-if="isClientUser">
+  <form class="text-left" @submit="onSubmit">
+    <div v-if="isClientUser" class="field">
       <label for="orgName" class="block font-medium text-900">
         Your Organization Name
         <!-- <span class="text-red-600">*</span> -->
@@ -129,7 +130,7 @@ export default defineComponent({
         type="text"
         class="w-full"
         disabled
-        :class="{ 'p-invalid': errors['orgName'] }"
+        :class="{ 'p-invalid': errors.orgName }"
       />
     </div>
     <div class="field">
@@ -142,15 +143,15 @@ export default defineComponent({
         v-model="firstName"
         type="text"
         class="w-full"
-        :class="{ 'p-invalid': errors['firstName'] }"
+        :class="{ 'p-invalid': errors.firstName }"
       />
       <transition mode="out-in" name="field-slide-down">
         <FormFeedbackMessage
-          :success-class="'font-medium'"
+          success-class="font-medium"
           :errors="errors"
           :feedback="false"
           :values="values"
-          :errorKey="'firstName'"
+          error-key="firstName"
         />
       </transition>
     </div>
@@ -164,15 +165,15 @@ export default defineComponent({
         v-model="lastName"
         type="text"
         class="w-full"
-        :class="{ 'p-invalid': errors['lastName'] }"
+        :class="{ 'p-invalid': errors.lastName }"
       />
       <transition mode="out-in" name="field-slide-down">
         <FormFeedbackMessage
-          :success-class="'font-medium'"
+          success-class="font-medium"
           :errors="errors"
           :feedback="false"
           :values="values"
-          :errorKey="'lastName'"
+          error-key="lastName"
         />
       </transition>
     </div>
@@ -187,15 +188,15 @@ export default defineComponent({
         type="email"
         class="w-full"
         disabled
-        :class="{ 'p-invalid': errors['email'] }"
+        :class="{ 'p-invalid': errors.email }"
       />
       <transition mode="out-in" name="field-slide-down">
         <FormFeedbackMessage
-          :success-class="'font-medium'"
+          success-class="font-medium"
           :errors="errors"
           :values="values"
           :feedback="false"
-          :errorKey="'email'"
+          error-key="email"
         />
       </transition>
     </div>
@@ -207,17 +208,19 @@ export default defineComponent({
         </label>
         <Password
           id="password"
-          name="password"
           v-model="password"
-          toggleMask
+          name="password"
+          toggle-mask
           class="w-full"
-          :class="{ 'p-invalid': errors['password'] }"
+          :class="{ 'p-invalid': errors.password }"
           :strong-regex="strongRegEx"
         >
           <template #footer="sp: any">
             {{ sp.level }}
             <Divider />
-            <p class="mt-2">Suggestions</p>
+            <p class="mt-2">
+              Suggestions
+            </p>
             <ul class="pl-2 ml-2 mt-0" style="line-height: 1.5">
               <li
                 :class="{
@@ -257,10 +260,10 @@ export default defineComponent({
         </Password>
         <transition mode="out-in" name="field-slide-down">
           <FormFeedbackMessage
-            :success-class="'font-medium'"
+            success-class="font-medium"
             :errors="errors"
             :values="values"
-            :errorKey="'password'"
+            error-key="password"
           />
         </transition>
       </div>
@@ -271,21 +274,20 @@ export default defineComponent({
         </label>
         <Password
           id="confirmPassword"
-          name="confirmPassword"
           v-model="confirmPassword"
-          toggleMask
+          name="confirmPassword"
+          toggle-mask
           :feedback="false"
           class="w-full"
-          :class="{ 'p-invalid': errors['confirmPassword'] }"
+          :class="{ 'p-invalid': errors.confirmPassword }"
           :strong-regex="strongRegEx"
-        >
-        </Password>
+        />
         <transition mode="out-in" name="field-slide-down">
           <FormFeedbackMessage
-            :success-class="'font-medium'"
+            success-class="font-medium"
             :errors="errors"
             :values="values"
-            :errorKey="'confirmPassword'"
+            error-key="confirmPassword"
             :feedback="false"
           />
         </transition>
@@ -298,7 +300,7 @@ export default defineComponent({
       :loading="isLoading"
       type="submit"
       class="block mx-auto mt-4"
-    ></Button>
+    />
 
     <div class="font-medium mt-4">
       <a

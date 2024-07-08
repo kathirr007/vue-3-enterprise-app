@@ -1,10 +1,9 @@
 <script setup lang="ts">
 // import { toTypedSchema } from '@vee-validate/zod';
 import { useField, useForm } from 'vee-validate';
-import type { HRLeaveCreateInput, HRHoliday } from '@/types/hrms.type';
+import type { HRHoliday, HRLeaveCreateInput } from '@/types/hrms.type';
 import { HRLeaveCreateInputSchema } from '@/types/hrms.type';
-import { useQuery, useMutation } from 'vue-query';
-import dayjs from 'dayjs';
+import { useMutation, useQuery } from 'vue-query';
 import type { PaginatedResponse } from '@/types/common.type';
 
 const props = defineProps<{
@@ -15,9 +14,9 @@ const emits = defineEmits(['success', 'close']);
 
 const remainingLeaveBalance = ref<number>(0);
 
-const { handleSubmit, errors, meta, setFieldValue, validate, validateField } =
-  useForm({
-    validationSchema: HRLeaveCreateInputSchema,
+const { handleSubmit, errors, meta, setFieldValue, validate, validateField }
+  = useForm({
+    validationSchema: HRLeaveCreateInputSchema
   });
 const { createOne, getAllType, createLeaveBalance } = useHrmsLeaves();
 const { getAll: getAllHolidays } = useHrmsHolidays();
@@ -44,7 +43,7 @@ const { data: holidaysList } = useQuery(
     onSuccess: (data: PaginatedResponse<HRHoliday>) => {
       setFieldValue('holidaysInSelectedRange', data?.total);
     },
-    enabled: canFetchHolidays,
+    enabled: canFetchHolidays
   }
 );
 const { mutateAsync: createLeave, isLoading } = useMutation(
@@ -54,7 +53,7 @@ const { mutateAsync: createLeave, isLoading } = useMutation(
   {
     onSuccess: () => {
       emits('success');
-    },
+    }
   }
 );
 const { mutateAsync: applyLeaveBalance } = useMutation(
@@ -65,13 +64,13 @@ const { mutateAsync: applyLeaveBalance } = useMutation(
     onSuccess: (data) => {
       remainingLeaveBalance.value = data?.remainingLeaveBalance;
       setFieldValue('remainingLeaves', data?.remainingLeaveBalance);
-    },
+    }
   }
 );
 
-const handleClose = () => {
+function handleClose() {
   emits('close');
-};
+}
 const onSubmit = handleSubmit(async (values) => {
   const paylaod = values;
   createLeave(paylaod as HRLeaveCreateInput);
@@ -80,7 +79,8 @@ const onSubmit = handleSubmit(async (values) => {
 const getRemainingLeaveBalanceValue = computed(() => {
   if (remainingLeaveBalance.value !== 0) {
     return false;
-  } else return true;
+  }
+  else return true;
 });
 watch(
   () => leaveTypeId.value,
@@ -88,7 +88,7 @@ watch(
     if (data) {
       const paylaod: { leaveTypeId: string; userId: string } = {
         leaveTypeId: data,
-        userId: props.userId as string,
+        userId: props.userId as string
       };
       applyLeaveBalance(paylaod);
     }
@@ -97,12 +97,12 @@ watch(
 </script>
 
 <template>
-  <form @submit="onSubmit" class="grid p-fluid formgrid">
+  <form class="grid p-fluid formgrid" @submit="onSubmit">
     <div class="field col-12 md-2">
       <label for="leaveTypeId" class="block font-medium text-900">
         Leave Type
         <span class="text-red-600">*</span>
-        <span class="text-sm font-semibold" v-if="leaveTypeId">
+        <span v-if="leaveTypeId" class="text-sm font-semibold">
           (Remaining Leaves - {{ remainingLeaveBalance }} )
         </span>
       </label>
@@ -110,11 +110,11 @@ watch(
         id="leaveTypeId"
         v-model="leaveTypeId"
         :options="leaveTypesData"
-        optionLabel="name"
-        optionValue="id"
+        option-label="name"
+        option-value="id"
         placeholder="Leave Type"
         class="w-full"
-        :class="{ 'p-invalid': errors['leaveTypeId'] }"
+        :class="{ 'p-invalid': errors.leaveTypeId }"
         @blur="validateField('leaveTypeId')"
       >
         <template #option="slotProps">
@@ -123,7 +123,7 @@ watch(
           </div>
         </template>
       </Dropdown>
-      <p class="p-error" v-if="errors.leaveTypeId">
+      <p v-if="errors.leaveTypeId" class="p-error">
         {{ errors.leaveTypeId }}
       </p>
     </div>
@@ -133,16 +133,16 @@ watch(
         <span class="text-red-600">*</span>
       </label>
       <Calendar
+        id="startDate"
+        v-model="startDate"
         :tabindex="0"
         class="w-full"
         name="startDate"
-        id="startDate"
         placeholder="Select Start Date"
-        v-model="startDate"
-        :maxDate="endDate"
+        :max-date="endDate"
         :disabled="!leaveTypeId"
       />
-      <p class="p-error" v-if="errors.startDate">
+      <p v-if="errors.startDate" class="p-error">
         {{ errors.startDate }}
       </p>
     </div>
@@ -153,17 +153,17 @@ watch(
         <span class="text-red-600">*</span>
       </label>
       <Calendar
+        id="endDate"
+        v-model="endDate"
         :tabindex="0"
         class="w-full"
         name="endDate"
-        id="endDate"
         placeholder="Select End Date"
-        v-model="endDate"
-        :minDate="startDate"
+        :min-date="startDate"
         :disabled="!leaveTypeId"
         @blur="validateField('leaveTypeId')"
       />
-      <p class="p-error" v-if="errors.endDate">
+      <p v-if="errors.endDate" class="p-error">
         {{ errors.endDate }}
       </p>
     </div>
@@ -179,23 +179,23 @@ watch(
         type="name"
         class="w-full"
         rows="5"
-        :class="{ 'p-invalid': errors['description'] }"
+        :class="{ 'p-invalid': errors.description }"
       />
     </div>
 
     <div class="flex justify-content-between ml-auto col-12">
       <Button
         label="Cancel"
-        @click="handleClose"
         class="p-button w-5rem block p-button-danger"
-      ></Button>
+        @click="handleClose"
+      />
       <Button
         class="p-button-primary w-8rem block"
         type="submit"
         label="Submit"
         :disabled="!meta.valid || getRemainingLeaveBalanceValue"
         :loading="isLoading"
-      ></Button>
+      />
     </div>
   </form>
 </template>

@@ -11,7 +11,7 @@ const { data: orgDetails, isLoading } = useQuery('org-data', () => {
     <div class="card">
       <CommonLoading v-if="isLoading" />
 
-      <PortalSettingUpdateForm v-else :orgPortalData="orgDetails" />
+      <PortalSettingUpdateForm v-else :org-portal-data="orgDetails" />
     </div>
   </CommonPage>
 </template>

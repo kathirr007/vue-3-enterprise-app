@@ -11,7 +11,7 @@ export interface BusinessEntity {
 export const BusinessEntityCreatePayloadSchema = object({
   name: string().required().min(3).label('Name'),
   description: string().optional().max(255).nullable().label('Description'),
-  businessType: string().required().label('Category'),
+  businessType: string().required().label('Category')
 });
 
 export type BusinessEntityCreatePayload = InferType<

@@ -1,11 +1,12 @@
 import $api from '@/plugins/api';
 import type { PaginatedResponse } from '@/types/common.type';
+
 // import type { PaginatedResponse } from '@/types/common.type';
 import type {
   CreateServicePayload,
   ProjectStage,
   ProjectStageCreateUpdatePayload,
-  Service,
+  Service
 } from '@/types/service.type';
 
 export async function useServiceList(templates = false) {
@@ -20,7 +21,7 @@ export async function useServiceListV2({
   page,
   limit,
   filters,
-  sortBy,
+  sortBy
 }: {
   templates?: boolean;
   page?: number;
@@ -35,8 +36,8 @@ export async function useServiceListV2({
         page,
         limit,
         filters,
-        sortBy,
-      },
+        sortBy
+      }
     }
   );
   return data;
@@ -98,9 +99,9 @@ export function useProjectStages() {
     return {
       results: data.results.map((stage: ProjectStage) => ({
         ...stage,
-        statusName: getStatusName(stage.projectStatus.name),
+        statusName: getStatusName(stage.projectStatus.name)
       })),
-      total: data.total,
+      total: data.total
     };
   };
 

@@ -14,9 +14,9 @@ const emits = defineEmits(['success']);
 const { handleSubmit, errors, meta, validate, values } = useForm({
   initialValues: {
     isReject: props.status === 'REJECTED',
-    approverComment: undefined,
+    approverComment: undefined
   },
-  validationSchema: HRLeaveActionsInputSchema,
+  validationSchema: HRLeaveActionsInputSchema
 });
 const { updateStatus } = useHrmsLeaves();
 
@@ -29,28 +29,31 @@ const { isLoading, mutateAsync: updateLeaveStatus } = useMutation(
   {
     onSuccess: () => {
       emits('success');
-    },
+    }
   }
 );
 
 const onSubmit = handleSubmit(async (values) => {
   const paylaod = {
     ...values,
-    status: props.status,
+    status: props.status
   };
   updateLeaveStatus(paylaod as unknown as HRLeaveActionsInput);
 });
 const labelText = computed(() => {
   if (props.status) {
-    if (props.status === 'CANCELLED') return ' Reason For Cancellation';
-    if (props.status === 'APPROVED') return 'Comment';
-    if (props.status === 'REJECTED') return 'Reason For Rejection';
+    if (props.status === 'CANCELLED')
+      return ' Reason For Cancellation';
+    if (props.status === 'APPROVED')
+      return 'Comment';
+    if (props.status === 'REJECTED')
+      return 'Reason For Rejection';
   }
 });
 </script>
 
 <template>
-  <form @submit="onSubmit" class="grid p-fluid formgrid">
+  <form class="grid p-fluid formgrid" @submit="onSubmit">
     <div class="field col-12 md:col-12">
       <label for="approverComment" class="block font-medium text-900">
         {{ labelText }}
@@ -62,16 +65,16 @@ const labelText = computed(() => {
         type="name"
         class="w-full"
         rows="5"
-        :class="{ 'p-invalid': errors['approverComment'] }"
+        :class="{ 'p-invalid': errors.approverComment }"
         @blur="validate()"
       />
       <transition mode="out-in" name="field-slide-down">
         <FormFeedbackMessage
-          :success-class="'font-medium'"
+          success-class="font-medium"
           :errors="errors"
           :feedback="false"
           :values="values"
-          :errorKey="'approverComment'"
+          error-key="approverComment"
         />
       </transition>
     </div>
@@ -83,7 +86,7 @@ const labelText = computed(() => {
         label="Confirm"
         :disabled="!meta.valid || isLoading"
         :loading="isLoading"
-      ></Button>
+      />
     </div>
   </form>
 </template>

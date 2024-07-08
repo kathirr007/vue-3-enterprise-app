@@ -3,11 +3,11 @@ import type {
   ClientReport,
   ClientRoiReport,
   CommonReport,
-  TeamReport,
   ProjectRoiReport,
   ReportType,
+  TeamReport,
   TeamUtilization,
-  TrendLine,
+  TrendLine
 } from '@/types/reports.type';
 
 export function useReports() {
@@ -50,6 +50,6 @@ export function useReports() {
     getOneReportList,
     getClientTrendReportList,
     getTeamTrendReportList,
-    exportToCSV,
+    exportToCSV
   };
 }

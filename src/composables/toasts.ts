@@ -1,5 +1,6 @@
 import app from '@/app';
 import type { APIActions } from '@/types/common.type';
+
 // import type { ToastSeverityOptions } from 'primevue/api';
 // import { useToast } from 'primevue/usetoast';
 
@@ -34,7 +35,7 @@ export function useToasts() {
     closable = true,
     detail,
     summary,
-    group = 'custom-tc',
+    group = 'custom-tc'
   }: ToastOptions) => {
     let toastOptions = {};
     toastOptions = {
@@ -43,7 +44,7 @@ export function useToasts() {
       detail,
       life,
       closable,
-      group,
+      group
     };
     return toastOptions;
   };
@@ -53,7 +54,7 @@ export function useToasts() {
     detail,
     severity,
     closable,
-    life,
+    life
   }: ShowToastOptions) => {
     return app.config.globalProperties.$toast.add(
       toastOptions({
@@ -61,7 +62,7 @@ export function useToasts() {
         summary,
         detail,
         closable,
-        life,
+        life
       })
     );
   };
@@ -73,7 +74,7 @@ export function useToasts() {
     detail,
     summary,
     severity,
-    life,
+    life
   }: InitToastOptions) {
     const dangerSeverities = [
       'Remove',
@@ -83,18 +84,16 @@ export function useToasts() {
       'Archive',
       'Error',
       'Cancel',
-      'Reject',
+      'Reject'
     ];
     showToast({
-      severity: severity
-        ? severity
-        : dangerSeverities.includes(actionType)
+      severity: severity || (dangerSeverities.includes(actionType)
         ? 'error'
-        : 'success',
+        : 'success'),
       summary: summary || `${actionType} ${title}`,
       detail:
-        detail ||
-        `${title} ${
+        detail
+        || `${title} ${
           actionObj?.name
             ? `<strong>${actionObj.name}</strong>`
             : actionObj?.title
@@ -104,13 +103,13 @@ export function useToasts() {
           actionType.toLowerCase().charAt(actionType.length - 1) === 'e'
             ? 'd'
             : 'ed'
-        } successfully`,
+        } successfully`
     });
   }
 
   return {
     toastOptions,
     showToast,
-    initToast,
+    initToast
   };
 }

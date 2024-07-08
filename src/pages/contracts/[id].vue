@@ -13,9 +13,10 @@ const { data: contractDetails, isError } = useQuery(
   () => getContractDetails(contractId.value as string)
 );
 </script>
+
 <script lang="ts">
 export default defineComponent({
-  inheritAttrs: false,
+  inheritAttrs: false
 });
 </script>
 
@@ -28,11 +29,11 @@ export default defineComponent({
             v-if="true"
             class="text-sm"
             :src="`${getAttachmentUrl(
-              contractDetails?.org.logo.path as string
+              contractDetails?.org.logo.path as string,
             )}`"
             style="vertical-align: middle"
-            :alt="`CPA - Logo`"
-          />
+            alt="CPA - Logo"
+          >
           <template v-else>
             {{ initials(`${contractDetails?.org.name}`) }}
           </template>
@@ -52,8 +53,8 @@ export default defineComponent({
     <!-- <h3 v-if="isError">Contract form not found.</h3> -->
     <Common404
       v-if="isError"
-      :hideNavigations="true"
-      :title="'Contract form not found.'"
+      :hide-navigations="true"
+      title="Contract form not found."
     />
     <iframe
       v-else

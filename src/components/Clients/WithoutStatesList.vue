@@ -8,7 +8,7 @@ const props = withDefaults(
     withoutStateServices?: Partial<CommonClientService>[];
   }>(),
   {
-    withoutStateServices: () => [],
+    withoutStateServices: () => []
   }
 );
 
@@ -27,8 +27,8 @@ const canDoActions = inject('canDoActions');
 const { id } = toRefs(props);
 const federalList = ref([
   {
-    name: 'Without State',
-  },
+    name: 'Without State'
+  }
 ]);
 const queryClient = useQueryClient();
 const { defaultBreakpoints } = useCommonBreakPoints();
@@ -38,20 +38,21 @@ const { currentUser } = useCurrentUserData();
 const selectedState = ref<{ name: string }>();
 const openFederalModal = ref(false);
 
-const updateRowClass = () => {
+function updateRowClass() {
   if (props.withoutStateServices) {
     return (
-      (!props.withoutStateServices?.length ? 'bg-red-600' : 'bg-blue-600') +
-      ' text-white'
+      `${!props.withoutStateServices?.length ? 'bg-red-600' : 'bg-blue-600'
+      } text-white`
     );
   }
   return '';
-};
+}
 </script>
+
 <!-- eslint-disable vue/no-unused-vars -->
 <script lang="ts">
 export default defineComponent({
-  inheritAttrs: false,
+  inheritAttrs: false
 });
 </script>
 
@@ -81,12 +82,12 @@ export default defineComponent({
       >
         <span
           v-if="
-            canAccessAllMenu ||
-            clientDetails?.relationshipManager.id === currentUser.id
+            canAccessAllMenu
+              || clientDetails?.relationshipManager.id === currentUser.id
           "
-          @click="emit('start-automate', state, true)"
           class="cursor-pointer font-medium hover:text-blue-100 underline"
           :class="[{ 'opacity-50 pointer-events-none': !canDoActions }]"
+          @click="emit('start-automate', state, true)"
         >
           {{
             withoutStateServices && withoutStateServices?.length > 0
@@ -98,23 +99,25 @@ export default defineComponent({
     </li>
   </ul>
   <Dialog
-    :modal="true"
-    appendTo="body"
+    key="federal"
     v-model:visible="openFederalModal"
+    :modal="true"
+    append-to="body"
     :breakpoints="defaultBreakpoints"
     :style="{ width: '60vw' }"
-    :contentClass="'border-round-bottom-md'"
-    key="federal"
+    content-class="border-round-bottom-md"
   >
     <template #header>
-      <div class="text-xl font-medium mb-1">Automation</div>
+      <div class="text-xl font-medium mb-1">
+        Automation
+      </div>
     </template>
     <ClientsAddUpdateServiceForm
       key="federal"
       :state="selectedState"
       :review="!!(withoutStateServices && withoutStateServices?.length > 0)"
       :federal="true"
-      :clientName="clientDetails?.name"
+      :client-name="clientDetails?.name"
       @refresh="
         queryClient.invalidateQueries('client-federal-services-list');
         if (withoutStateServices && withoutStateServices?.length === 0) {

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { SchemaForm } from '@/types/schemaform.type';
 import {
-  ProjectStageCreateUpdateSchema,
   type ProjectStage,
   type ProjectStageCreateUpdatePayload,
+  ProjectStageCreateUpdateSchema
 } from '@/types/service.type';
 import Dropdown from 'primevue/dropdown';
 import InputText from 'primevue/inputtext';
@@ -26,12 +26,12 @@ const { data: statuses } = useQuery('statuses', getAllStatuses);
 
 const filteredStatuses = computed(() => {
   return statuses.value?.filter(
-    (status) => status.status === 1 || status.status === 2
+    status => status.status === 1 || status.status === 2
   );
 });
 
-const { mutateAsync: createUpdateStage, isLoading: createIsLoading } =
-  useMutation(
+const { mutateAsync: createUpdateStage, isLoading: createIsLoading }
+  = useMutation(
     (payload: ProjectStageCreateUpdatePayload) => {
       if (props.projectStage) {
         return update(
@@ -49,20 +49,20 @@ const { mutateAsync: createUpdateStage, isLoading: createIsLoading } =
             summary: props.projectStage ? 'Update' : 'Create',
             detail: props.projectStage
               ? 'Project Stage updated successfully'
-              : 'Project Stage created successfully',
+              : 'Project Stage created successfully'
           });
         }
         queryClient.invalidateQueries('project-stages');
         emit('success');
-      },
+      }
     }
   );
-const onSubmit = async (values: Record<string, any>) => {
+async function onSubmit(values: Record<string, any>) {
   await createUpdateStage({
     name: values.name,
-    projectStatusId: values.projectStatusId,
+    projectStatusId: values.projectStatusId
   } as unknown as ProjectStageCreateUpdatePayload);
-};
+}
 
 const formData = computed<SchemaForm>(() => {
   return {
@@ -72,7 +72,7 @@ const formData = computed<SchemaForm>(() => {
         name: 'name',
         label: 'Name',
         required: true,
-        autocomplete: 'off',
+        autocomplete: 'off'
       },
       {
         as: Dropdown,
@@ -83,17 +83,17 @@ const formData = computed<SchemaForm>(() => {
         autocomplete: 'off',
         options: filteredStatuses.value,
         optionLabel: 'statusName',
-        optionValue: 'id',
-      },
+        optionValue: 'id'
+      }
     ],
     validationSchema: ProjectStageCreateUpdateSchema,
     initialValues: props.projectStage
       ? {
           ...props.projectStage,
-          projectStatusId: props.projectStage.projectStatus.id,
+          projectStatusId: props.projectStage.projectStatus.id
         }
       : undefined,
-    btnText: 'Submit',
+    btnText: 'Submit'
   };
 });
 </script>
@@ -101,7 +101,7 @@ const formData = computed<SchemaForm>(() => {
 <template>
   <CommonSchemaForm
     :data="formData"
-    @submit="onSubmit"
     :primary-btn-loading="createIsLoading"
-  ></CommonSchemaForm>
+    @submit="onSubmit"
+  />
 </template>

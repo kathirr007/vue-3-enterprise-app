@@ -5,7 +5,7 @@ import type {
   BrightDirectoryUpdatePayload,
   DirectoryServices,
   DirectoryState,
-  LeadDirectory,
+  LeadDirectory
 } from '@/types/brightdirectory.type';
 import type { ClientState } from '@/types/client.type';
 
@@ -33,7 +33,7 @@ export async function useListingDirectory(id: string) {
     `bright-directory/listings/${id}`
   );
   if (data.services?.length) {
-    data.services = data.services.map((val) => (val as DirectoryServices).id);
+    data.services = data.services.map(val => (val as DirectoryServices).id);
   }
   if (data.state) {
     data.stateId = (data.state as DirectoryState).id;
@@ -62,7 +62,7 @@ export async function useLeadDirectoryList({
   id,
   page,
   limit,
-  archived,
+  archived
 }: {
   id: string;
   page?: number;
@@ -75,8 +75,8 @@ export async function useLeadDirectoryList({
       params: {
         page,
         limit,
-        archived,
-      },
+        archived
+      }
     }
   );
   return data;

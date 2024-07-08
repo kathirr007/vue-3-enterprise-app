@@ -1,17 +1,17 @@
 import $api from '@/plugins/api';
 import type {
-  DocumentFolder,
-  CreateFolderPayload,
-  CreateFilePayload,
-  DocumentFile,
-  SearchedReponse,
   BulkDocument,
+  CreateFilePayload,
+  CreateFolderPayload,
+  DocumentFile,
+  DocumentFolder,
   GetFolderDetails,
+  SearchedReponse
 } from '@/types/documents.type';
 
 export function useDocuments() {
   const getUploadFolderDetails = async ({
-    payload,
+    payload
   }: {
     payload: GetFolderDetails;
   }) => {
@@ -25,7 +25,7 @@ export function useDocuments() {
     folderId,
     isPortal,
     term,
-    isGallery,
+    isGallery
   }: {
     id: string;
     folderId?: string;
@@ -36,16 +36,16 @@ export function useDocuments() {
     const url = isGallery
       ? `gallery/folders`
       : folderId
-      ? `${
+        ? `${
           isPortal
             ? `portal/clients/folders/${folderId}`
             : `clients/${id}/folders/${folderId}`
         }`
-      : `${isPortal ? `portal/clients/folders` : `clients/${id}/folders`}`;
+        : `${isPortal ? `portal/clients/folders` : `clients/${id}/folders`}`;
     const { data } = await $api.get<DocumentFolder | DocumentFolder[]>(url, {
       params: {
-        term,
-      },
+        term
+      }
     });
     return data;
   };
@@ -54,7 +54,7 @@ export function useDocuments() {
     id,
     folderId,
     isPortal,
-    isGallery,
+    isGallery
   }: {
     id: string;
     folderId: string;
@@ -90,7 +90,7 @@ export function useDocuments() {
     folderId,
     payload,
     isPortal,
-    isGallery,
+    isGallery
   }: {
     id: string;
     folderId: string;
@@ -134,7 +134,7 @@ export function useDocuments() {
     tag,
     term,
     filters,
-    isGallery,
+    isGallery
   }: {
     id: string;
     folderId?: string;
@@ -155,8 +155,8 @@ export function useDocuments() {
         type,
         tag,
         term,
-        filters,
-      },
+        filters
+      }
     });
     return data;
   };
@@ -198,7 +198,7 @@ export function useDocuments() {
     folderId,
     fileId,
     isPortal,
-    isGallery,
+    isGallery
   }: {
     id: string;
     fileId: string;
@@ -237,7 +237,7 @@ export function useDocuments() {
     mode,
     q,
     isPortal,
-    isGallery,
+    isGallery
   }: {
     id: string;
     folderId?: string;
@@ -253,8 +253,8 @@ export function useDocuments() {
       params: {
         mode,
         folderId,
-        q,
-      },
+        q
+      }
     });
     return data;
   };
@@ -268,7 +268,7 @@ export function useDocuments() {
       `${isPortal ? `portal/clients/downloads` : `clients/${id}/downloads`}`,
       {
         uIds: [folder.id],
-        name: 'download',
+        name: 'download'
       }
     );
     return data;
@@ -299,24 +299,24 @@ export function useDocuments() {
     {
       name: 'DOCX',
       value:
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
     },
 
     { name: 'XLS', value: 'application/vnd.ms-excel' },
     {
       name: 'XLSX',
       value:
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     },
 
     { name: 'PPT', value: 'application/vnd.ms-powerpoint' },
     {
       name: 'PPTX',
       value:
-        'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation'
     },
     { name: 'TXT', value: 'text/plain' },
-    { name: 'CSV', value: 'text/csv' },
+    { name: 'CSV', value: 'text/csv' }
   ];
 
   return {
@@ -334,6 +334,6 @@ export function useDocuments() {
     searchFilesAndFolders,
     bulkUpdateDocuments,
     fileTypeOptions,
-    getUploadFolderDetails,
+    getUploadFolderDetails
   };
 }

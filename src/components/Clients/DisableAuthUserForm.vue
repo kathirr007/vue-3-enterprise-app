@@ -19,7 +19,7 @@ const { fullName } = useVueFilters();
 const { values, errors, meta, setValues, validate } = useForm({
   validationSchema: ClientAuthUserDisableSchema,
   initialErrors: undefined,
-  initialValues: undefined,
+  initialValues: undefined
 });
 
 const { value: clientUserId } = useField('clientUserId');
@@ -29,10 +29,10 @@ const userOptions = computed(() => {
     return {
       id: user.value.id,
       name: fullName(user.value as User),
-      isActive: user.value.isActive,
+      isActive: user.value.isActive
     };
   });
-  return users.filter((user) => user.id && user.isActive);
+  return users.filter(user => user.id && user.isActive);
 });
 </script>
 
@@ -50,30 +50,27 @@ const userOptions = computed(() => {
     }}
     <p class="text-md">
       To disable
-      <strong>{{ fullName(selectedAuthUser as User) }}</strong
-      >.
+      <strong>{{ fullName(selectedAuthUser as User) }}</strong>.
     </p>
     <form v-if="userOptions.length">
       <div class="field mb-0">
-        <label :for="`User`" class="block font-medium text-900"
-          >User <span class="text-red-500">*</span></label
-        >
+        <label for="User" class="block font-medium text-900">User <span class="text-red-500">*</span></label>
         <Dropdown
-          class="w-full"
-          @blur="validate()"
           v-model="clientUserId"
+          class="w-full"
           :options="userOptions"
-          optionLabel="name"
-          optionValue="id"
+          option-label="name"
+          option-value="id"
           :filter="true"
           placeholder="Select a User to make it as Authorised User"
+          @blur="validate()"
         />
 
         <transition mode="out-in" name="field-slide-down">
           <FormFeedbackMessage
             :errors="errors"
             :values="values"
-            :errorKey="`clientUserId`"
+            error-key="clientUserId"
             :feedback="false"
           />
         </transition>
@@ -88,8 +85,8 @@ const userOptions = computed(() => {
         <Button
           type="submit"
           label="Submit"
-          @click.prevent="emit('submit', values.clientUserId)"
           :disabled="!meta.valid"
+          @click.prevent="emit('submit', values.clientUserId)"
         />
       </div>
     </form>

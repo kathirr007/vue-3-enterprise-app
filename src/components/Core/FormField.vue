@@ -12,7 +12,7 @@ defineProps<{
     <label v-if="label" :for="name" class="label">
       {{ label }} <span v-if="required" class="text-red-500">*</span>
     </label>
-    <slot></slot>
+    <slot />
     <p v-if="error" class="p-error">
       {{ error }}
     </p>

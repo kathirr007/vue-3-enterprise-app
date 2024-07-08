@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import {
-  SmartFolderCreatePayloadSchema,
   type CreateSmartFolder,
   type SmartFolder,
+  SmartFolderCreatePayloadSchema
 } from '@/types/smart-folder.type';
 import type { SchemaForm } from '@/types/schemaform.type';
 import InputText from 'primevue/inputtext';
@@ -28,13 +28,13 @@ const formData = shallowRef<SchemaForm>({
       name: 'name',
       label: 'Folder Name',
       required: true,
-      autocomplete: 'off',
+      autocomplete: 'off'
     },
     {
       as: Textarea,
       name: 'description',
       label: 'Folder Description',
-      rows: 4,
+      rows: 4
     },
     {
       as: Checkbox,
@@ -42,25 +42,26 @@ const formData = shallowRef<SchemaForm>({
       name: 'clientReadable',
       label: 'Client Readable',
       direction: 'horizontal',
-      formGridClass: 'md:col-6',
+      formGridClass: 'md:col-6'
       // hide: !props.folderToUpdate,
-    },
+    }
   ],
   btnText: 'Next',
   validationSchema: SmartFolderCreatePayloadSchema,
   initialValues: props.smartFolderDetails
     ? { ...props.smartFolderDetails }
     : {},
-  secondaryBtnText: 'Back',
+  secondaryBtnText: 'Back'
 });
 
-const onSubmit = (values: any) => {
+function onSubmit(values: any) {
   emit('basic', { ...values });
-};
+}
 </script>
+
 <script lang="ts">
 export default defineComponent({
-  inheritAttrs: false,
+  inheritAttrs: false
 });
 </script>
 
@@ -69,9 +70,9 @@ export default defineComponent({
     ref="formRef"
     :key="formKey"
     :data="formData"
+    :primary-btn-loading="createIsLoading || updateIsLoading"
     @submit="onSubmit"
     @secondary-btn-click="() => emit('back', 'basic')"
-    :primary-btn-loading="createIsLoading || updateIsLoading"
   />
 </template>
 

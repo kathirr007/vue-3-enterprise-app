@@ -6,8 +6,8 @@ import type {
   CreateBroadcast,
   CreateBroadcastTemplate,
   Month,
-  Week,
   TemplateMessagePayload,
+  Week
 } from '@/types/broadcast.type';
 import type { PaginatedResponse } from '@/types/common.type';
 
@@ -21,7 +21,7 @@ export async function useBroadcastListV2({
   page,
   limit,
   filters,
-  sortBy,
+  sortBy
 }: {
   page?: number;
   limit?: number;
@@ -33,8 +33,8 @@ export async function useBroadcastListV2({
       page,
       limit,
       filters,
-      sortBy,
-    },
+      sortBy
+    }
   });
   return data;
 }
@@ -47,29 +47,29 @@ export async function useBroadcastDetails(id: string) {
       : refactoredData.body;
   }
   if (
-    data.template &&
-    (data.template?.messages as BroadcastTemplateMessage[])?.length > 0
+    data.template
+    && (data.template?.messages as BroadcastTemplateMessage[])?.length > 0
   ) {
     const messages = data.template?.messages as BroadcastTemplateMessage[];
-    refactoredData['type'] = messages[0].type;
-    refactoredData['broadcastTemplateId'] = data.template?.id;
+    refactoredData.type = messages[0].type;
+    refactoredData.broadcastTemplateId = data.template?.id;
   }
-  refactoredData['scheduleBroadcast'] =
-    data.status === 'COMPLETED' ? 'now' : 'later';
-  refactoredData['isRecurring'] = data.isRecurring ? 'repeat' : 'once';
+  refactoredData.scheduleBroadcast
+    = data.status === 'COMPLETED' ? 'now' : 'later';
+  refactoredData.isRecurring = data.isRecurring ? 'repeat' : 'once';
   if (data.isRecurring && data.recurringBroadcast) {
-    refactoredData['interval'] = data.recurringBroadcast?.interval;
+    refactoredData.interval = data.recurringBroadcast?.interval;
   }
 
   if (data.clients) {
-    refactoredData['clientType'] = Object.keys(data.clients)[0];
-    refactoredData['clientsPayload'] =
-      data.clients[refactoredData['clientType']];
+    refactoredData.clientType = Object.keys(data.clients)[0];
+    refactoredData.clientsPayload
+      = data.clients[refactoredData.clientType];
   }
   if (data.teamMembers) {
-    refactoredData['teamMemberType'] = Object.keys(data.teamMembers)[0];
-    refactoredData['teamMembersPayload'] =
-      data.teamMembers[refactoredData['teamMemberType']];
+    refactoredData.teamMemberType = Object.keys(data.teamMembers)[0];
+    refactoredData.teamMembersPayload
+      = data.teamMembers[refactoredData.teamMemberType];
   }
 
   return refactoredData;
@@ -85,7 +85,7 @@ export async function useBroadcastTemplateListV2({
   limit,
   filters,
   sortBy,
-  channel,
+  channel
 }: {
   page?: number;
   limit?: number;
@@ -103,8 +103,8 @@ export async function useBroadcastTemplateListV2({
         page,
         limit,
         filters: filtersString,
-        sortBy,
-      },
+        sortBy
+      }
     }
   );
 
@@ -175,7 +175,7 @@ export async function useBroadcastUpdate(payload: CreateBroadcast, id: string) {
 
 export async function useBroadcastRemoveAttachment({
   broadcastId,
-  attachmentId,
+  attachmentId
 }: {
   broadcastId: string;
   attachmentId: string;
@@ -188,7 +188,7 @@ export async function useBroadcastRemoveAttachment({
 
 export async function useBroadcastTemplateRemoveAttachment({
   broadcastTemplateId,
-  attachmentId,
+  attachmentId
 }: {
   broadcastTemplateId: string;
   attachmentId: string;
@@ -199,24 +199,24 @@ export async function useBroadcastTemplateRemoveAttachment({
   return data;
 }
 
-export const useBroadcastMessageDetails = async ({
+export async function useBroadcastMessageDetails({
   broadcastMessageId,
   isTemplate,
   userId,
-  email,
+  email
 }: {
   broadcastMessageId: string;
   isTemplate: string;
   userId: string;
   email: string;
-}) => {
+}) {
   const data = await $api.get(
     `broadcasts/details/${broadcastMessageId}?userId=${userId}&email=${email}&isTemplate=${isTemplate}`
   );
   return data;
-};
+}
 
-export const useRecurringBroadcast = () => {
+export function useRecurringBroadcast() {
   const weekOptions: Week[] = [
     { label: 'Sunday', value: 0 },
     { label: 'Monday', value: 1 },
@@ -224,7 +224,7 @@ export const useRecurringBroadcast = () => {
     { label: 'Wednesday', value: 3 },
     { label: 'Thursday', value: 4 },
     { label: 'Friday', value: 5 },
-    { label: 'Saturday', value: 6 },
+    { label: 'Saturday', value: 6 }
   ];
 
   const monthOptions: Month[] = [
@@ -239,7 +239,7 @@ export const useRecurringBroadcast = () => {
     { label: 'September', value: 8, maxDays: 30 },
     { label: 'October', value: 9, maxDays: 31 },
     { label: 'November', value: 10, maxDays: 30 },
-    { label: 'December', value: 11, maxDays: 31 },
+    { label: 'December', value: 11, maxDays: 31 }
   ];
   return { weekOptions, monthOptions };
-};
+}

@@ -5,10 +5,10 @@ import { useQuery } from 'vue-query';
 const props = withDefaults(
   defineProps<{
     queryFn?: () =>
-      | any[]
-      | (() => any[])
-      | (() => Promise<PaginatedResponse<any>>)
-      | (() => Promise<any[]>);
+    | any[]
+    | (() => any[])
+    | (() => Promise<PaginatedResponse<any>>)
+    | (() => Promise<any[]>);
     options?: any[];
     queryKey?: string;
     optionLabel?: string;
@@ -18,7 +18,7 @@ const props = withDefaults(
   {
     optionLabel: 'name',
     optionValue: 'id',
-    options: () => [],
+    options: () => []
   }
 );
 
@@ -31,8 +31,8 @@ const { data: optionsData, isLoading } = useQuery(
   },
   {
     onSuccess: (data: any) => {
-      data.results ? data.results : data;
-    },
+      return data.results ? data.results : data;
+    }
   }
 );
 </script>
@@ -43,16 +43,16 @@ const { data: optionsData, isLoading } = useQuery(
       props.options.length
         ? props.options
         : optionsData && optionsData.results
-        ? optionsData.results
-        : optionsData || []
+          ? optionsData.results
+          : optionsData || []
     "
     :loading="props.isLoading || isLoading"
-    :optionLabel="props.optionLabel"
-    :optionValue="props.optionValue"
-    dataKey="id"
+    :option-label="props.optionLabel"
+    :option-value="props.optionValue"
+    data-key="id"
     clearable
     filter
-    :virtualScrollerOptions="{ itemSize: 30 }"
+    :virtual-scroller-options="{ itemSize: 30 }"
   >
     <template #optiongroup="slotProps">
       <div class="flex align-items-center">

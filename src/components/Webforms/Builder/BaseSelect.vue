@@ -9,15 +9,17 @@ withDefaults(
     description?: string;
   }>(),
   {
-    label: null,
+    label: null
   }
 );
 </script>
+
 <script lang="ts">
 export default defineComponent({
-  inheritAttrs: false,
+  inheritAttrs: false
 });
 </script>
+
 <template>
   <div class="flex flex-column gap-1 w-full field mb-0">
     <label
@@ -30,30 +32,30 @@ export default defineComponent({
     <div v-else>
       <slot name="edit" />
     </div>
-    <small class="-mt-1 block" v-if="before">
+    <small v-if="before" class="-mt-1 block">
       {{ before }}
     </small>
     <div class="w-full">
       <VField
-        :name="name"
         v-slot="{ handleChange, value, validate }"
+        :name="name"
         v-bind="$attrs"
       >
         <Dropdown
-          :tabindex="0"
-          @update:model-value="handleChange"
-          @blur="validate()"
-          class="w-full p-0"
           v-bind="{ ...$attrs }"
-          :name="name"
           :id="name"
-          :inputId="name"
+          :tabindex="0"
+          class="w-full p-0"
+          :name="name"
+          :input-id="name"
           :model-value="value"
           disabled
+          @update:model-value="handleChange"
+          @blur="validate()"
         />
       </VField>
     </div>
-    <small class="block" v-if="description">
+    <small v-if="description" class="block">
       {{ description }}
     </small>
   </div>

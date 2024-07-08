@@ -1,25 +1,22 @@
 import $api from '@/plugins/api';
 import type {
-  ClientGroup,
-  ClientGroupAddClientsPayload,
-  ClientGroupCreatePayload,
-  ClientGroupRemovePayload,
+  ClientGroupRemovePayload
 } from '@/types/client-group';
 import type { MetaObj, PaginatedResponse } from '@/types/common.type';
 import type {
-  ContactCreatePayload,
-  UserContact,
   ContactAddClientsPayload,
+  ContactCreatePayload,
+  UserContact
 } from '@/types/contacts.type';
 
-export const useContacts = () => {
+export function useContacts() {
   const baseUrl = 'contact';
   const getAll = async ({
     page,
     limit,
     filters,
     sortBy,
-    clientId,
+    clientId
   }: {
     page?: number;
     limit?: number;
@@ -35,8 +32,8 @@ export const useContacts = () => {
           limit,
           filters,
           sortBy,
-          clientId,
-        },
+          clientId
+        }
       }
     );
     return data;
@@ -75,7 +72,7 @@ export const useContacts = () => {
 
   const detachClients = async ({
     id,
-    payload,
+    payload
   }: {
     id: string;
     payload: ContactAddClientsPayload;
@@ -92,7 +89,7 @@ export const useContacts = () => {
     payload?: ClientGroupRemovePayload
   ) => {
     const { data } = await $api.delete(`${baseUrl}/${id}/remove-client`, {
-      data: payload,
+      data: payload
     });
     return data;
   };
@@ -126,6 +123,6 @@ export const useContacts = () => {
     removeClient,
     update,
     addPicture,
-    removePicture,
+    removePicture
   };
-};
+}

@@ -6,7 +6,7 @@
           <h6>Today</h6>
         </div>
         <div class="weather">
-          <img src="/demo/images/rightpanel/icon-sun.svg" alt="freya-layout" />
+          <img src="/demo/images/rightpanel/icon-sun.svg" alt="freya-layout">
           <div class="weather-info">
             <h6>Ankara, 22 May</h6>
             <h1>24º</h1>
@@ -21,7 +21,7 @@
             type="button"
             icon="pi pi-plus"
             class="p-button-secondary p-button-text p-button-rounded"
-          ></Button>
+          />
         </div>
         <ul>
           <li>
@@ -41,13 +41,13 @@
             <div class="task-info">
               <h6>Morning Run</h6>
             </div>
-            <i class="pi pi-check"></i>
+            <i class="pi pi-check" />
           </li>
           <li class="done">
             <div class="task-info">
               <h6>Morning Run</h6>
             </div>
-            <i class="pi pi-check"></i>
+            <i class="pi pi-check" />
           </li>
         </ul>
       </div>
@@ -58,22 +58,22 @@
         </div>
         <div class="favorite-items">
           <a href="#" class="favorite-item">
-            <img src="/demo/images/rightpanel/github.svg" alt="freya-layout" />
+            <img src="/demo/images/rightpanel/github.svg" alt="freya-layout">
           </a>
           <a href="#" class="favorite-item">
-            <img src="/demo/images/rightpanel/slack.svg" alt="freya-layout" />
+            <img src="/demo/images/rightpanel/slack.svg" alt="freya-layout">
           </a>
           <a href="#" class="favorite-item">
-            <img src="/demo/images/rightpanel/aws.svg" alt="freya-layout" />
+            <img src="/demo/images/rightpanel/aws.svg" alt="freya-layout">
           </a>
           <a href="#" class="favorite-item">
-            <img src="/demo/images/rightpanel/jenkins.svg" alt="freya-layout" />
+            <img src="/demo/images/rightpanel/jenkins.svg" alt="freya-layout">
           </a>
           <a href="#" class="favorite-item">
-            <img src="/demo/images/rightpanel/jira.svg" alt="freya-layout" />
+            <img src="/demo/images/rightpanel/jira.svg" alt="freya-layout">
           </a>
           <a href="#" class="add-item" aria-label="add-item">
-            <i class="pi pi-plus"></i>
+            <i class="pi pi-plus" />
           </a>
         </div>
       </div>
@@ -85,11 +85,11 @@
               <img
                 src="/demo/images/rightpanel/profile-1.png"
                 alt="freya-layout"
-              />
+              >
               <span class="p-badge">3</span>
             </template>
             <div class="chat">
-              <span class="fade"></span>
+              <span class="fade" />
               <div class="chat-content">
                 <div class="chat-message send">
                   <span class="name">You</span>
@@ -135,7 +135,7 @@
                     <span>3 mins ago</span>
                   </div>
                 </div>
-                <div class="chat-message"></div>
+                <div class="chat-message" />
               </div>
               <div class="chat-input">
                 <InputText type="text" placeholder="Write here..." />
@@ -147,11 +147,11 @@
               <img
                 src="/demo/images/rightpanel/profile-2.png"
                 alt="freya-layout"
-              />
+              >
               <span class="p-badge">1</span>
             </template>
             <div class="chat">
-              <span class="fade"></span>
+              <span class="fade" />
               <div class="chat-content">
                 <div class="chat-message">
                   <span class="name">Sarah</span>
@@ -167,7 +167,7 @@
                     <span>3 mins ago</span>
                   </div>
                 </div>
-                <div class="chat-message"></div>
+                <div class="chat-message" />
               </div>
               <div class="chat-input">
                 <InputText type="text" placeholder="Write here..." />
@@ -179,7 +179,7 @@
               <img
                 src="/demo/images/rightpanel/profile-3.png"
                 alt="freya-layout"
-              />
+              >
             </template>
             <div class="chat">
               <div class="chat-content no-message">
@@ -195,7 +195,7 @@
               <img
                 src="/demo/images/rightpanel/profile-4.png"
                 alt="freya-layout"
-              />
+              >
             </template>
             <div class="chat">
               <div class="chat-content no-message">
@@ -208,17 +208,17 @@
           </TabPanel>
           <TabPanel>
             <template #header>
-              <i class="pi pi-plus"></i>
+              <i class="pi pi-plus" />
             </template>
             <div class="chat">
-              <span class="fade"></span>
+              <span class="fade" />
               <div class="contacts">
                 <ul>
                   <li>
                     <img
                       src="/demo/images/rightpanel/profile-1.png"
                       alt="freya-layout"
-                    />
+                    >
                     <div class="contact-info">
                       <h6>John Doe</h6>
                       <span>Active</span>
@@ -228,7 +228,7 @@
                     <img
                       src="/demo/images/rightpanel/profile-2.png"
                       alt="freya-layout"
-                    />
+                    >
                     <div class="contact-info">
                       <h6>John Doe</h6>
                       <span>Active</span>
@@ -238,7 +238,7 @@
                     <img
                       src="/demo/images/rightpanel/profile-3.png"
                       alt="freya-layout"
-                    />
+                    >
                     <div class="contact-info">
                       <h6>John Doe</h6>
                       <span>Active</span>
@@ -248,7 +248,7 @@
                     <img
                       src="/demo/images/rightpanel/profile-4.png"
                       alt="freya-layout"
-                    />
+                    >
                     <div class="contact-info">
                       <h6>John Doe</h6>
                       <span>Active</span>
@@ -258,7 +258,7 @@
                     <img
                       src="/demo/images/rightpanel/profile-1.png"
                       alt="freya-layout"
-                    />
+                    >
                     <div class="contact-info">
                       <h6>John Doe</h6>
                       <span>Active</span>
@@ -268,7 +268,7 @@
                     <img
                       src="/demo/images/rightpanel/profile-1.png"
                       alt="freya-layout"
-                    />
+                    >
                     <div class="contact-info">
                       <h6>John Doe</h6>
                       <span>Active</span>
@@ -278,7 +278,7 @@
                     <img
                       src="/demo/images/rightpanel/profile-1.png"
                       alt="freya-layout"
-                    />
+                    >
                     <div class="contact-info">
                       <h6>John Doe</h6>
                       <span>Active</span>
@@ -288,7 +288,7 @@
                     <img
                       src="/demo/images/rightpanel/profile-1.png"
                       alt="freya-layout"
-                    />
+                    >
                     <div class="contact-info">
                       <h6>John Doe</h6>
                       <span>Active</span>
@@ -298,7 +298,7 @@
                     <img
                       src="/demo/images/rightpanel/profile-1.png"
                       alt="freya-layout"
-                    />
+                    >
                     <div class="contact-info">
                       <h6>John Doe</h6>
                       <span>Active</span>

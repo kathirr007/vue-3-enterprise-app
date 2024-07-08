@@ -1,21 +1,16 @@
 <script setup lang="ts">
-import type { SchemaForm, SchemaFormField } from '@/types/schemaform.type';
+import type { SchemaForm } from '@/types/schemaform.type';
 import { Field as VField } from 'vee-validate';
-import Title from '../Form/Title.vue';
 import { useQuery } from 'vue-query';
 
 import type {
-  ClientServices,
   CommonClientState,
-  HandleStepFunc,
+  HandleStepFunc
 } from '@/types/client.type';
 import { ClientServiceSchema } from '@/types/client.type';
 import MultiSelect from 'primevue/multiselect';
 import InputText from 'primevue/inputtext';
 import type { Step } from '@/types/common.type';
-
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const handleStep = inject<HandleStepFunc>('handleStep', () => {});
 
 const props = defineProps<{
   review?: boolean;
@@ -23,15 +18,19 @@ const props = defineProps<{
   federal?: boolean;
   isWithoutState?: boolean;
 }>();
+
 const emit = defineEmits<{
   (event: 'refresh', refresh?: boolean): void;
   (event: 'title', title: 'table' | 'select' | 'default'): void;
 }>();
+
+const handleStep = inject<HandleStepFunc>('handleStep', () => {});
+
 const {
   review: reviewProp,
   state: stateProp,
   federal: federalProp,
-  isWithoutState: isWithoutStateProp,
+  isWithoutState: isWithoutStateProp
 } = toRefs(props);
 const { getServices } = useCommonListQueries();
 const { data: servicesList } = getServices();
@@ -52,7 +51,7 @@ const formData = shallowRef<SchemaForm>({
       placeholder: 'Enter Name',
       formGridClass: 'w-0 h-0',
       softHide: true,
-      hide: true,
+      hide: true
     },
     {
       as: MultiSelect,
@@ -63,13 +62,13 @@ const formData = shallowRef<SchemaForm>({
       label: 'Project Templates',
       placeholder: 'Select Project Templates',
       required: true,
-      showSlot: true,
-    },
+      showSlot: true
+    }
   ],
   btnText: 'Next',
   validationSchema: ClientServiceSchema,
   initialValues: undefined,
-  secondaryBtnText: 'Back',
+  secondaryBtnText: 'Back'
 });
 
 const instance = getCurrentInstance();
@@ -78,23 +77,24 @@ const { findFormIndex, updateOptions } = useSchemaForm(formData);
 const {
   data: clientServices,
   isLoading: servicesIsLoading,
-  isFetching: servicesFetching,
+  isFetching: servicesFetching
 } = useQuery(
   'client-services-list',
   () => {
     return reviewProp.value
       ? useClientServices({
-          id: clientId.value as string,
-          stateId: stateProp?.value?.id,
-          isFederal: federalProp.value,
-          isWithoutState: isWithoutStateProp.value,
-        })
+        id: clientId.value as string,
+        stateId: stateProp?.value?.id,
+        isFederal: federalProp.value,
+        isWithoutState: isWithoutStateProp.value
+      })
       : [];
   },
   {
     onSuccess: (data) => {
-      if (reviewProp.value && data && data.length === 0) emit('refresh', true);
-    },
+      if (reviewProp.value && data && data.length === 0)
+        emit('refresh', true);
+    }
   }
 );
 
@@ -107,16 +107,16 @@ const stepItems = computed(() => {
   const steps: Step[] = [
     {
       name: 'select',
-      label: 'Select Project Template(s)',
+      label: 'Select Project Template(s)'
     },
     {
       name: 'table',
       label: `Assign / Update Project Template(s) ${
-        stateProp?.value?.name == 'Automation'
+        stateProp?.value?.name === 'Automation'
           ? ''
-          : 'to ' + stateProp?.value?.name
-      }`,
-    },
+          : `to ${stateProp?.value?.name}`
+      }`
+    }
   ];
   return steps;
 });
@@ -135,13 +135,14 @@ watchEffect(() => {
 watch(
   () => reviewProp.value,
   (val) => {
-    if (val) isServicesSelectionCompleted.value = true;
+    if (val)
+      isServicesSelectionCompleted.value = true;
   }
 );
 
 onMounted(() => {
   if (stateProp?.value) {
-    setTimeout(function () {
+    setTimeout(() => {
       if (!reviewProp.value) {
         formData.value.fields[0].hide = false;
         instance?.proxy?.$forceUpdate();
@@ -154,24 +155,24 @@ onMounted(() => {
   }
 });
 
-const onSubmit = async (data: Record<string, any>) => {
-  // eslint-disable-next-line no-unsafe-optional-chaining
+async function onSubmit(data: Record<string, any>) {
   const { valid } = await formRef.value?.validate();
   if (valid) {
     selectedServices.value = data.services as string[];
     isServicesSelectionCompleted.value = true;
   }
-};
-const handleBack = (services: string[]) => {
+}
+function handleBack(services: string[]) {
   isServicesSelectionCompleted.value = false;
-  setTimeout(function () {
+  setTimeout(() => {
     formRef.value?.setFieldValue('services', [...services], { force: true });
   }, 200);
-};
+}
 </script>
+
 <script lang="ts">
 export default defineComponent({
-  inheritAttrs: false,
+  inheritAttrs: false
 });
 </script>
 
@@ -184,8 +185,8 @@ export default defineComponent({
   >
     <CommonSteps
       v-if="!reviewProp"
-      readonly
       id="abc"
+      readonly
       :items="stepItems"
       class="mb-4"
       :current="currentStep"
@@ -196,20 +197,20 @@ export default defineComponent({
       ref="formRef"
       :key="formKey"
       :data="formData"
+      class="card border-2 border-round default-border-color border-round-lg"
       @submit="onSubmit"
       @secondary-btn-click="handleStep('Automation', { nestedActiveIndex: 1 })"
-      class="card border-2 border-round default-border-color border-round-lg"
     >
-      <template v-slot:services="{ ...attrs }">
-        <div :class="'field mb-0'">
-          <VField name="services" v-slot="{ handleChange, value, validate }">
+      <template #services="{ ...attrs }">
+        <div class="field mb-0">
+          <VField v-slot="{ handleChange, value, validate }" name="services">
             <MultiSelect
               :tabindex="0"
-              @update:model-value="handleChange"
-              @blur="validate()"
               class="w-full"
               :model-value="value"
               v-bind="attrs"
+              @update:model-value="handleChange"
+              @blur="validate()"
             >
               <template #header>
                 <RouterLink
@@ -232,23 +233,23 @@ export default defineComponent({
       </template>
     </CommonSchemaForm>
     <ClientsServicesUpdate
-      :stateId="stateProp?.id ? stateProp.id : ''"
       v-if="isServicesSelectionCompleted"
+      :state-id="stateProp?.id ? stateProp.id : ''"
       :services="
         reviewProp
           ? clientServices
             ? clientServices
             : []
           : selectedServices.map((e) => {
-              return { serviceId: e };
-            })
+            return { serviceId: e };
+          })
       "
       :review="reviewProp"
-      @back="handleBack"
       :federal="federalProp"
-      :isWithoutState="isWithoutState"
+      :is-without-state="isWithoutState"
       :loading="servicesIsLoading"
       :fetching="servicesFetching"
+      @back="handleBack"
       @refresh="emit('refresh')"
       @automation="emit('refresh', true)"
     />
@@ -256,8 +257,7 @@ export default defineComponent({
       v-if="stepItems[0].name !== currentStep"
       class="inline-block underline font-medium mt-3 text-lg cursor-pointer text-blue-600 hover:text-blue-800"
       @click="handleStep('Automation', { nestedActiveIndex: 1 })"
-      >Back to List</span
-    >
+    >Back to List</span>
   </div>
 
   <!-- <div v-if="!isDetailsRoute" class="flex py-2 justify-content-between">
